@@ -41,3 +41,8 @@ jobs:
 
       # run tests!
       - run: mvn test
+      - run:
+          name: Send to CodeCov
+          command: bash <(curl -s https://codecov.io/bash) -t 2ba6dc6b-8af6-4e05-bf35-601ce24e7139
+      - store_artifacts:
+          path: target
