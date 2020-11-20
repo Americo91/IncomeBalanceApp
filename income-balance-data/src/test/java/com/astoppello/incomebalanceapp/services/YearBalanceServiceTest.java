@@ -1,5 +1,7 @@
 package com.astoppello.incomebalanceapp.services;
 
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
+import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +33,7 @@ class YearBalanceServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository);
+        yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, YearBalanceMapper.INSTANCE);
         yearBalance = YearBalance.builder().year(YEAR).id(ID).build();
     }
 
@@ -47,20 +49,20 @@ class YearBalanceServiceTest {
     @Test
     void findYearBalanceById() {
         when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.of(yearBalance));
-        YearBalance yb = yearBalanceService.findYearBalanceById(ID);
-        assertNotNull(yb);
-        assertEquals(ID, yb.getId());
-        assertEquals(YEAR, yb.getYear());
+        YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceById(ID);
+        assertNotNull(yearBalanceDTO);
+        assertEquals(ID, yearBalanceDTO.getId());
+        assertEquals(YEAR, yearBalanceDTO.getYear());
         verify(yearBalanceRepository, times(1)).findById(anyLong());
     }
 
     @Test
     void findYearBalanceByYear() {
         when(yearBalanceRepository.findByYear(anyInt())).thenReturn(yearBalance);
-        YearBalance yb = yearBalanceService.findYearBalanceByYear(YEAR);
-        assertNotNull(yb);
-        assertEquals(ID, yb.getId());
-        assertEquals(YEAR, yb.getYear());
+        YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceByYear(YEAR);
+        assertNotNull(yearBalanceDTO);
+        assertEquals(ID, yearBalanceDTO.getId());
+        assertEquals(YEAR, yearBalanceDTO.getYear());
         verify(yearBalanceRepository, times(1)).findByYear(anyInt());
     }
 }

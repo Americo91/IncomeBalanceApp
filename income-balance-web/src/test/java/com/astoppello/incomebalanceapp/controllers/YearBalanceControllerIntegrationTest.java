@@ -1,6 +1,8 @@
 package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.bootstrap.Bootstrap;
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
+import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
 import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
@@ -39,12 +41,12 @@ public class YearBalanceControllerIntegrationTest {
         Bootstrap run = new Bootstrap(yearBalanceRepository);
         run.run();
 
-        yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository);
+        yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, YearBalanceMapper.INSTANCE);
     }
 
     @Test
     public void getAllYearBalance() {
-        List<YearBalance> yearBalanceList = yearBalanceService.findAllYearBalance();
+        List<YearBalanceDTO> yearBalanceList = yearBalanceService.findAllYearBalance();
         assertEquals(3, yearBalanceList.size());
     }
 
@@ -54,9 +56,9 @@ public class YearBalanceControllerIntegrationTest {
                                                    .stream()
                                                    .findAny()
                                                    .orElseThrow(ResourceNotFoundException::new);
-        YearBalance yearBalance = yearBalanceService.findYearBalanceById(balance.getId());
-        assertNotNull(yearBalance);
-        assertEquals(balance, yearBalance);
+        YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceById(balance.getId());
+        assertNotNull(yearBalanceDTO);
+        assertEquals(balance.getId(), yearBalanceDTO.getId());
     }
 
     @Test
@@ -67,9 +69,8 @@ public class YearBalanceControllerIntegrationTest {
                                      .filter(y -> Objects.nonNull(y.getYear()))
                                      .findAny()
                                      .orElseThrow(ResourceNotFoundException::new);
-        YearBalance yearBalance = yearBalanceService.findYearBalanceByYear(balance.getYear());
-        assertNotNull(yearBalance);
-        assertEquals(balance, yearBalance);
-        assertEquals(balance.getYear(), yearBalance.getYear());
+        YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceByYear(balance.getYear());
+        assertNotNull(yearBalanceDTO);
+        assertEquals(balance.getYear(), yearBalanceDTO.getYear());
     }
 }

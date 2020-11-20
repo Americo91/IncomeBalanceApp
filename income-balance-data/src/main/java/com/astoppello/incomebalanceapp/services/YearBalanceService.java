@@ -1,5 +1,7 @@
 package com.astoppello.incomebalanceapp.services;
 
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceListDTO;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 
 import java.util.List;
@@ -9,9 +11,9 @@ import java.util.List;
  */
 public interface YearBalanceService {
 
-    List<YearBalance> findAllYearBalance();
+    List<YearBalanceDTO> findAllYearBalance();
 
-    YearBalance findYearBalanceById(Long id);
+    YearBalanceDTO findYearBalanceById(Long id);
 
-    YearBalance findYearBalanceByYear(int year);
+    YearBalanceDTO findYearBalanceByYear(int year);
 }

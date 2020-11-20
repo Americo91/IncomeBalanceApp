@@ -1,12 +1,16 @@
 package com.astoppello.incomebalanceapp.services;
 
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceListDTO;
+import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
 import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by @author stopp on 15/11/2020
@@ -15,23 +19,30 @@ import java.util.Set;
 public class YearBalanceServiceImpl implements YearBalanceService {
 
     private final YearBalanceRepository yearBalanceRepository;
+    private final YearBalanceMapper yearBalanceMapper;
 
-    public YearBalanceServiceImpl(YearBalanceRepository yearBalanceRepository) {
+    public YearBalanceServiceImpl(YearBalanceRepository yearBalanceRepository, YearBalanceMapper yearBalanceMapper) {
         this.yearBalanceRepository = yearBalanceRepository;
+        this.yearBalanceMapper = yearBalanceMapper;
     }
 
     @Override
-    public List<YearBalance> findAllYearBalance() {
-        return yearBalanceRepository.findAll();
+    public List<YearBalanceDTO> findAllYearBalance() {
+        return yearBalanceRepository.findAll()
+                                    .stream()
+                                    .map(yearBalanceMapper::yearBalanceToYearBalanceDto)
+                                    .collect(Collectors.toList());
     }
 
     @Override
-    public YearBalance findYearBalanceById(Long id) {
-        return yearBalanceRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+    public YearBalanceDTO findYearBalanceById(Long id) {
+        return yearBalanceRepository.findById(id)
+                                    .map(yearBalanceMapper::yearBalanceToYearBalanceDto)
+                                    .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
-    public YearBalance findYearBalanceByYear(int year) {
-        return yearBalanceRepository.findByYear(year);
+    public YearBalanceDTO findYearBalanceByYear(int year) {
+        return yearBalanceMapper.yearBalanceToYearBalanceDto(yearBalanceRepository.findByYear(year));
     }
 }

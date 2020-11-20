@@ -20,7 +20,6 @@ public class YearBalance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Integer year;
     private BigDecimal salary;
     private BigDecimal expenses;

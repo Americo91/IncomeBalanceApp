@@ -1,16 +1,13 @@
 package com.astoppello.incomebalanceapp.controllers;
 
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.services.YearBalanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -36,32 +33,30 @@ public class YearBalanceControllerTest {
     @Mock
     YearBalanceService yearBalanceService;
     MockMvc mockMvc;
-    YearBalance yearBalance;
+    YearBalanceDTO yearBalanceDTO;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(yearBalanceController)
                                  .build();
-        yearBalance = YearBalance.builder()
-                                 .id(ID)
-                                 .year(YEAR)
-                                 .build();
+        yearBalanceDTO = new YearBalanceDTO();
+        yearBalanceDTO.setId(ID);
+        yearBalanceDTO.setYear(YEAR);
     }
 
     @Test
     void findAllYearBalance() throws Exception {
-        List<YearBalance> yearBalances = List.of(yearBalance, YearBalance.builder()
-                                                                         .build());
+        List<YearBalanceDTO> yearBalances = List.of(new YearBalanceDTO(), new YearBalanceDTO());
         when(yearBalanceService.findAllYearBalance()).thenReturn(yearBalances);
         mockMvc.perform(get(YearBalanceController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.*", hasSize(2)));
+               .andExpect(jsonPath("$.yearbalances", hasSize(2)));
     }
 
     @Test
     void findYearBalanceById() throws Exception {
-        when(yearBalanceService.findYearBalanceById(anyLong())).thenReturn(yearBalance);
+        when(yearBalanceService.findYearBalanceById(anyLong())).thenReturn(yearBalanceDTO);
         mockMvc.perform(get(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.id", equalTo(1)));
@@ -69,7 +64,7 @@ public class YearBalanceControllerTest {
 
     @Test
     void findYearBalanceByYear() throws Exception {
-        when(yearBalanceService.findYearBalanceByYear(anyInt())).thenReturn(yearBalance);
+        when(yearBalanceService.findYearBalanceByYear(anyInt())).thenReturn(yearBalanceDTO);
                 mockMvc.perform(post(YearBalanceController.BASE_URL).contentType(MediaType.APPLICATION_JSON).content(AbstractRestControllerTest.asJsonString(YEAR)))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.year", equalTo(YEAR)));

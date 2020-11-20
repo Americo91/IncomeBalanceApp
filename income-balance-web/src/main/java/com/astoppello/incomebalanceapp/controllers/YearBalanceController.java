@@ -1,5 +1,7 @@
 package com.astoppello.incomebalanceapp.controllers;
 
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceListDTO;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.services.YearBalanceService;
 import org.springframework.http.HttpStatus;
@@ -23,19 +25,19 @@ public class YearBalanceController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<YearBalance> findAllYearBalance() {
-        return yearBalanceService.findAllYearBalance();
+    public YearBalanceListDTO findAllYearBalance() {
+        return new YearBalanceListDTO(yearBalanceService.findAllYearBalance());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public YearBalance findYearBalanceById(@PathVariable Long id) {
+    public YearBalanceDTO findYearBalanceById(@PathVariable Long id) {
         return yearBalanceService.findYearBalanceById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public YearBalance findYearBalanceByYear(@RequestBody int year) {
+    public YearBalanceDTO findYearBalanceByYear(@RequestBody Integer year) {
         return yearBalanceService.findYearBalanceByYear(year);
     }
 }
