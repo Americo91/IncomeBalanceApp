@@ -1,7 +1,6 @@
 package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
-import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.services.YearBalanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,7 +37,7 @@ public class YearBalanceControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(yearBalanceController)
                                  .build();
         yearBalanceDTO = new YearBalanceDTO();

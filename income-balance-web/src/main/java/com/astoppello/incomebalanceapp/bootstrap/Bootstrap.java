@@ -1,6 +1,8 @@
 package com.astoppello.incomebalanceapp.bootstrap;
 
+import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.YearBalance;
+import com.astoppello.incomebalanceapp.repositories.BankRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -14,9 +16,11 @@ import java.math.BigDecimal;
 public class Bootstrap implements CommandLineRunner {
 
     private final YearBalanceRepository yearBalanceRepository;
+    private final BankRepository bankRepository;
 
-    public Bootstrap(YearBalanceRepository yearBalanceRepository) {
+    public Bootstrap(YearBalanceRepository yearBalanceRepository, BankRepository bankRepository) {
         this.yearBalanceRepository = yearBalanceRepository;
+        this.bankRepository = bankRepository;
     }
 
     @Override
@@ -25,5 +29,10 @@ public class Bootstrap implements CommandLineRunner {
         yearBalanceRepository.save(YearBalance.builder().id(2L).year(2019).salary(new BigDecimal("500.00")).build());
         yearBalanceRepository.save(YearBalance.builder().id(3L).expenses(new BigDecimal("500")).build());
         System.out.println("YearBalance data loaded " + yearBalanceRepository.count());
+
+        bankRepository.save(Bank.builder().id(1L).name("Revolut").build());
+        bankRepository.save(Bank.builder().id(2L).name("Mediolanum").build());
+        bankRepository.save(Bank.builder().id(3L).build());
+        System.out.println("Bank data loaded "+ bankRepository.count());
     }
 }

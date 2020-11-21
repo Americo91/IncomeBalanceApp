@@ -43,6 +43,10 @@ public class YearBalanceServiceImpl implements YearBalanceService {
 
     @Override
     public YearBalanceDTO findYearBalanceByYear(int year) {
-        return yearBalanceMapper.yearBalanceToYearBalanceDto(yearBalanceRepository.findByYear(year));
+        YearBalance yearBalance = yearBalanceRepository.findByYear(year);
+        if (yearBalance == null) {
+            throw new ResourceNotFoundException("YearBalance not found. Year: " + year);
+        }
+        return yearBalanceMapper.yearBalanceToYearBalanceDto(yearBalance);
     }
 }

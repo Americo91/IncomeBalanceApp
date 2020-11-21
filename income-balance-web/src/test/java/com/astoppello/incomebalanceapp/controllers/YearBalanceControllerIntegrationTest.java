@@ -5,6 +5,7 @@ import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
 import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.model.YearBalance;
+import com.astoppello.incomebalanceapp.repositories.BankRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import com.astoppello.incomebalanceapp.services.YearBalanceService;
 import com.astoppello.incomebalanceapp.services.YearBalanceServiceImpl;
@@ -30,39 +31,41 @@ public class YearBalanceControllerIntegrationTest {
 
     @Autowired
     YearBalanceRepository yearBalanceRepository;
+    @Autowired
+    BankRepository bankRepository;
 
     YearBalanceService yearBalanceService;
 
     @BeforeEach
     void setUp() throws Exception {
-        System.out.println("Loanding data..");
-        System.out.println(yearBalanceRepository.count());
+        System.out.println("Loanding data: " + yearBalanceRepository.count());
 
-        Bootstrap run = new Bootstrap(yearBalanceRepository);
+        Bootstrap run = new Bootstrap(yearBalanceRepository, bankRepository);
         run.run();
 
         yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, YearBalanceMapper.INSTANCE);
     }
 
     @Test
-    public void getAllYearBalance() {
+    void getAllYearBalanceTest() {
         List<YearBalanceDTO> yearBalanceList = yearBalanceService.findAllYearBalance();
         assertEquals(3, yearBalanceList.size());
     }
 
     @Test
-    public void getYearBalanceById() {
-        YearBalance balance = yearBalanceRepository.findAll()
+    void getYearBalanceByIdTest() {
+        YearBalance yearBalance = yearBalanceRepository.findAll()
                                                    .stream()
                                                    .findAny()
                                                    .orElseThrow(ResourceNotFoundException::new);
-        YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceById(balance.getId());
+        YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceById(yearBalance.getId());
         assertNotNull(yearBalanceDTO);
-        assertEquals(balance.getId(), yearBalanceDTO.getId());
+        assertYearBalanceAndYearBalanceDtoAreEquals(yearBalance, yearBalanceDTO);
     }
 
+
     @Test
-    public void getYearBalanceByYear() {
+    void getYearBalanceByYearTest() {
         YearBalance balance =
                 yearBalanceRepository.findAll()
                                      .stream()
@@ -71,6 +74,15 @@ public class YearBalanceControllerIntegrationTest {
                                      .orElseThrow(ResourceNotFoundException::new);
         YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceByYear(balance.getYear());
         assertNotNull(yearBalanceDTO);
-        assertEquals(balance.getYear(), yearBalanceDTO.getYear());
+        assertYearBalanceAndYearBalanceDtoAreEquals(balance, yearBalanceDTO);
+    }
+
+    private void assertYearBalanceAndYearBalanceDtoAreEquals(YearBalance yearBalance, YearBalanceDTO yearBalanceDTO) {
+        assertEquals(yearBalance.getId(), yearBalanceDTO.getId());
+        assertEquals(yearBalance.getYear(), yearBalanceDTO.getYear());
+        assertEquals(yearBalance.getExpenses(),yearBalanceDTO.getExpenses());
+        assertEquals(yearBalance.getIncomes(), yearBalanceDTO.getIncomes());
+        assertEquals(yearBalance.getSalary(),yearBalanceDTO.getSalary());
+        assertEquals(yearBalance.getResult(), yearBalanceDTO.getResult());
     }
 }
