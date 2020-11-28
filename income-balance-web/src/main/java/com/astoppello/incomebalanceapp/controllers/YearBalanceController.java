@@ -23,13 +23,13 @@ public class YearBalanceController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public YearBalanceListDTO findAllYearBalance() {
-        return new YearBalanceListDTO(yearBalanceService.findAllYearBalance());
+        return new YearBalanceListDTO(yearBalanceService.findAll());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public YearBalanceDTO findYearBalanceById(@PathVariable Long id) {
-        return yearBalanceService.findYearBalanceById(id);
+        return yearBalanceService.findById(id);
     }
 
     @PostMapping

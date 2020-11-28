@@ -48,7 +48,7 @@ public class YearBalanceControllerTest {
     @Test
     void findAllYearBalance() throws Exception {
         List<YearBalanceDTO> yearBalances = List.of(new YearBalanceDTO(), new YearBalanceDTO());
-        when(yearBalanceService.findAllYearBalance()).thenReturn(yearBalances);
+        when(yearBalanceService.findAll()).thenReturn(yearBalances);
         mockMvc.perform(get(YearBalanceController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.yearbalances", hasSize(2)));
@@ -56,7 +56,7 @@ public class YearBalanceControllerTest {
 
     @Test
     void findYearBalanceById() throws Exception {
-        when(yearBalanceService.findYearBalanceById(anyLong())).thenReturn(yearBalanceDTO);
+        when(yearBalanceService.findById(anyLong())).thenReturn(yearBalanceDTO);
         mockMvc.perform(get(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.id", equalTo(1)));

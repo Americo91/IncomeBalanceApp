@@ -23,13 +23,13 @@ public class BankController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public BankListDTO findAllBanks() {
-     return new BankListDTO(bankService.findAllBanks());
+     return new BankListDTO(bankService.findAll());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BankDTO findBankById(@PathVariable Long id){
-        return bankService.findBankById(id);
+        return bankService.findById(id);
     }
 
     @PostMapping()

@@ -16,35 +16,35 @@ import java.util.stream.Collectors;
 @Service
 public class YearBalanceServiceImpl implements YearBalanceService {
 
-    private final YearBalanceRepository yearBalanceRepository;
-    private final YearBalanceMapper yearBalanceMapper;
+    private final YearBalanceRepository repository;
+    private final YearBalanceMapper mapper;
 
-    public YearBalanceServiceImpl(YearBalanceRepository yearBalanceRepository, YearBalanceMapper yearBalanceMapper) {
-        this.yearBalanceRepository = yearBalanceRepository;
-        this.yearBalanceMapper = yearBalanceMapper;
+    public YearBalanceServiceImpl(YearBalanceRepository repository, YearBalanceMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
     }
 
     @Override
-    public List<YearBalanceDTO> findAllYearBalance() {
-        return yearBalanceRepository.findAll()
-                                    .stream()
-                                    .map(yearBalanceMapper::yearBalanceToYearBalanceDto)
-                                    .collect(Collectors.toList());
+    public List<YearBalanceDTO> findAll() {
+        return repository.findAll()
+                         .stream()
+                         .map(mapper::yearBalanceToYearBalanceDto)
+                         .collect(Collectors.toList());
     }
 
     @Override
-    public YearBalanceDTO findYearBalanceById(Long id) {
-        return yearBalanceRepository.findById(id)
-                                    .map(yearBalanceMapper::yearBalanceToYearBalanceDto)
-                                    .orElseThrow(ResourceNotFoundException::new);
+    public YearBalanceDTO findById(Long id) {
+        return repository.findById(id)
+                         .map(mapper::yearBalanceToYearBalanceDto)
+                         .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
     public YearBalanceDTO findYearBalanceByYear(int year) {
-        YearBalance yearBalance = yearBalanceRepository.findByYear(year);
+        YearBalance yearBalance = repository.findByYear(year);
         if (yearBalance == null) {
             throw new ResourceNotFoundException("YearBalance not found. Year: " + year);
         }
-        return yearBalanceMapper.yearBalanceToYearBalanceDto(yearBalance);
+        return mapper.yearBalanceToYearBalanceDto(yearBalance);
     }
 }

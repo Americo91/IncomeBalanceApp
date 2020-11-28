@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * Created by @author stopp on 15/11/2020
  */
-public interface YearBalanceService {
+public interface YearBalanceService extends CrudService<YearBalanceDTO, Long>{
 
-    List<YearBalanceDTO> findAllYearBalance();
+    List<YearBalanceDTO> findAll();
 
-    YearBalanceDTO findYearBalanceById(Long id);
+    YearBalanceDTO findById(Long id);
 
     YearBalanceDTO findYearBalanceByYear(int year);
 }

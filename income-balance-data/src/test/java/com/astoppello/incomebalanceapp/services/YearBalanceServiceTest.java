@@ -42,14 +42,14 @@ class YearBalanceServiceTest {
         List<YearBalance> list = List.of(yearBalance, YearBalance.builder().build());
         when(yearBalanceRepository.findAll()).thenReturn(list);
 
-        assertEquals(list.size(), yearBalanceService.findAllYearBalance().size());
+        assertEquals(list.size(), yearBalanceService.findAll().size());
         verify(yearBalanceRepository).findAll();
     }
 
     @Test
     void findYearBalanceById() {
         when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.of(yearBalance));
-        YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceById(ID);
+        YearBalanceDTO yearBalanceDTO = yearBalanceService.findById(ID);
         assertNotNull(yearBalanceDTO);
         assertEquals(ID, yearBalanceDTO.getId());
         assertEquals(YEAR, yearBalanceDTO.getYear());

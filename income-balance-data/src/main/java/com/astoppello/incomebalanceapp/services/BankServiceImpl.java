@@ -16,32 +16,32 @@ import java.util.stream.Collectors;
 @Service
 public class BankServiceImpl implements BankService {
 
-    private final BankRepository bankRepository;
+    private final BankRepository repository;
     private final BankMapper bankMapper;
 
-    public BankServiceImpl(BankRepository bankRepository, BankMapper bankMapper) {
-        this.bankRepository = bankRepository;
+    public BankServiceImpl(BankRepository repository, BankMapper bankMapper) {
+        this.repository = repository;
         this.bankMapper = bankMapper;
     }
 
     @Override
-    public List<BankDTO> findAllBanks() {
-        return bankRepository.findAll()
-                             .stream()
-                             .map(bankMapper::bankToBankDto)
-                             .collect(Collectors.toList());
+    public List<BankDTO> findAll() {
+        return repository.findAll()
+                         .stream()
+                         .map(bankMapper::bankToBankDto)
+                         .collect(Collectors.toList());
     }
 
     @Override
-    public BankDTO findBankById(Long id) {
-        return bankRepository.findById(id)
-                             .map(bankMapper::bankToBankDto)
-                             .orElseThrow(ResourceNotFoundException::new);
+    public BankDTO findById(Long id) {
+        return repository.findById(id)
+                         .map(bankMapper::bankToBankDto)
+                         .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
     public BankDTO findBankByName(String name) {
-        Bank bank = bankRepository.findBankByName(name);
+        Bank bank = repository.findBankByName(name);
         if (bank == null) {
             throw new ResourceNotFoundException("Bank not found. Name: " + name);
         }

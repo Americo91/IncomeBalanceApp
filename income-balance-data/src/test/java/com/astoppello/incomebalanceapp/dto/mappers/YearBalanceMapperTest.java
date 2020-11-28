@@ -12,7 +12,7 @@ class YearBalanceMapperTest {
 
     private YearBalanceMapper mapper;
     private static final Integer YEAR = 2020;
-    private static final Long ID = 1l;
+    private static final Long ID = 1L;
 
     @BeforeEach
     void setUp() {

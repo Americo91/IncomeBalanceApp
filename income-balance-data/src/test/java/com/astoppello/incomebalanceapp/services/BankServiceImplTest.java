@@ -40,14 +40,14 @@ class BankServiceImplTest {
     void findAllBanks() {
         List<Bank> bankList = List.of(bank, Bank.builder().build());
         when(bankRepository.findAll()).thenReturn(bankList);
-        assertEquals(bankList.size(), bankService.findAllBanks().size());
+        assertEquals(bankList.size(), bankService.findAll().size());
         verify(bankRepository).findAll();
     }
 
     @Test
     void findBankById() {
         when(bankRepository.findById(anyLong())).thenReturn(Optional.of(bank));
-        BankDTO bankDTO = bankService.findBankById(anyLong());
+        BankDTO bankDTO = bankService.findById(anyLong());
         assertNotNull(bankDTO);
         assertEquals(BankMapperTest.ID, bankDTO.getId());
     }
