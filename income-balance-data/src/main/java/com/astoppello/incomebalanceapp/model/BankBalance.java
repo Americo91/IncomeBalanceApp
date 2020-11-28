@@ -9,45 +9,46 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
- * Created by @author stopp on 15/11/2020
+ * Created by @author stopp on 28/11/2020
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "yearbalance")
-public class YearBalance extends AbstractBalanceEntity {
-    private Integer year;
+@Table(name = "BankBalance")
+public class BankBalance extends AbstractBalanceEntity {
+
+    private String monthName;
 
     @Builder
-    public YearBalance(Long id, BigDecimal salary, BigDecimal expenses, BigDecimal incomes, BigDecimal result,
-                       Integer year) {
+    public BankBalance(Long id, BigDecimal salary, BigDecimal expenses, BigDecimal incomes, BigDecimal result,
+                       String monthName) {
         super(id, salary, expenses, incomes, result);
-        this.year = year;
+        this.monthName = monthName;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof YearBalance))
+        if (!(o instanceof BankBalance))
             return false;
         if (!super.equals(o))
             return false;
-        YearBalance that = (YearBalance) o;
-        return Objects.equals(year, that.year);
+        BankBalance that = (BankBalance) o;
+        return Objects.equals(monthName, that.monthName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), year);
+        return Objects.hash(super.hashCode(), monthName);
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", YearBalance.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", BankBalance.class.getSimpleName() + "[", "]")
                 .merge(super.getStringJoiner())
-                .add("year=" + year)
+                .add("monthName=" + monthName)
                 .toString();
     }
 }

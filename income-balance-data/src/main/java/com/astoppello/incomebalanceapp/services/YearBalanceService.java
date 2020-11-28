@@ -1,8 +1,6 @@
 package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
-import com.astoppello.incomebalanceapp.dto.domain.YearBalanceListDTO;
-import com.astoppello.incomebalanceapp.model.YearBalance;
 
 import java.util.List;
 

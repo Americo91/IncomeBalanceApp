@@ -1,11 +1,11 @@
 package com.astoppello.incomebalanceapp.model;
 
 import lombok.*;
-import org.springframework.stereotype.Service;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Created by @author stopp on 21/11/2020
@@ -13,37 +13,40 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "Bank")
-public class Bank implements Serializable {
+public class Bank extends AbstractBaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String name;
+
+    @Builder
+    public Bank(Long id, String name) {
+        super(id);
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof Bank))
+            return false;
+        if (!super.equals(o))
             return false;
         Bank bank = (Bank) o;
-        return id.equals(bank.id);
+        return Objects.equals(name, bank.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(super.hashCode(), name);
     }
 
     @Override
     public String toString() {
-        return "Bank{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return new StringJoiner(", ", Bank.class.getSimpleName() + "[", "]")
+                .merge(super.getStringJoiner())
+                .add("name=" + name)
+                .toString();
     }
 }

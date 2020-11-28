@@ -55,9 +55,9 @@ public class YearBalanceControllerIntegrationTest {
     @Test
     void getYearBalanceByIdTest() {
         YearBalance yearBalance = yearBalanceRepository.findAll()
-                                                   .stream()
-                                                   .findAny()
-                                                   .orElseThrow(ResourceNotFoundException::new);
+                                                       .stream()
+                                                       .findAny()
+                                                       .orElseThrow(ResourceNotFoundException::new);
         YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceById(yearBalance.getId());
         assertNotNull(yearBalanceDTO);
         assertYearBalanceAndYearBalanceDtoAreEquals(yearBalance, yearBalanceDTO);

@@ -2,12 +2,9 @@ package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceListDTO;
-import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.services.YearBalanceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Created by @author stopp on 15/11/2020

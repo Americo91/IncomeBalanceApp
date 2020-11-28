@@ -1,7 +1,6 @@
 package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
-import com.astoppello.incomebalanceapp.dto.domain.YearBalanceListDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
 import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.model.YearBalance;
@@ -9,7 +8,6 @@ import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
