@@ -37,5 +37,4 @@ public class BankController {
     public BankDTO findBankByName(@RequestBody String name) {
         return bankService.findBankByName(name);
     }
-
 }
