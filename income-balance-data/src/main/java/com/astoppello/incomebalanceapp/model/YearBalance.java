@@ -15,7 +15,7 @@ import java.util.StringJoiner;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "yearbalance")
+@Table(name = "YearBalance")
 public class YearBalance extends AbstractBalanceEntity {
     private Integer year;
 
