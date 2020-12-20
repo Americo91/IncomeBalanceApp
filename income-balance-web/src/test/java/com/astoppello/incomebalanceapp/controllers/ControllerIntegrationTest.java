@@ -15,8 +15,8 @@ import com.astoppello.incomebalanceapp.repositories.BankBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.BankRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import com.astoppello.incomebalanceapp.services.*;
+import com.astoppello.incomebalanceapp.services.jms.JmsTextMessageService;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +47,7 @@ public class ControllerIntegrationTest {
     BankBalanceService bankBalanceService;
     private YearBalanceService yearBalanceService;
     private BankService bankService;
+    private JmsTextMessageService jmsTextMessageService;
 
     @BeforeAll
     void setUp() throws Exception {

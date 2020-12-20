@@ -4,6 +4,7 @@ import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
+import com.astoppello.incomebalanceapp.services.jms.JmsTextMessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,7 @@ class YearBalanceServiceTest {
     private static final Long ID = 1L;
     private static final int YEAR = 2020;
     YearBalance yearBalance;
+    JmsTextMessageService jmsTextMessageService;
 
     @Mock
     YearBalanceRepository yearBalanceRepository;
