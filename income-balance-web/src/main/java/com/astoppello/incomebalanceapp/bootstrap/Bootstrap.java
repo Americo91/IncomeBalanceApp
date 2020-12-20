@@ -2,9 +2,11 @@ package com.astoppello.incomebalanceapp.bootstrap;
 
 import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
+import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.BankBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.BankRepository;
+import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -20,12 +22,13 @@ public class Bootstrap implements CommandLineRunner {
     private final YearBalanceRepository yearBalanceRepository;
     private final BankRepository bankRepository;
     private final BankBalanceRepository bankBalanceRepository;
+    private final MonthBalanceRepository monthBalanceRepository;
 
-    public Bootstrap(YearBalanceRepository yearBalanceRepository, BankRepository bankRepository,
-                     BankBalanceRepository bankBalanceRepository) {
+    public Bootstrap(YearBalanceRepository yearBalanceRepository, BankRepository bankRepository, BankBalanceRepository bankBalanceRepository, MonthBalanceRepository monthBalanceRepository) {
         this.yearBalanceRepository = yearBalanceRepository;
         this.bankRepository = bankRepository;
         this.bankBalanceRepository = bankBalanceRepository;
+        this.monthBalanceRepository = monthBalanceRepository;
     }
 
     @Override
@@ -40,9 +43,23 @@ public class Bootstrap implements CommandLineRunner {
         bankRepository.save(revolut);
         bankRepository.save(mediolanum);
         bankRepository.save(Bank.builder().id(3L).build());
-        System.out.println("Bank data loaded "+ bankRepository.count());
+        System.out.println("Bank data loaded " + bankRepository.count());
 
         BankBalance bankBalance = BankBalance.builder().id(1L).expenses(new BigDecimal("100")).bank(revolut).build();
         bankBalanceRepository.save(bankBalance);
+        System.out.println("BankBalance loaded " + bankBalanceRepository.count());
+
+        monthBalanceRepository.save(MonthBalance.builder()
+                                                .id(1L)
+                                                .month("September")
+                                                .salary(new BigDecimal("2229.58"))
+                                                .build());
+        monthBalanceRepository.save(MonthBalance.builder().id(2L).result(new BigDecimal("200.00")).build());
+        monthBalanceRepository.save(MonthBalance.builder()
+                                                .id(3L)
+                                                .month("October")
+                                                .incomes(new BigDecimal("2000"))
+                                                .build());
+        System.out.println("MonthBalance loaded " + monthBalanceRepository.count());
     }
 }

@@ -10,9 +10,5 @@ import java.util.List;
  */
 public interface BankService extends CrudService<BankDTO, Long>{
 
-    List<BankDTO> findAll();
-
-    BankDTO findById(Long id);
-
     BankDTO findBankByName(String name);
 }

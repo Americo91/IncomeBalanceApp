@@ -36,9 +36,9 @@ class BankBalanceMapperTest {
         assertEquals(salary, bankBalance.getSalary());
         assertEquals(incomes, bankBalance.getIncomes());
         assertEquals(BankMapperTest.NAME, bankBalance.getBank()
-                                                     .getName());
+                .getName());
         assertEquals(ID, bankBalance.getBank()
-                                    .getId());
+                .getId());
     }
 
     @Test
@@ -52,24 +52,24 @@ class BankBalanceMapperTest {
         assertEquals(salary, bankBalanceDTO.getSalary());
         assertEquals(incomes, bankBalance.getIncomes());
         assertEquals(BankMapperTest.NAME, bankBalanceDTO.getBank()
-                                                     .getName());
+                .getName());
         assertEquals(ID, bankBalanceDTO.getBank()
-                                    .getId());
+                .getId());
 
     }
 
     private BankBalance createBankBalance() {
         return BankBalance.builder()
-                          .id(ID)
-                          .bank(Bank.builder()
-                                    .id(ID)
-                                    .name(BankMapperTest.NAME)
-                                    .build())
-                          .expenses(expenses)
-                          .incomes(incomes)
-                          .salary(salary)
-                          .result(result)
-                          .build();
+                .id(ID)
+                .bank(Bank.builder()
+                              .id(ID)
+                              .name(BankMapperTest.NAME)
+                              .build())
+                .expenses(expenses)
+                .incomes(incomes)
+                .salary(salary)
+                .result(result)
+                .build();
     }
 
     private BankBalanceDTO createBankBalanceDto() {

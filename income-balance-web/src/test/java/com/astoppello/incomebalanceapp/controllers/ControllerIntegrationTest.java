@@ -3,25 +3,29 @@ package com.astoppello.incomebalanceapp.controllers;
 import com.astoppello.incomebalanceapp.bootstrap.Bootstrap;
 import com.astoppello.incomebalanceapp.dto.domain.BankBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.BankDTO;
+import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.BankBalanceMapper;
 import com.astoppello.incomebalanceapp.dto.mappers.BankMapper;
+import com.astoppello.incomebalanceapp.dto.mappers.MonthBalanceMapper;
 import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
 import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
+import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.BankBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.BankRepository;
+import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import com.astoppello.incomebalanceapp.services.*;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -44,18 +48,22 @@ public class ControllerIntegrationTest {
     BankRepository bankRepository;
     @Autowired
     BankBalanceRepository bankBalanceRepository;
+    @Autowired
+    MonthBalanceRepository monthBalanceRepository;
     BankBalanceService bankBalanceService;
     private YearBalanceService yearBalanceService;
     private BankService bankService;
+    private MonthBalanceService monthBalanceService;
 
     @BeforeAll
     void setUp() throws Exception {
         System.out.println("Loading data: " + bankBalanceRepository.count());
-        Bootstrap bootstrap = new Bootstrap(yearBalanceRepository, bankRepository, bankBalanceRepository);
+        Bootstrap bootstrap = new Bootstrap(yearBalanceRepository, bankRepository, bankBalanceRepository, monthBalanceRepository);
         bootstrap.run();
         bankBalanceService = new BankBalanceServiceImpl(bankBalanceRepository, BankBalanceMapper.INSTANCE);
         yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, YearBalanceMapper.INSTANCE);
         bankService = new BankServiceImpl(bankRepository, BankMapper.INSTANCE);
+        monthBalanceService = new MonthBalanceServiceImpl(monthBalanceRepository, MonthBalanceMapper.INSTANCE);
     }
 
     @Test
@@ -65,8 +73,10 @@ public class ControllerIntegrationTest {
 
     @Test
     void getBankBalanceByIdTest() {
-        BankBalance bankBalance =
-                bankBalanceRepository.findAll().stream().findAny().orElseThrow(ResourceNotFoundException::new);
+        BankBalance bankBalance = bankBalanceRepository.findAll()
+                                                       .stream()
+                                                       .findAny()
+                                                       .orElseThrow(ResourceNotFoundException::new);
         BankBalanceDTO bankBalanceDTO = bankBalanceService.findById(bankBalance.getId());
         assertNotNull(bankBalanceDTO);
         assertBankBalanceAndDtoAreEqual(bankBalance, bankBalanceDTO);
@@ -74,8 +84,7 @@ public class ControllerIntegrationTest {
 
     @Test
     void getAllBankTest() {
-        assertEquals(bankRepository.count(), bankService.findAll()
-                                                        .size());
+        assertEquals(bankRepository.count(), bankService.findAll().size());
     }
 
     @Test
@@ -114,23 +123,49 @@ public class ControllerIntegrationTest {
 
     @Test
     void getYearBalanceByYearTest() {
-        YearBalance balance =
-                yearBalanceRepository.findAll()
-                                     .stream()
-                                     .filter(y -> Objects.nonNull(y.getYear()))
-                                     .findAny()
-                                     .orElseThrow(ResourceNotFoundException::new);
+        YearBalance balance = yearBalanceRepository.findAll()
+                                                   .stream()
+                                                   .filter(y -> Objects.nonNull(y.getYear()))
+                                                   .findAny()
+                                                   .orElseThrow(ResourceNotFoundException::new);
         YearBalanceDTO yearBalanceDTO = yearBalanceService.findYearBalanceByYear(balance.getYear());
         assertNotNull(yearBalanceDTO);
         assertYearBalanceAndYearBalanceDtoAreEquals(balance, yearBalanceDTO);
     }
 
+    @Test
+    void getAllMonthBalanceTest() {
+        assertEquals(3, monthBalanceRepository.findAll().size());
+    }
+
+    @Test
+    void getMonthBalanceById() {
+        MonthBalance monthBalance = monthBalanceRepository.findAll()
+                                                          .stream()
+                                                          .findAny()
+                                                          .orElseThrow(ResourceNotFoundException::new);
+        MonthBalanceDTO monthBalanceDTO = monthBalanceService.findById(monthBalance.getId());
+        assertNotNull(monthBalanceDTO);
+        assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
+    }
+
+    @Test
+    void getMonthBalanceByMonth() {
+        MonthBalance monthBalance = monthBalanceRepository.findAll()
+                                                          .stream()
+                                                          .findAny()
+                                                          .orElseThrow(ResourceNotFoundException::new);
+        MonthBalanceDTO monthBalanceDTO = monthBalanceService.findByMonth(monthBalance.getMonth());
+        assertNotNull(monthBalanceDTO);
+        assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
+    }
+
     private void assertYearBalanceAndYearBalanceDtoAreEquals(YearBalance yearBalance, YearBalanceDTO yearBalanceDTO) {
         assertEquals(yearBalance.getId(), yearBalanceDTO.getId());
         assertEquals(yearBalance.getYear(), yearBalanceDTO.getYear());
-        assertEquals(yearBalance.getExpenses(),yearBalanceDTO.getExpenses());
+        assertEquals(yearBalance.getExpenses(), yearBalanceDTO.getExpenses());
         assertEquals(yearBalance.getIncomes(), yearBalanceDTO.getIncomes());
-        assertEquals(yearBalance.getSalary(),yearBalanceDTO.getSalary());
+        assertEquals(yearBalance.getSalary(), yearBalanceDTO.getSalary());
         assertEquals(yearBalance.getResult(), yearBalanceDTO.getResult());
     }
 
@@ -147,5 +182,14 @@ public class ControllerIntegrationTest {
         assertEquals(bankBalance.getIncomes(), bankBalanceDTO.getIncomes());
         assertEquals(bankBalance.getResult(), bankBalanceDTO.getResult());
         assertEquals(bankBalance.getSalary(), bankBalanceDTO.getSalary());
+    }
+
+    private void assertMonthBalanceAndDtoAreEqual(MonthBalance monthBalance, MonthBalanceDTO monthBalanceDTO) {
+        assertEquals(monthBalance.getId(), monthBalanceDTO.getId());
+        assertEquals(monthBalance.getMonth(), monthBalanceDTO.getMonth());
+        assertEquals(monthBalance.getExpenses(), monthBalanceDTO.getExpenses());
+        assertEquals(monthBalance.getIncomes(), monthBalanceDTO.getIncomes());
+        assertEquals(monthBalance.getResult(), monthBalanceDTO.getResult());
+        assertEquals(monthBalance.getSalary(), monthBalanceDTO.getSalary());
     }
 }

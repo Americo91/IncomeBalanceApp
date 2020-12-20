@@ -9,6 +9,4 @@ import java.util.List;
  */
 public interface BankBalanceService extends CrudService<BankBalanceDTO, Long>{
 
-    List<BankBalanceDTO> findAll();
-    BankBalanceDTO findById(Long id);
 }

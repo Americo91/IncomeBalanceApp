@@ -9,9 +9,5 @@ import java.util.List;
  */
 public interface YearBalanceService extends CrudService<YearBalanceDTO, Long>{
 
-    List<YearBalanceDTO> findAll();
-
-    YearBalanceDTO findById(Long id);
-
     YearBalanceDTO findYearBalanceByYear(int year);
 }

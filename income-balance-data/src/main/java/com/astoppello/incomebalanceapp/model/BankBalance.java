@@ -47,8 +47,7 @@ public class BankBalance extends AbstractBalanceEntity {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", BankBalance.class.getSimpleName() + "[", "]")
-                .merge(super.getStringJoiner())
+        return new StringJoiner(", ", BankBalance.class.getSimpleName() + "[", "]").merge(super.getStringJoiner())
                 .add("bank=" + bank)
                 .toString();
     }
