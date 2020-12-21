@@ -2,6 +2,8 @@ package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.BankBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.BankBalanceMapper;
+import com.astoppello.incomebalanceapp.dto.mappers.BankBalanceMapperImpl;
+import com.astoppello.incomebalanceapp.dto.mappers.BankMapperImpl;
 import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
@@ -12,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.swing.text.html.Option;
 import java.math.BigDecimal;
@@ -25,13 +29,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BankBalanceServiceImplTest {
+@SpringBootTest(classes = {BankBalanceMapperImpl.class, BankMapperImpl.class})
+class BankBalanceServiceTest {
 
     private static final Long ID = 1L;
     public static final BigDecimal EXPENSES = BigDecimal.valueOf(100);
     public static final BigDecimal SALARY = BigDecimal.valueOf(200);
     public static final String REVOLUT = "Revolut";
     BankBalance bankBalance;
+    @Autowired
+    BankBalanceMapper bankBalanceMapper;
 
     @Mock
     BankBalanceRepository repository;
@@ -40,7 +47,7 @@ class BankBalanceServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        service = new BankBalanceServiceImpl(repository, BankBalanceMapper.INSTANCE);
+        service = new BankBalanceServiceImpl(repository, bankBalanceMapper);
         bankBalance =
                 BankBalance.builder()
                            .bank(Bank.builder()

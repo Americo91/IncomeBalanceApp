@@ -37,8 +37,7 @@ public class BankControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(bankController)
-                                 .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(bankController).build();
         bankDTO = new BankDTO();
         bankDTO.setName(NAME);
         bankDTO.setId(ID);
@@ -64,7 +63,8 @@ public class BankControllerTest {
     @Test
     void findBankByName() throws Exception {
         when(bankService.findBankByName(anyString())).thenReturn(bankDTO);
-        mockMvc.perform(post(BankController.BASE_URL).contentType(MediaType.APPLICATION_JSON).content(AbstractRestControllerTest.asJsonString(NAME)))
+        mockMvc.perform(post(BankController.BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                                                     .content(AbstractRestControllerTest.asJsonString(NAME)))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.name", equalTo(NAME)));
     }

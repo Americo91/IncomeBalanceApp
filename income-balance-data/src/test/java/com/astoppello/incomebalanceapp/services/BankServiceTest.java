@@ -2,6 +2,7 @@ package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.BankDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.BankMapper;
+import com.astoppello.incomebalanceapp.dto.mappers.BankMapperImpl;
 import com.astoppello.incomebalanceapp.dto.mappers.BankMapperTest;
 import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.repositories.BankRepository;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,17 +25,20 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {BankMapperImpl.class})
 class BankServiceTest {
 
     @Mock
     BankRepository bankRepository;
     Bank bank;
     BankService bankService;
+    @Autowired
+    BankMapper bankMapper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        bankService = new BankServiceImpl(bankRepository, BankMapper.INSTANCE);
+        bankService = new BankServiceImpl(bankRepository, bankMapper);
         bank = Bank.builder().id(BankMapperTest.ID).name(BankMapperTest.NAME).build();
     }
 

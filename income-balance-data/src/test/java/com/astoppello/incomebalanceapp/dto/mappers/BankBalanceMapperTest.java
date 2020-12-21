@@ -4,15 +4,23 @@ import com.astoppello.incomebalanceapp.dto.domain.BankBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.BankDTO;
 import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
+import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BankBalanceMapperTest {
+@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {BankBalanceMapperImpl.class, BankMapperImpl.class})
+public class BankBalanceMapperTest {
 
+    @Autowired
     private BankBalanceMapper bankBalanceMapper;
     private static final Long ID = 1L;
     private final BigDecimal expenses = BigDecimal.valueOf(100);
@@ -20,25 +28,13 @@ class BankBalanceMapperTest {
     private final BigDecimal incomes = BigDecimal.valueOf(170);
     private final BigDecimal result = BigDecimal.valueOf(190);
 
-    @BeforeEach
-    void setUp() {
-        bankBalanceMapper = BankBalanceMapper.INSTANCE;
-    }
 
     @Test
     void bankBalanceDtoToBankBalance() {
         BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
         BankBalance bankBalance = bankBalanceMapper.bankBalanceDtoToBankBalance(bankBalanceDTO);
         assertNotNull(bankBalance);
-        assertEquals(ID, bankBalance.getId());
-        assertEquals(result, bankBalance.getResult());
-        assertEquals(expenses, bankBalance.getExpenses());
-        assertEquals(salary, bankBalance.getSalary());
-        assertEquals(incomes, bankBalance.getIncomes());
-        assertEquals(BankMapperTest.NAME, bankBalance.getBank()
-                .getName());
-        assertEquals(ID, bankBalance.getBank()
-                .getId());
+        ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, bankBalanceDTO);
     }
 
     @Test
@@ -46,16 +42,7 @@ class BankBalanceMapperTest {
         BankBalance bankBalance = createBankBalance();
         BankBalanceDTO bankBalanceDTO = bankBalanceMapper.bankBalanceToBankBalanceDTO(bankBalance);
         assertNotNull(bankBalanceDTO);
-        assertEquals(ID, bankBalanceDTO.getId());
-        assertEquals(result, bankBalanceDTO.getResult());
-        assertEquals(expenses, bankBalanceDTO.getExpenses());
-        assertEquals(salary, bankBalanceDTO.getSalary());
-        assertEquals(incomes, bankBalance.getIncomes());
-        assertEquals(BankMapperTest.NAME, bankBalanceDTO.getBank()
-                .getName());
-        assertEquals(ID, bankBalanceDTO.getBank()
-                .getId());
-
+        ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, bankBalanceDTO);
     }
 
     private BankBalance createBankBalance() {

@@ -1,7 +1,7 @@
 package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
-import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
+import com.astoppello.incomebalanceapp.dto.mappers.*;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,12 +21,15 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {YearBalanceMapperImpl.class, BankBalanceMapperImpl.class, BankMapperImpl.class, MonthBalanceMapperImpl.class})
 class YearBalanceServiceTest {
 
     private static final Long ID = 1L;
     private static final int YEAR = 2020;
     YearBalance yearBalance;
 
+    @Autowired
+    YearBalanceMapper yearBalanceMapper;
     @Mock
     YearBalanceRepository yearBalanceRepository;
 
@@ -33,7 +38,7 @@ class YearBalanceServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, YearBalanceMapper.INSTANCE);
+        yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper);
         yearBalance = YearBalance.builder().year(YEAR).id(ID).build();
     }
 

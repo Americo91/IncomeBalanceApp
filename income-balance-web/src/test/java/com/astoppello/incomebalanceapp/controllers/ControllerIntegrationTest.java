@@ -5,10 +5,7 @@ import com.astoppello.incomebalanceapp.dto.domain.BankBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.BankDTO;
 import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
-import com.astoppello.incomebalanceapp.dto.mappers.BankBalanceMapper;
-import com.astoppello.incomebalanceapp.dto.mappers.BankMapper;
-import com.astoppello.incomebalanceapp.dto.mappers.MonthBalanceMapper;
-import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
+import com.astoppello.incomebalanceapp.dto.mappers.*;
 import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
@@ -25,12 +22,13 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Objects;
 
+import static com.astoppello.incomebalanceapp.utils.ModelEqualUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -39,8 +37,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Import({BankMapperImpl.class, BankBalanceMapperImpl.class, MonthBalanceMapperImpl.class, YearBalanceMapperImpl.class})
+@DataJpaTest
 public class ControllerIntegrationTest {
     @Autowired
     YearBalanceRepository yearBalanceRepository;
@@ -54,16 +53,24 @@ public class ControllerIntegrationTest {
     private YearBalanceService yearBalanceService;
     private BankService bankService;
     private MonthBalanceService monthBalanceService;
+    @Autowired
+    BankMapper bankMapper;
+    @Autowired
+    BankBalanceMapper bankBalanceMapper;
+    @Autowired
+    MonthBalanceMapper monthBalanceMapper;
+    @Autowired
+    YearBalanceMapper yearBalanceMapper;
 
     @BeforeAll
     void setUp() throws Exception {
         System.out.println("Loading data: " + bankBalanceRepository.count());
         Bootstrap bootstrap = new Bootstrap(yearBalanceRepository, bankRepository, bankBalanceRepository, monthBalanceRepository);
         bootstrap.run();
-        bankBalanceService = new BankBalanceServiceImpl(bankBalanceRepository, BankBalanceMapper.INSTANCE);
-        yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, YearBalanceMapper.INSTANCE);
-        bankService = new BankServiceImpl(bankRepository, BankMapper.INSTANCE);
-        monthBalanceService = new MonthBalanceServiceImpl(monthBalanceRepository, MonthBalanceMapper.INSTANCE);
+        bankBalanceService = new BankBalanceServiceImpl(bankBalanceRepository, bankBalanceMapper);
+        yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper);
+        bankService = new BankServiceImpl(bankRepository, bankMapper);
+        monthBalanceService = new MonthBalanceServiceImpl(monthBalanceRepository, monthBalanceMapper);
     }
 
     @Test
@@ -160,36 +167,4 @@ public class ControllerIntegrationTest {
         assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
     }
 
-    private void assertYearBalanceAndYearBalanceDtoAreEquals(YearBalance yearBalance, YearBalanceDTO yearBalanceDTO) {
-        assertEquals(yearBalance.getId(), yearBalanceDTO.getId());
-        assertEquals(yearBalance.getYear(), yearBalanceDTO.getYear());
-        assertEquals(yearBalance.getExpenses(), yearBalanceDTO.getExpenses());
-        assertEquals(yearBalance.getIncomes(), yearBalanceDTO.getIncomes());
-        assertEquals(yearBalance.getSalary(), yearBalanceDTO.getSalary());
-        assertEquals(yearBalance.getResult(), yearBalanceDTO.getResult());
-    }
-
-    private void assertBankAndBankDtoAreEquals(Bank bank, BankDTO bankDTO) {
-        assertEquals(bank.getId(), bankDTO.getId());
-        assertEquals(bank.getName(), bankDTO.getName());
-    }
-
-    private void assertBankBalanceAndDtoAreEqual(BankBalance bankBalance, BankBalanceDTO bankBalanceDTO) {
-        assertEquals(bankBalance.getId(), bankBalanceDTO.getId());
-        assertEquals(bankBalance.getBank().getId(), bankBalanceDTO.getBank().getId());
-        assertEquals(bankBalance.getBank().getName(), bankBalanceDTO.getBank().getName());
-        assertEquals(bankBalance.getExpenses(), bankBalanceDTO.getExpenses());
-        assertEquals(bankBalance.getIncomes(), bankBalanceDTO.getIncomes());
-        assertEquals(bankBalance.getResult(), bankBalanceDTO.getResult());
-        assertEquals(bankBalance.getSalary(), bankBalanceDTO.getSalary());
-    }
-
-    private void assertMonthBalanceAndDtoAreEqual(MonthBalance monthBalance, MonthBalanceDTO monthBalanceDTO) {
-        assertEquals(monthBalance.getId(), monthBalanceDTO.getId());
-        assertEquals(monthBalance.getMonth(), monthBalanceDTO.getMonth());
-        assertEquals(monthBalance.getExpenses(), monthBalanceDTO.getExpenses());
-        assertEquals(monthBalance.getIncomes(), monthBalanceDTO.getIncomes());
-        assertEquals(monthBalance.getResult(), monthBalanceDTO.getResult());
-        assertEquals(monthBalance.getSalary(), monthBalanceDTO.getSalary());
-    }
 }

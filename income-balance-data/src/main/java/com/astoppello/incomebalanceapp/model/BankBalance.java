@@ -14,12 +14,16 @@ import java.util.StringJoiner;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "BankBalance")
+@Table(name = "bankBalances")
 public class BankBalance extends AbstractBalanceEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank")
     private Bank bank;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "monthBalance_id")
+    private MonthBalance monthBalance;
 
     @Builder
     public BankBalance(Long id, BigDecimal salary, BigDecimal expenses, BigDecimal incomes, BigDecimal result,
@@ -37,12 +41,12 @@ public class BankBalance extends AbstractBalanceEntity {
         if (!super.equals(o))
             return false;
         BankBalance that = (BankBalance) o;
-        return Objects.equals(bank, that.bank);
+        return Objects.equals(bank, that.bank) && Objects.equals(monthBalance, that.monthBalance);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), bank);
+        return Objects.hash(super.hashCode(), bank, monthBalance);
     }
 
     @Override

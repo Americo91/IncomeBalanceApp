@@ -1,7 +1,10 @@
 package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
+import com.astoppello.incomebalanceapp.dto.mappers.BankBalanceMapperImpl;
+import com.astoppello.incomebalanceapp.dto.mappers.BankMapperImpl;
 import com.astoppello.incomebalanceapp.dto.mappers.MonthBalanceMapper;
+import com.astoppello.incomebalanceapp.dto.mappers.MonthBalanceMapperImpl;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +24,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {BankBalanceMapperImpl.class, BankMapperImpl.class, MonthBalanceMapperImpl.class})
 class MonthBalanceServiceTest {
 
     @Mock
@@ -27,11 +33,13 @@ class MonthBalanceServiceTest {
     private static final Long ID = 1L;
     private static final String MONTH = "September";
     MonthBalanceService monthBalanceService;
+    @Autowired
+    MonthBalanceMapper monthBalanceMapper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        monthBalanceService = new MonthBalanceServiceImpl(monthBalanceRepository, MonthBalanceMapper.INSTANCE);
+        monthBalanceService = new MonthBalanceServiceImpl(monthBalanceRepository, monthBalanceMapper);
         monthBalance = MonthBalance.builder().id(ID).month(MONTH).build();
     }
 

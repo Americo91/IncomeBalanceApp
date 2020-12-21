@@ -14,7 +14,7 @@ import java.util.StringJoiner;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "Bank")
+@Table(name = "banks")
 public class Bank extends AbstractBaseEntity {
 
     private String name;

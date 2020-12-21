@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(YearBalanceController.BASE_URL)
 public class YearBalanceController {
 
-    public static final String BASE_URL = "/api/v1/years";
+    public static final String BASE_URL = "/api/v1/yearbalances";
     private final YearBalanceService yearBalanceService;
 
     public YearBalanceController(YearBalanceService yearBalanceService) {

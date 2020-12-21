@@ -3,6 +3,7 @@ package com.astoppello.incomebalanceapp.dto.domain;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by @author stopp on 20/12/2020
@@ -15,4 +16,5 @@ public class MonthBalanceDTO {
     private BigDecimal expenses;
     private BigDecimal incomes;
     private BigDecimal result;
+    private List<BankBalanceDTO> bankBalanceDTOList;
 }

@@ -33,11 +33,6 @@ public class Bootstrap implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        yearBalanceRepository.save(YearBalance.builder().id(1L).year(2020).build());
-        yearBalanceRepository.save(YearBalance.builder().id(2L).year(2019).salary(new BigDecimal("500.00")).build());
-        yearBalanceRepository.save(YearBalance.builder().id(3L).expenses(new BigDecimal("500")).build());
-        System.out.println("YearBalance data loaded " + yearBalanceRepository.count());
-
         Bank revolut = Bank.builder().id(1L).name("Revolut").build();
         Bank mediolanum = Bank.builder().id(2L).name("Mediolanum").build();
         bankRepository.save(revolut);
@@ -49,17 +44,30 @@ public class Bootstrap implements CommandLineRunner {
         bankBalanceRepository.save(bankBalance);
         System.out.println("BankBalance loaded " + bankBalanceRepository.count());
 
-        monthBalanceRepository.save(MonthBalance.builder()
-                                                .id(1L)
-                                                .month("September")
-                                                .salary(new BigDecimal("2229.58"))
-                                                .build());
-        monthBalanceRepository.save(MonthBalance.builder().id(2L).result(new BigDecimal("200.00")).build());
-        monthBalanceRepository.save(MonthBalance.builder()
-                                                .id(3L)
-                                                .month("October")
-                                                .incomes(new BigDecimal("2000"))
-                                                .build());
+        MonthBalance september = MonthBalance.builder()
+                                             .id(1L)
+                                             .month("September")
+                                             .salary(new BigDecimal("2229.58"))
+                                             .build();
+        MonthBalance monthBalance = MonthBalance.builder().id(2L).result(new BigDecimal("200.00")).build();
+        MonthBalance october = MonthBalance.builder()
+                                           .id(3L)
+                                           .month("October")
+                                           .incomes(new BigDecimal("2000"))
+                                           .build()
+                                           .addBankBalance(bankBalance);
+        monthBalanceRepository.save(september);
+        monthBalanceRepository.save(monthBalance);
+        monthBalanceRepository.save(october);
         System.out.println("MonthBalance loaded " + monthBalanceRepository.count());
+
+        yearBalanceRepository.save(YearBalance.builder().id(1L).year(2020).build());
+        yearBalanceRepository.save(YearBalance.builder().id(2L).year(2019).salary(new BigDecimal("500.00")).build());
+        yearBalanceRepository.save(YearBalance.builder()
+                                              .id(3L)
+                                              .expenses(new BigDecimal("500"))
+                                              .build()
+                                              .addMonthBalance(october));
+        System.out.println("YearBalance data loaded " + yearBalanceRepository.count());
     }
 }

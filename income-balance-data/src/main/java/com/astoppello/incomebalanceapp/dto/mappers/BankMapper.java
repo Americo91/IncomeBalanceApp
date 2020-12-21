@@ -8,12 +8,10 @@ import org.mapstruct.factory.Mappers;
 /**
  * Created by @author stopp on 21/11/2020
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface BankMapper {
 
-    BankMapper INSTANCE = Mappers.getMapper(BankMapper.class);
-
-    public Bank bankDtoToBank(BankDTO bankDTO);
-    public BankDTO bankToBankDto(Bank bank);
+    Bank bankDtoToBank(BankDTO bankDTO);
+    BankDTO bankToBankDto(Bank bank);
 
 }
