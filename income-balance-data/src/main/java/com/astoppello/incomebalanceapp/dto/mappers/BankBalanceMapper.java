@@ -12,5 +12,7 @@ import org.mapstruct.Mapping;
 public interface BankBalanceMapper {
 
     BankBalance bankBalanceDtoToBankBalance(BankBalanceDTO bankBalanceDto);
+
+    @Mapping(source = "monthBalance.id", target = "monthBalanceId")
     BankBalanceDTO bankBalanceToBankBalanceDTO(BankBalance bankBalance);
 }
