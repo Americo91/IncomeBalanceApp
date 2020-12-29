@@ -15,11 +15,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,7 +55,7 @@ public class MonthBalanceControllerTest {
     @Test
     void findMonthBalanceById() throws Exception {
         when(monthBalanceService.findById(anyLong())).thenReturn(monthBalanceDTO);
-        mockMvc.perform(get(MonthBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(MonthBalanceController.BASE_URL + ID).contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.id", equalTo(1)));
     }
@@ -70,5 +67,15 @@ public class MonthBalanceControllerTest {
                                                              .content(AbstractRestControllerTest.asJsonString(MONTH)))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.month", equalTo(MONTH)));
+    }
+
+    @Test
+    void findMonthBalanceByYearBalanceIdAndId() throws Exception {
+        when(monthBalanceService.findMonthBalanceByYearBalanceIdAndId(anyLong(), anyLong()))
+                .thenReturn(monthBalanceDTO);
+        mockMvc.perform(get("/api/v1/yearbalances/1/monthbalances/" + ID).contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.id", equalTo(1)));
+        verify(monthBalanceService, times(1)).findMonthBalanceByYearBalanceIdAndId(anyLong(), anyLong());
     }
 }
