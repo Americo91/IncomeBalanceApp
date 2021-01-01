@@ -16,6 +16,7 @@ import com.astoppello.incomebalanceapp.repositories.BankRepository;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import com.astoppello.incomebalanceapp.services.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -29,8 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.astoppello.incomebalanceapp.utils.ModelEqualUtils.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by @author stopp on 28/11/2020
@@ -65,12 +65,19 @@ public class ControllerIntegrationTest {
     @BeforeAll
     void setUp() throws Exception {
         System.out.println("Loading data: " + bankBalanceRepository.count());
-        Bootstrap bootstrap = new Bootstrap(yearBalanceRepository, bankRepository, bankBalanceRepository, monthBalanceRepository);
+        Bootstrap bootstrap = new Bootstrap(
+                yearBalanceRepository,
+                bankRepository,
+                bankBalanceRepository,
+                monthBalanceRepository);
         bootstrap.run();
         bankBalanceService = new BankBalanceServiceImpl(bankBalanceRepository, bankBalanceMapper);
         yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper);
         bankService = new BankServiceImpl(bankRepository, bankMapper);
-        monthBalanceService = new MonthBalanceServiceImpl(monthBalanceRepository, monthBalanceMapper);
+        monthBalanceService = new MonthBalanceServiceImpl(
+                monthBalanceRepository,
+                monthBalanceMapper,
+                yearBalanceRepository);
     }
 
     @Test
@@ -165,6 +172,17 @@ public class ControllerIntegrationTest {
         MonthBalanceDTO monthBalanceDTO = monthBalanceService.findByMonth(monthBalance.getMonth());
         assertNotNull(monthBalanceDTO);
         assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
+    }
+
+    @Test
+    void getMonthBalanceByYearBalanceIdAndId() {
+        MonthBalanceDTO monthBalanceDTO = monthBalanceService.findMonthBalanceByYearBalanceIdAndId(3L, 3L);
+        YearBalance yearBalance= yearBalanceRepository.findById(3L).get();
+        assertNotNull(monthBalanceDTO);
+        assertNotNull(yearBalance);
+        assertFalse(CollectionUtils.isEmpty(yearBalance.getMonthBalanceList()));
+        assertNotNull(yearBalance.getMonthBalanceList().get(0));
+        assertMonthBalanceAndDtoAreEqual(yearBalance.getMonthBalanceList().get(0), monthBalanceDTO);
     }
 
 }

@@ -18,6 +18,7 @@ public class YearBalanceServiceImpl implements YearBalanceService {
 
     private final YearBalanceRepository repository;
     private final YearBalanceMapper mapper;
+    public static final String YEAR_BALANCE_NOT_FOUND = "YearBalance not found: ";
 
     public YearBalanceServiceImpl(YearBalanceRepository repository, YearBalanceMapper mapper) {
         this.repository = repository;
@@ -36,14 +37,14 @@ public class YearBalanceServiceImpl implements YearBalanceService {
     public YearBalanceDTO findById(Long id) {
         return repository.findById(id)
                          .map(mapper::yearBalanceToYearBalanceDto)
-                         .orElseThrow(ResourceNotFoundException::new);
+                         .orElseThrow(() -> new ResourceNotFoundException(YEAR_BALANCE_NOT_FOUND+id));
     }
 
     @Override
     public YearBalanceDTO findYearBalanceByYear(int year) {
         YearBalance yearBalance = repository.findByYear(year);
         if (yearBalance == null) {
-            throw new ResourceNotFoundException("YearBalance not found. Year: " + year);
+            throw new ResourceNotFoundException(YEAR_BALANCE_NOT_FOUND + year);
         }
         return mapper.yearBalanceToYearBalanceDto(yearBalance);
     }

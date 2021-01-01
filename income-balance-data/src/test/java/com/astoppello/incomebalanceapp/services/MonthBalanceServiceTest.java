@@ -6,7 +6,10 @@ import com.astoppello.incomebalanceapp.dto.mappers.BankMapperImpl;
 import com.astoppello.incomebalanceapp.dto.mappers.MonthBalanceMapper;
 import com.astoppello.incomebalanceapp.dto.mappers.MonthBalanceMapperImpl;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
+import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
+import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
+import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,11 +38,13 @@ class MonthBalanceServiceTest {
     MonthBalanceService monthBalanceService;
     @Autowired
     MonthBalanceMapper monthBalanceMapper;
+    @Mock
+    private YearBalanceRepository yearBalanceRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        monthBalanceService = new MonthBalanceServiceImpl(monthBalanceRepository, monthBalanceMapper);
+        monthBalanceService = new MonthBalanceServiceImpl(monthBalanceRepository, monthBalanceMapper, yearBalanceRepository);
         monthBalance = MonthBalance.builder().id(ID).month(MONTH).build();
     }
 
@@ -65,10 +70,21 @@ class MonthBalanceServiceTest {
     }
 
     @Test
-    void testFindAll() {
+    void findAll() {
         List<MonthBalance> monthBalances = List.of(monthBalance, MonthBalance.builder().build());
         when(monthBalanceRepository.findAll()).thenReturn(monthBalances);
         assertEquals(monthBalances.size(), monthBalanceService.findAll().size());
         verify(monthBalanceRepository).findAll();
+    }
+
+    @Test
+    void findMonthBalanceByIdAndYearBalanceId() {
+        YearBalance yearBalance = YearBalance.builder().id(1L).build();
+        yearBalance.addMonthBalance(monthBalance);
+
+        when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.of(yearBalance));
+        MonthBalanceDTO monthBalanceDTO = monthBalanceService.findMonthBalanceByYearBalanceIdAndId(1L, 1L);
+        ModelEqualUtils.assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
+        verify(yearBalanceRepository, times(1)).findById(anyLong());
     }
 }
