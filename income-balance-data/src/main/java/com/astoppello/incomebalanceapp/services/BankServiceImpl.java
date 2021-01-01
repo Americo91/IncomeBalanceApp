@@ -19,7 +19,7 @@ public class BankServiceImpl implements BankService {
     private final BankRepository repository;
     private final BankMapper bankMapper;
 
-    public BankServiceImpl(BankRepository repository, BankMapper bankMapper) {
+  public BankServiceImpl(BankRepository repository, BankMapper bankMapper) {
         this.repository = repository;
         this.bankMapper = bankMapper;
     }

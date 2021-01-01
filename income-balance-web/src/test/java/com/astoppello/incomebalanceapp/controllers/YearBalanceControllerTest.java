@@ -25,48 +25,52 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class YearBalanceControllerTest {
 
-    private final int YEAR = 2002;
-    private final Long ID = 1L;
+  private final int YEAR = 2002;
+  private final Long ID = 1L;
 
-    @InjectMocks
-    YearBalanceController yearBalanceController;
-    @Mock
-    YearBalanceService yearBalanceService;
-    MockMvc mockMvc;
-    YearBalanceDTO yearBalanceDTO;
+  @InjectMocks YearBalanceController yearBalanceController;
+  @Mock YearBalanceService yearBalanceService;
+  MockMvc mockMvc;
+  YearBalanceDTO yearBalanceDTO;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(yearBalanceController)
-                                 .build();
-        yearBalanceDTO = new YearBalanceDTO();
-        yearBalanceDTO.setId(ID);
-        yearBalanceDTO.setYear(YEAR);
-    }
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.openMocks(this);
+    mockMvc = MockMvcBuilders.standaloneSetup(yearBalanceController).build();
+    yearBalanceDTO = new YearBalanceDTO();
+    yearBalanceDTO.setId(ID);
+    yearBalanceDTO.setYear(YEAR);
+  }
 
-    @Test
-    void findAllYearBalance() throws Exception {
-        List<YearBalanceDTO> yearBalances = List.of(new YearBalanceDTO(), new YearBalanceDTO());
-        when(yearBalanceService.findAll()).thenReturn(yearBalances);
-        mockMvc.perform(get(YearBalanceController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.yearbalances", hasSize(2)));
-    }
+  @Test
+  void findAllYearBalance() throws Exception {
+    List<YearBalanceDTO> yearBalances = List.of(new YearBalanceDTO(), new YearBalanceDTO());
+    when(yearBalanceService.findAll()).thenReturn(yearBalances);
+    mockMvc
+        .perform(get(YearBalanceController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.yearbalances", hasSize(2)));
+  }
 
-    @Test
-    void findYearBalanceById() throws Exception {
-        when(yearBalanceService.findById(anyLong())).thenReturn(yearBalanceDTO);
-        mockMvc.perform(get(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.id", equalTo(1)));
-    }
+  @Test
+  void findYearBalanceById() throws Exception {
+    when(yearBalanceService.findById(anyLong())).thenReturn(yearBalanceDTO);
+    mockMvc
+        .perform(
+            get(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", equalTo(1)));
+  }
 
-    @Test
-    void findYearBalanceByYear() throws Exception {
-        when(yearBalanceService.findYearBalanceByYear(anyInt())).thenReturn(yearBalanceDTO);
-                mockMvc.perform(post(YearBalanceController.BASE_URL).contentType(MediaType.APPLICATION_JSON).content(AbstractRestControllerTest.asJsonString(YEAR)))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.year", equalTo(YEAR)));
-    }
+  @Test
+  void findYearBalanceByYear() throws Exception {
+    when(yearBalanceService.findYearBalanceByYear(anyInt())).thenReturn(yearBalanceDTO);
+    mockMvc
+        .perform(
+            post(YearBalanceController.BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(AbstractRestControllerTest.asJsonString(YEAR)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.year", equalTo(YEAR)));
+  }
 }

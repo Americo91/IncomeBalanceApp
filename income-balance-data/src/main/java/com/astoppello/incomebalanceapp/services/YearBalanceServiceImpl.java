@@ -18,7 +18,6 @@ public class YearBalanceServiceImpl implements YearBalanceService {
 
     private final YearBalanceRepository repository;
     private final YearBalanceMapper mapper;
-    public static final String YEAR_BALANCE_NOT_FOUND = "YearBalance not found: ";
 
     public YearBalanceServiceImpl(YearBalanceRepository repository, YearBalanceMapper mapper) {
         this.repository = repository;

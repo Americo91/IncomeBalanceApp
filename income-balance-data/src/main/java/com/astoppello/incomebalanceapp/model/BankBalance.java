@@ -1,6 +1,9 @@
 package com.astoppello.incomebalanceapp.model;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,9 +24,9 @@ public class BankBalance extends AbstractBalanceEntity {
     @JoinColumn(name = "bank")
     private Bank bank;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "monthBalance_id")
-    private MonthBalance monthBalance;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "monthBalance_id")
+  private MonthBalance monthBalance;
 
     @Builder
     public BankBalance(Long id, BigDecimal salary, BigDecimal expenses, BigDecimal incomes, BigDecimal result,

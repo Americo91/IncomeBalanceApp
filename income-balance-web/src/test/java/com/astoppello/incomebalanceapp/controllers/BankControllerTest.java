@@ -25,47 +25,50 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class BankControllerTest {
 
-    private static final Long ID = 1L;
-    private static final String NAME = "Revolut";
-    @InjectMocks
-    BankController bankController;
-    @Mock
-    BankService bankService;
-    MockMvc mockMvc;
-    BankDTO bankDTO;
+  private static final Long ID = 1L;
+  private static final String NAME = "Revolut";
+  @InjectMocks BankController bankController;
+  @Mock BankService bankService;
+  MockMvc mockMvc;
+  BankDTO bankDTO;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(bankController).build();
-        bankDTO = new BankDTO();
-        bankDTO.setName(NAME);
-        bankDTO.setId(ID);
-    }
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.openMocks(this);
+    mockMvc = MockMvcBuilders.standaloneSetup(bankController).build();
+    bankDTO = new BankDTO();
+    bankDTO.setName(NAME);
+    bankDTO.setId(ID);
+  }
 
-    @Test
-    void findAllBanks() throws Exception {
-        List<BankDTO> bankDTOS = List.of(new BankDTO(), new BankDTO());
-        when(bankService.findAll()).thenReturn(bankDTOS);
-        mockMvc.perform(get(BankController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.banks", hasSize(2)));
-    }
+  @Test
+  void findAllBanks() throws Exception {
+    List<BankDTO> bankDTOS = List.of(new BankDTO(), new BankDTO());
+    when(bankService.findAll()).thenReturn(bankDTOS);
+    mockMvc
+        .perform(get(BankController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.banks", hasSize(2)));
+  }
 
-    @Test
-    void findBankById() throws Exception {
-        when(bankService.findById(anyLong())).thenReturn(bankDTO);
-        mockMvc.perform(get(BankController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.id", equalTo(1)));
-    }
+  @Test
+  void findBankById() throws Exception {
+    when(bankService.findById(anyLong())).thenReturn(bankDTO);
+    mockMvc
+        .perform(get(BankController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", equalTo(1)));
+  }
 
-    @Test
-    void findBankByName() throws Exception {
-        when(bankService.findBankByName(anyString())).thenReturn(bankDTO);
-        mockMvc.perform(post(BankController.BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                                                     .content(AbstractRestControllerTest.asJsonString(NAME)))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.name", equalTo(NAME)));
-    }
+  @Test
+  void findBankByName() throws Exception {
+    when(bankService.findBankByName(anyString())).thenReturn(bankDTO);
+    mockMvc
+        .perform(
+            post(BankController.BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(AbstractRestControllerTest.asJsonString(NAME)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.name", equalTo(NAME)));
+  }
 }

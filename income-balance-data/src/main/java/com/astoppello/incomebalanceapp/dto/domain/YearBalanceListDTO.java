@@ -6,12 +6,10 @@ import lombok.Data;
 
 import java.util.List;
 
-/**
- * Created by @author stopp on 16/11/2020
- */
+/** Created by @author stopp on 16/11/2020 */
 @Data
 @AllArgsConstructor
 public class YearBalanceListDTO {
-    @JsonProperty("yearbalances")
-    private List<YearBalanceDTO> yearBalanceDTOList;
+  @JsonProperty("yearbalances")
+  private List<YearBalanceDTO> yearBalanceDTOList;
 }

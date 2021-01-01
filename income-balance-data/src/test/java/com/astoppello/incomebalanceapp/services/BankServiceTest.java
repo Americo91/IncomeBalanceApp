@@ -18,7 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -28,41 +29,39 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = {BankMapperImpl.class})
 class BankServiceTest {
 
-    @Mock
-    BankRepository bankRepository;
-    Bank bank;
-    BankService bankService;
-    @Autowired
-    BankMapper bankMapper;
+  @Mock BankRepository bankRepository;
+  Bank bank;
+  BankService bankService;
+  @Autowired BankMapper bankMapper;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        bankService = new BankServiceImpl(bankRepository, bankMapper);
-        bank = Bank.builder().id(BankMapperTest.ID).name(BankMapperTest.NAME).build();
-    }
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.openMocks(this);
+    bankService = new BankServiceImpl(bankRepository, bankMapper);
+    bank = Bank.builder().id(BankMapperTest.ID).name(BankMapperTest.NAME).build();
+  }
 
-    @Test
-    void findAllBanks() {
-        List<Bank> bankList = List.of(bank, Bank.builder().build());
-        when(bankRepository.findAll()).thenReturn(bankList);
-        assertEquals(bankList.size(), bankService.findAll().size());
-        verify(bankRepository).findAll();
-    }
+  @Test
+  void findAllBanks() {
+    List<Bank> bankList = List.of(bank, Bank.builder().build());
+    when(bankRepository.findAll()).thenReturn(bankList);
+    assertEquals(bankList.size(), bankService.findAll().size());
+    verify(bankRepository).findAll();
+  }
 
-    @Test
-    void findBankById() {
-        when(bankRepository.findById(anyLong())).thenReturn(Optional.of(bank));
-        BankDTO bankDTO = bankService.findById(anyLong());
-        assertNotNull(bankDTO);
-        assertEquals(BankMapperTest.ID, bankDTO.getId());
-    }
+  @Test
+  void findBankById() {
+    when(bankRepository.findById(anyLong())).thenReturn(Optional.of(bank));
+    BankDTO bankDTO = bankService.findById(anyLong());
+    assertNotNull(bankDTO);
+    assertEquals(BankMapperTest.ID, bankDTO.getId());
+  }
 
-    @Test
-    void findBankByName() {
-        when(bankRepository.findBankByName(anyString())).thenReturn(bank);
-        BankDTO bankDTO = bankService.findBankByName(anyString());
-        assertNotNull(bankDTO);
-        assertEquals(BankMapperTest.NAME, bankDTO.getName());
-    }
+  @Test
+  void findBankByName() {
+    when(bankRepository.findBankByName(anyString())).thenReturn(bank);
+    BankDTO bankDTO = bankService.findBankByName(anyString());
+    assertNotNull(bankDTO);
+    assertEquals(BankMapperTest.NAME, bankDTO.getName());
+  }
 }
