@@ -47,4 +47,14 @@ public class YearBalanceServiceImpl implements YearBalanceService {
         }
         return mapper.yearBalanceToYearBalanceDto(yearBalance);
     }
+
+    @Override
+    public YearBalanceDTO createNewYearBalance(YearBalanceDTO yearBalanceDTO) {
+        return saveAndReturnDto(mapper.yearBalanceDtoToYearBalance(yearBalanceDTO));
+    }
+
+    private YearBalanceDTO saveAndReturnDto(YearBalance yearBalance) {
+        YearBalance savedYearBalance = repository.save(yearBalance);
+        return mapper.yearBalanceToYearBalanceDto(savedYearBalance);
+    }
 }

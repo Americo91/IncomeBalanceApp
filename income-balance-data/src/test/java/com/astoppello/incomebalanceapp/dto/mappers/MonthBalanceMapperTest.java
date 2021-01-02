@@ -75,7 +75,7 @@ public class MonthBalanceMapperTest {
         monthBalanceDTO.setId(ID);
         monthBalanceDTO.setIncomes(incomes);
         monthBalanceDTO.setResult(result);
-        monthBalanceDTO.setBankBalanceDTOList(List.of(createBankBalanceDto()));
+        monthBalanceDTO.setBankBalances(List.of(createBankBalanceDto()));
         return monthBalanceDTO;
     }
 

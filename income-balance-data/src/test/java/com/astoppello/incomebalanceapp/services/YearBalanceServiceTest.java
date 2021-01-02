@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,9 @@ class YearBalanceServiceTest {
   YearBalance yearBalance;
 
   @Autowired YearBalanceMapper yearBalanceMapper;
+  @Autowired MonthBalanceMapper monthBalanceMapper;
+  @Autowired BankMapper bankMapper;
+  @Autowired BankBalanceMapper bankBalanceMapper;
   @Mock YearBalanceRepository yearBalanceRepository;
 
   YearBalanceService yearBalanceService;
@@ -74,5 +78,22 @@ class YearBalanceServiceTest {
     assertEquals(ID, yearBalanceDTO.getId());
     assertEquals(YEAR, yearBalanceDTO.getYear());
     verify(yearBalanceRepository, times(1)).findByYear(anyInt());
+  }
+
+  @Test
+  void createNewYearBalance() {
+    YearBalanceDTO yearBalanceDTO = new YearBalanceDTO();
+    yearBalanceDTO.setId(ID);
+    yearBalanceDTO.setYear(YEAR);
+    yearBalanceDTO.setExpenses(new BigDecimal(200));
+    when(yearBalanceRepository.save(any(YearBalance.class)))
+        .thenReturn(yearBalanceMapper.yearBalanceDtoToYearBalance(yearBalanceDTO));
+
+    YearBalanceDTO savedDto = yearBalanceService.createNewYearBalance(yearBalanceDTO);
+    assertNotNull(savedDto);
+    assertEquals(yearBalanceDTO.getId(), savedDto.getId());
+    assertEquals(yearBalanceDTO.getYear(), savedDto.getYear());
+    assertEquals(yearBalanceDTO.getExpenses(), savedDto.getExpenses());
+    verify(yearBalanceRepository).save(any(YearBalance.class));
   }
 }

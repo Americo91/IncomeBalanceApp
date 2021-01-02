@@ -1,5 +1,6 @@
 package com.astoppello.incomebalanceapp.dto.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -14,5 +15,6 @@ public class YearBalanceDTO {
   private BigDecimal expenses;
   private BigDecimal incomes;
   private BigDecimal result;
-  private List<MonthBalanceDTO> monthBalanceDTOList;
+  @JsonProperty("monthBalances")
+  private List<MonthBalanceDTO> monthBalances;
 }

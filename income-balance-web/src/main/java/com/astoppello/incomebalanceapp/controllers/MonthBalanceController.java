@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(MonthBalanceController.BASE_URL)
 public class MonthBalanceController {
 
-  public static final String BASE_URL = "/api/v1/yearBalances/{yearBalanceId}/monthBalances/";
+  public static final String BASE_URL = "/api/v1/yearBalances/{yearBalanceId}/monthBalances";
   private final MonthBalanceService monthBalanceService;
 
   public MonthBalanceController(MonthBalanceService monthBalanceService) {
@@ -24,7 +24,7 @@ public class MonthBalanceController {
     return new MonthBalanceListDTO(monthBalanceService.findAll(yearBalanceId));
   }
 
-  @GetMapping("{monthBalanceId}")
+  @GetMapping("/{monthBalanceId}")
   @ResponseStatus(HttpStatus.OK)
   public MonthBalanceDTO findMonthBalanceById(@PathVariable Long yearBalanceId, @PathVariable Long monthBalanceId) {
     return monthBalanceService.findById(yearBalanceId, monthBalanceId);

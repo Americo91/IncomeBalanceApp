@@ -48,7 +48,7 @@ public class MonthBalanceControllerTest {
     when(monthBalanceService.findAll(anyLong())).thenReturn(monthBalanceDTOS);
     mockMvc
         .perform(
-            get(YearBalanceController.BASE_URL + "/1/monthBalances/")
+            get(YearBalanceController.BASE_URL + "/1/monthBalances")
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.monthbalances", hasSize(2)));
@@ -70,7 +70,7 @@ public class MonthBalanceControllerTest {
     when(monthBalanceService.findByMonth(anyLong(), anyString())).thenReturn(monthBalanceDTO);
     mockMvc
         .perform(
-            post(YearBalanceController.BASE_URL+"/1/monthBalances/")
+            post(YearBalanceController.BASE_URL+"/1/monthBalances")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(AbstractRestControllerTest.asJsonString(MONTH)))
         .andExpect(status().isOk())

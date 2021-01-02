@@ -12,11 +12,11 @@ import org.mapstruct.Mappings;
     componentModel = "spring")
 public interface MonthBalanceMapper {
 
-  @Mapping(source = "bankBalanceDTOList", target = "bankBalanceList")
+  @Mapping(source = "bankBalances", target = "bankBalanceList")
   MonthBalance monthBalanceDtoToMonthBalance(MonthBalanceDTO monthBalanceDto);
 
   @Mappings({
-    @Mapping(source = "bankBalanceList", target = "bankBalanceDTOList"),
+    @Mapping(source = "bankBalanceList", target = "bankBalances"),
     @Mapping(source = "yearBalance.id", target = "yearBalanceId")
   })
   MonthBalanceDTO monthBalanceToMonthBalanceDto(MonthBalance monthBalance);

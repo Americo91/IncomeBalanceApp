@@ -64,7 +64,7 @@ public class YearBalance extends AbstractBalanceEntity {
   public int hashCode() {
     return Objects.hash(super.hashCode(), year, monthBalanceList);
   }
-
+/*
   @Override
   public String toString() {
     return new StringJoiner(", ", YearBalance.class.getSimpleName() + "[", "]")
@@ -72,5 +72,5 @@ public class YearBalance extends AbstractBalanceEntity {
         .add("MonthBalanceList=" + monthBalanceList.toString())
         .add("year=" + year)
         .toString();
-  }
+  }*/
 }

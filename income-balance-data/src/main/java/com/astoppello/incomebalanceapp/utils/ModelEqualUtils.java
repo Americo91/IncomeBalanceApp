@@ -49,7 +49,7 @@ public class ModelEqualUtils {
     assertEquals(monthBalance.getSalary(), monthBalanceDTO.getSalary());
     for (int i = 0; i < monthBalance.getBankBalanceList().size(); i++) {
       assertBankBalanceAndDtoAreEqual(
-          monthBalance.getBankBalanceList().get(i), monthBalanceDTO.getBankBalanceDTOList().get(i));
+          monthBalance.getBankBalanceList().get(i), monthBalanceDTO.getBankBalances().get(i));
     }
   }
 }

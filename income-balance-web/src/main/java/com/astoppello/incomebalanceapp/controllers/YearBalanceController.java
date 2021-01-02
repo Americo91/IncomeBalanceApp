@@ -30,9 +30,17 @@ public class YearBalanceController {
     return yearBalanceService.findById(id);
   }
 
+  /*
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
   public YearBalanceDTO findYearBalanceByYear(@RequestBody Integer year) {
     return yearBalanceService.findYearBalanceByYear(year);
+  }
+   */
+
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public YearBalanceDTO createNewYearBalance(@RequestBody YearBalanceDTO yearBalanceDTO) {
+    return yearBalanceService.createNewYearBalance(yearBalanceDTO);
   }
 }

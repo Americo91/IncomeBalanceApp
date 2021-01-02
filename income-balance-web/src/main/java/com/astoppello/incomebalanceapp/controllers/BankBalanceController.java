@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class BankBalanceController {
 
   public static final String BASE_URL =
-      "/api/v1/yearBalances/{yearBalanceId}/monthBalances/{monthBalanceId}/bankBalances/";
+      "/api/v1/yearBalances/{yearBalanceId}/monthBalances/{monthBalanceId}/bankBalances";
   private final BankBalanceService bankBalanceService;
 
   public BankBalanceController(BankBalanceService bankBalanceService) {
@@ -26,7 +26,7 @@ public class BankBalanceController {
     return new BankBalanceListDTO(bankBalanceService.findAll(yearBalanceId, monthBalanceId));
   }
 
-  @GetMapping("{bankBalanceId}")
+  @GetMapping("/{bankBalanceId}")
   @ResponseStatus(HttpStatus.OK)
   public BankBalanceDTO findBankBalanceById(
       @PathVariable Long yearBalanceId,

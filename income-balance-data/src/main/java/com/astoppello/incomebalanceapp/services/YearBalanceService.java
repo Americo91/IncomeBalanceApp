@@ -14,4 +14,6 @@ public interface YearBalanceService {
   YearBalanceDTO findById(Long id);
 
   YearBalanceDTO findYearBalanceByYear(int year);
+
+  YearBalanceDTO createNewYearBalance(YearBalanceDTO yearBalanceDTO);
 }

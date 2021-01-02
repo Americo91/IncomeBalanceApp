@@ -15,8 +15,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -62,6 +61,7 @@ public class YearBalanceControllerTest {
         .andExpect(jsonPath("$.id", equalTo(1)));
   }
 
+  /*
   @Test
   void findYearBalanceByYear() throws Exception {
     when(yearBalanceService.findYearBalanceByYear(anyInt())).thenReturn(yearBalanceDTO);
@@ -71,6 +71,24 @@ public class YearBalanceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(AbstractRestControllerTest.asJsonString(YEAR)))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$.year", equalTo(YEAR)));
+  }
+  */
+
+  @Test
+  void createNewYearBalance() throws Exception {
+    YearBalanceDTO yearBalanceCreated = new YearBalanceDTO();
+    yearBalanceCreated.setYear(yearBalanceDTO.getYear());
+    yearBalanceCreated.setId(yearBalanceDTO.getId());
+    when(yearBalanceService.createNewYearBalance(yearBalanceDTO))
+        .thenReturn(yearBalanceCreated);
+    mockMvc
+        .perform(
+            post(YearBalanceController.BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(AbstractRestControllerTest.asJsonString(yearBalanceDTO)))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id", equalTo(1)))
         .andExpect(jsonPath("$.year", equalTo(YEAR)));
   }
 }

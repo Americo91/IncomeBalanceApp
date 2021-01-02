@@ -59,7 +59,7 @@ public class BankBalanceControllerTest {
     when(bankBalanceService.findAll(anyLong(), anyLong())).thenReturn(bankBalanceDTOS);
     mockMvc
         .perform(
-            get(YearBalanceController.BASE_URL + "/1/monthBalances/1/bankBalances/")
+            get(YearBalanceController.BASE_URL + "/1/monthBalances/1/bankBalances")
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.bankbalances", hasSize(2)));
@@ -85,7 +85,7 @@ public class BankBalanceControllerTest {
         .thenReturn(bankBalanceDTO);
     mockMvc
         .perform(
-            post(YearBalanceController.BASE_URL + "/1/monthBalances/1/bankBalances/")
+            post(YearBalanceController.BASE_URL + "/1/monthBalances/1/bankBalances")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(AbstractRestControllerTest.asJsonString("Revolut")))
         .andExpect(status().isOk())

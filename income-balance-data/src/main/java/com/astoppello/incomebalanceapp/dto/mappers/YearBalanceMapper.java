@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
     componentModel = "spring")
 public interface YearBalanceMapper {
 
-  @Mapping(source = "monthBalanceDTOList", target = "monthBalanceList")
+  @Mapping(source = "monthBalances", target = "monthBalanceList")
   YearBalance yearBalanceDtoToYearBalance(YearBalanceDTO yearBalanceDTO);
 
   @InheritInverseConfiguration

@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class YearBalanceListDTO {
   @JsonProperty("yearbalances")
-  private List<YearBalanceDTO> yearBalanceDTOList;
+  private List<YearBalanceDTO> yearBalances;
 }
