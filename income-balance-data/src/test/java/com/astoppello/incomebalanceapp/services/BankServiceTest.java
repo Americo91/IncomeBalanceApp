@@ -23,8 +23,7 @@ import static com.astoppello.incomebalanceapp.dto.mappers.BankMapperTest.NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = {BankMapperImpl.class})
@@ -56,8 +55,10 @@ class BankServiceTest {
     BankDTO bankDTO = bankService.findById(ID);
     assertNotNull(bankDTO);
     assertEquals(ID, bankDTO.getId());
+    verify(bankRepository, times(1)).findById(anyLong());
   }
 
+  /*
   @Test
   void findBankByName() {
     when(bankRepository.findBankByName(anyString())).thenReturn(bank);
@@ -65,6 +66,7 @@ class BankServiceTest {
     assertNotNull(bankDTO);
     assertEquals(BankMapperTest.NAME, bankDTO.getName());
   }
+   */
 
   @Test
   void createNewBank() {
@@ -75,5 +77,6 @@ class BankServiceTest {
     assertNotNull(savedBankDto);
     assertNotNull(savedBankDto.getId());
     assertEquals(savedBankDto.getName(), NAME);
+    verify(bankRepository, times(1)).save(any(Bank.class));
   }
 }

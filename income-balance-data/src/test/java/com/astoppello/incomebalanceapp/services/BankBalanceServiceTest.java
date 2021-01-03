@@ -77,6 +77,7 @@ class BankBalanceServiceTest {
     assertEquals(SALARY, bankBalanceDTO.getSalary());
     assertEquals(ID, bankBalanceDTO.getBank().getId());
     assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
+    verify(yearBalanceRepository, times(1)).findById(anyLong());
   }
 
   @Test
@@ -89,5 +90,6 @@ class BankBalanceServiceTest {
     assertEquals(SALARY, bankBalanceDTO.getSalary());
     assertEquals(ID, bankBalanceDTO.getBank().getId());
     assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
+    verify(yearBalanceRepository, times(1)).findById(anyLong());
   }
 }

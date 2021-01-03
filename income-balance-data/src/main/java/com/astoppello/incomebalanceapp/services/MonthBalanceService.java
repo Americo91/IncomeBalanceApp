@@ -13,5 +13,7 @@ public interface MonthBalanceService {
 
   MonthBalanceDTO findById(Long yearBalanceId, Long monthBalanceId);
 
-  MonthBalanceDTO findByMonth(Long yearBalanceId, String month);
+  //MonthBalanceDTO findByMonth(Long yearBalanceId, String month);
+
+  MonthBalanceDTO createNewMonthBalance(Long yearBalanceId, MonthBalanceDTO monthBalanceDTO);
 }

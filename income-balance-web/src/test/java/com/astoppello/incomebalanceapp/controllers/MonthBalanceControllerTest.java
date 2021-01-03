@@ -15,8 +15,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -65,15 +65,31 @@ public class MonthBalanceControllerTest {
         .andExpect(jsonPath("$.id", equalTo(1)));
   }
 
+  /*
   @Test
   void findMonthBalanceByMonth() throws Exception {
     when(monthBalanceService.findByMonth(anyLong(), anyString())).thenReturn(monthBalanceDTO);
     mockMvc
         .perform(
-            post(YearBalanceController.BASE_URL+"/1/monthBalances")
+            post(YearBalanceController.BASE_URL + "/1/monthBalances")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(AbstractRestControllerTest.asJsonString(MONTH)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.month", equalTo(MONTH)));
+  }
+   */
+
+  @Test
+  void createNewMonthBalance() throws Exception {
+    when(monthBalanceService.createNewMonthBalance(anyLong(), any(MonthBalanceDTO.class)))
+        .thenReturn(monthBalanceDTO);
+    mockMvc.perform(
+        post(YearBalanceController.BASE_URL + "/1/monthBalances")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(AbstractRestControllerTest.asJsonString(monthBalanceDTO)))
+    .andExpect(status().isCreated())
+    .andExpect(jsonPath("$.id", equalTo(1)))
+    .andExpect(jsonPath("$.month", equalTo(MONTH)));
+    verify(monthBalanceService).createNewMonthBalance(anyLong(), any(MonthBalanceDTO.class));
   }
 }

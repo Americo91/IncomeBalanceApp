@@ -26,13 +26,22 @@ public class MonthBalanceController {
 
   @GetMapping("/{monthBalanceId}")
   @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceDTO findMonthBalanceById(@PathVariable Long yearBalanceId, @PathVariable Long monthBalanceId) {
+  public MonthBalanceDTO findMonthBalanceById(
+      @PathVariable Long yearBalanceId, @PathVariable Long monthBalanceId) {
     return monthBalanceService.findById(yearBalanceId, monthBalanceId);
   }
 
+  /*
   @PostMapping()
   @ResponseStatus(HttpStatus.OK)
   public MonthBalanceDTO findMonthBalanceByMonth(@PathVariable Long yearBalanceId, @RequestBody String month) {
     return monthBalanceService.findByMonth(yearBalanceId, month);
+  }
+  */
+
+  @PostMapping()
+  @ResponseStatus(HttpStatus.CREATED)
+  public MonthBalanceDTO createNewMonthBalance(@PathVariable Long yearBalanceId, @RequestBody MonthBalanceDTO monthBalanceDTO) {
+    return monthBalanceService.createNewMonthBalance(yearBalanceId, monthBalanceDTO);
   }
 }

@@ -55,7 +55,6 @@ class YearBalanceServiceTest {
   void findAllYearBalance() {
     List<YearBalance> list = List.of(yearBalance, YearBalance.builder().build());
     when(yearBalanceRepository.findAll()).thenReturn(list);
-
     assertEquals(list.size(), yearBalanceService.findAll().size());
     verify(yearBalanceRepository).findAll();
   }
