@@ -30,9 +30,17 @@ public class BankController {
     return bankService.findById(id);
   }
 
+  /*
   @PostMapping()
   @ResponseStatus(HttpStatus.OK)
   public BankDTO findBankByName(@RequestBody String name) {
     return bankService.findBankByName(name);
+  }
+   */
+
+  @PostMapping()
+  @ResponseStatus(HttpStatus.CREATED)
+  public BankDTO createNewBank(@RequestBody BankDTO bankDTO) {
+    return bankService.createNewBank(bankDTO);
   }
 }

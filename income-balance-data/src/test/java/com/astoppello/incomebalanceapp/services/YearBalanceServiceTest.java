@@ -82,12 +82,12 @@ class YearBalanceServiceTest {
 
   @Test
   void createNewYearBalance() {
+    yearBalance.setExpenses(new BigDecimal(200));
     YearBalanceDTO yearBalanceDTO = new YearBalanceDTO();
     yearBalanceDTO.setId(ID);
     yearBalanceDTO.setYear(YEAR);
     yearBalanceDTO.setExpenses(new BigDecimal(200));
-    when(yearBalanceRepository.save(any(YearBalance.class)))
-        .thenReturn(yearBalanceMapper.yearBalanceDtoToYearBalance(yearBalanceDTO));
+    when(yearBalanceRepository.save(any(YearBalance.class))).thenReturn(yearBalance);
 
     YearBalanceDTO savedDto = yearBalanceService.createNewYearBalance(yearBalanceDTO);
     assertNotNull(savedDto);

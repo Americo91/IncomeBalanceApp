@@ -47,4 +47,14 @@ public class BankServiceImpl implements BankService {
         }
         return bankMapper.bankToBankDto(bank);
     }
+
+    @Override
+    public BankDTO createNewBank(BankDTO bankDTO) {
+        return saveAndReturnDto(bankMapper.bankDtoToBank(bankDTO));
+    }
+
+    private BankDTO saveAndReturnDto(Bank bank) {
+      Bank savedBank = repository.save(bank);
+      return bankMapper.bankToBankDto(savedBank);
+    }
 }

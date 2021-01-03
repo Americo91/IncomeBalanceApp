@@ -12,4 +12,6 @@ public interface BankService {
   BankDTO findById(Long id);
 
   BankDTO findBankByName(String name);
+
+  BankDTO createNewBank(BankDTO bankDTO);
 }

@@ -18,10 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
+import static com.astoppello.incomebalanceapp.dto.mappers.BankMapperTest.ID;
+import static com.astoppello.incomebalanceapp.dto.mappers.BankMapperTest.NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +39,7 @@ class BankServiceTest {
   void setUp() {
     MockitoAnnotations.openMocks(this);
     bankService = new BankServiceImpl(bankRepository, bankMapper);
-    bank = Bank.builder().id(BankMapperTest.ID).name(BankMapperTest.NAME).build();
+    bank = Bank.builder().id(ID).name(BankMapperTest.NAME).build();
   }
 
   @Test
@@ -52,16 +53,27 @@ class BankServiceTest {
   @Test
   void findBankById() {
     when(bankRepository.findById(anyLong())).thenReturn(Optional.of(bank));
-    BankDTO bankDTO = bankService.findById(anyLong());
+    BankDTO bankDTO = bankService.findById(ID);
     assertNotNull(bankDTO);
-    assertEquals(BankMapperTest.ID, bankDTO.getId());
+    assertEquals(ID, bankDTO.getId());
   }
 
   @Test
   void findBankByName() {
     when(bankRepository.findBankByName(anyString())).thenReturn(bank);
-    BankDTO bankDTO = bankService.findBankByName(anyString());
+    BankDTO bankDTO = bankService.findBankByName(NAME);
     assertNotNull(bankDTO);
     assertEquals(BankMapperTest.NAME, bankDTO.getName());
+  }
+
+  @Test
+  void createNewBank() {
+    BankDTO bankDTO = new BankDTO();
+    bankDTO.setName(NAME);
+    when(bankRepository.save(any(Bank.class))).thenReturn(bank);
+    BankDTO savedBankDto = bankService.createNewBank(bankDTO);
+    assertNotNull(savedBankDto);
+    assertNotNull(savedBankDto.getId());
+    assertEquals(savedBankDto.getName(), NAME);
   }
 }

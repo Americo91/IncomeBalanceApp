@@ -159,4 +159,25 @@ public class ControllerIntegrationTest {
     assertNotNull(monthBalanceDTO);
     assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
   }
+
+  @Test
+  void createNewYearBalance() {
+    YearBalanceDTO yearBalanceDTO = new YearBalanceDTO();
+    yearBalanceDTO.setYear(2021);
+    YearBalanceDTO savedYearBalanceDto = yearBalanceService.createNewYearBalance(yearBalanceDTO);
+    assertNotNull(savedYearBalanceDto);
+    assertNotNull(savedYearBalanceDto.getId());
+    assertEquals(savedYearBalanceDto.getYear(), 2021);
+  }
+
+  @Test
+  void createNewBank() {
+    String bankName = "Revolut";
+    BankDTO bankDTO = new BankDTO();
+    bankDTO.setName(bankName);
+    BankDTO savedBankDto = bankService.createNewBank(bankDTO);
+    assertNotNull(savedBankDto);
+    assertNotNull(savedBankDto.getId());
+    assertEquals(savedBankDto.getName(), bankName);
+  }
 }
