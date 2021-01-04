@@ -8,7 +8,10 @@ import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
+import com.astoppello.incomebalanceapp.repositories.BankBalanceRepository;
+import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
+import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-import java.time.Month;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,12 +41,21 @@ class BankBalanceServiceTest {
   @Autowired BankBalanceMapper bankBalanceMapper;
   BankBalanceService service;
   @Mock YearBalanceRepository yearBalanceRepository;
+  @Mock BankBalanceRepository bankBalanceRepository;
+  @Mock MonthBalanceRepository monthBalanceRepository;
   private YearBalance yearBalance;
+  private MonthBalance monthBalance;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    service = new BankBalanceServiceImpl(bankBalanceMapper, yearBalanceRepository);
+    service =
+        new BankBalanceServiceImpl(
+            bankBalanceRepository,
+            bankBalanceMapper,
+            monthBalanceRepository,
+            yearBalanceRepository);
+    monthBalance = MonthBalance.builder().id(ID).build();
     bankBalance =
         BankBalance.builder()
             .bank(Bank.builder().id(ID).name(REVOLUT).build())
@@ -57,7 +67,7 @@ class BankBalanceServiceTest {
         YearBalance.builder()
             .id(ID)
             .build()
-            .addMonthBalance(MonthBalance.builder().id(ID).build().addBankBalance(bankBalance));
+            .addMonthBalance(monthBalance.addBankBalance(bankBalance));
   }
 
   @Test
@@ -69,15 +79,15 @@ class BankBalanceServiceTest {
 
   @Test
   void findById() {
-    when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.of(yearBalance));
-    BankBalanceDTO bankBalanceDTO = service.findById(ID, ID, ID);
+    when(bankBalanceRepository.findById(anyLong())).thenReturn(Optional.of(bankBalance));
+    BankBalanceDTO bankBalanceDTO = service.findById(ID);
     assertNotNull(bankBalanceDTO);
     assertEquals(ID, bankBalanceDTO.getId());
     assertEquals(EXPENSES, bankBalanceDTO.getExpenses());
     assertEquals(SALARY, bankBalanceDTO.getSalary());
     assertEquals(ID, bankBalanceDTO.getBank().getId());
     assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
-    verify(yearBalanceRepository, times(1)).findById(anyLong());
+    verify(bankBalanceRepository, times(1)).findById(anyLong());
   }
 
   @Test
@@ -91,5 +101,20 @@ class BankBalanceServiceTest {
     assertEquals(ID, bankBalanceDTO.getBank().getId());
     assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
     verify(yearBalanceRepository, times(1)).findById(anyLong());
+  }
+
+  @Test
+  void createNewBankBalance() {
+    BankBalanceDTO bankBalanceDTO = bankBalanceMapper.bankBalanceToBankBalanceDTO(bankBalance);
+    when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
+    when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(monthBalance));
+    BankBalanceDTO savedBankBalanceDto = service.createNewBankBalance(bankBalanceDTO);
+    assertNotNull(savedBankBalanceDto);
+    // assertEquals(ID, bankBalanceDTO.getId());
+    ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, savedBankBalanceDto);
+    verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
+    assertNotNull(savedBankBalanceDto.getMonthBalanceId());
+    verify(monthBalanceRepository).findById(anyLong());
+    verify(monthBalanceRepository).save(any(MonthBalance.class));
   }
 }

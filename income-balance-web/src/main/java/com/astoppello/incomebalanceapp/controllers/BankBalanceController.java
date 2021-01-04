@@ -32,9 +32,10 @@ public class BankBalanceController {
       @PathVariable Long yearBalanceId,
       @PathVariable Long monthBalanceId,
       @PathVariable Long bankBalanceId) {
-    return bankBalanceService.findById(yearBalanceId, monthBalanceId, bankBalanceId);
+    return bankBalanceService.findById(bankBalanceId);
   }
 
+  /*
   @PostMapping()
   @ResponseStatus(HttpStatus.OK)
   public BankBalanceDTO findBankBalanceByName(
@@ -42,5 +43,12 @@ public class BankBalanceController {
       @PathVariable Long monthBalanceId,
       @RequestBody String bankName) {
     return bankBalanceService.findByBankName(yearBalanceId, monthBalanceId, bankName);
+  }
+   */
+
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public BankBalanceDTO createNewBankBalance(@RequestBody BankBalanceDTO bankBalanceDTO) {
+    return bankBalanceService.createNewBankBalance(bankBalanceDTO);
   }
 }

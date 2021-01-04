@@ -63,10 +63,17 @@ public class ControllerIntegrationTest {
         new Bootstrap(
             yearBalanceRepository, bankRepository, bankBalanceRepository, monthBalanceRepository);
     bootstrap.run();
-    bankBalanceService = new BankBalanceServiceImpl(bankBalanceMapper, yearBalanceRepository);
+    bankBalanceService =
+        new BankBalanceServiceImpl(
+            bankBalanceRepository,
+            bankBalanceMapper,
+            monthBalanceRepository,
+            yearBalanceRepository);
     yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper);
     bankService = new BankServiceImpl(bankRepository, bankMapper);
-    monthBalanceService = new MonthBalanceServiceImpl(monthBalanceRepository, monthBalanceMapper, yearBalanceRepository);
+    monthBalanceService =
+        new MonthBalanceServiceImpl(
+            monthBalanceRepository, monthBalanceMapper, yearBalanceRepository);
   }
 
   @Test
@@ -77,7 +84,7 @@ public class ControllerIntegrationTest {
   @Test
   void getBankBalanceByIdTest() {
     BankBalance bankBalance = bankBalanceRepository.findById(1L).get();
-    BankBalanceDTO bankBalanceDTO = bankBalanceService.findById(3L, 3L, 1L);
+    BankBalanceDTO bankBalanceDTO = bankBalanceService.findById(1L);
     assertNotNull(bankBalanceDTO);
     assertBankBalanceAndDtoAreEqual(bankBalance, bankBalanceDTO);
   }
@@ -187,7 +194,8 @@ public class ControllerIntegrationTest {
   void createNewMonthBalance() {
     MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
     monthBalanceDTO.setMonth("September");
-    MonthBalanceDTO savedMonthBalanceDto = monthBalanceService.createNewMonthBalance(1L, monthBalanceDTO);
+    MonthBalanceDTO savedMonthBalanceDto =
+        monthBalanceService.createNewMonthBalance(1L, monthBalanceDTO);
     assertNotNull(savedMonthBalanceDto);
     assertNotNull(savedMonthBalanceDto.getId());
     assertEquals(1, savedMonthBalanceDto.getYearBalanceId());

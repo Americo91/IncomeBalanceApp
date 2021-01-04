@@ -16,6 +16,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,6 +50,7 @@ public class YearBalanceControllerTest {
         .perform(get(YearBalanceController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.yearbalances", hasSize(2)));
+    verify(yearBalanceService).findAll();
   }
 
   @Test
@@ -59,6 +61,7 @@ public class YearBalanceControllerTest {
             get(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)));
+    verify(yearBalanceService).findById(anyLong());
   }
 
   /*
@@ -90,5 +93,6 @@ public class YearBalanceControllerTest {
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id", equalTo(1)))
         .andExpect(jsonPath("$.year", equalTo(YEAR)));
+    verify(yearBalanceService).createNewYearBalance(any(YearBalanceDTO.class));
   }
 }

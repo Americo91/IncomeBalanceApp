@@ -52,6 +52,7 @@ public class MonthBalanceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.monthbalances", hasSize(2)));
+    verify(monthBalanceService).findAll(anyLong());
   }
 
   @Test
@@ -63,6 +64,7 @@ public class MonthBalanceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)));
+    verify(monthBalanceService).findById(anyLong(), anyLong());
   }
 
   /*

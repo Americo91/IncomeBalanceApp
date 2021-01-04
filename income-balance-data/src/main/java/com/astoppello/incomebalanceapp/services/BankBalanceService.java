@@ -11,7 +11,9 @@ public interface BankBalanceService {
 
   List<BankBalanceDTO> findAll(Long yearBalanceId, Long monthBalanceId);
 
-  BankBalanceDTO findById(Long yearBalanceId, Long monthBalanceId, Long bankBalanceId);
+  BankBalanceDTO findById(Long bankBalanceId);
 
   BankBalanceDTO findByBankName(Long yearBalanceId, Long monthBalanceId, String bankName);
+
+  BankBalanceDTO createNewBankBalance(BankBalanceDTO bankBalanceDTO);
 }

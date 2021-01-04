@@ -103,6 +103,7 @@ class MonthBalanceServiceTest {
     MonthBalanceDTO savedMonthBalance =
         monthBalanceService.createNewMonthBalance(yearBalance.getId(), monthBalanceDTO);
     assertNotNull(savedMonthBalance);
+    //assertNotNull(savedMonthBalance.getId());
     assertNotNull(savedMonthBalance.getYearBalanceId());
     assertEquals(savedMonthBalance.getExpenses(), EXPENSES);
     assertEquals(savedMonthBalance.getMonth(), MONTH);

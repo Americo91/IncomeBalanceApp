@@ -2,10 +2,6 @@ package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.BankBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.BankDTO;
-import com.astoppello.incomebalanceapp.model.Bank;
-import com.astoppello.incomebalanceapp.model.BankBalance;
-import com.astoppello.incomebalanceapp.model.MonthBalance;
-import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.services.BankBalanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +17,9 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,11 +60,12 @@ public class BankBalanceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.bankbalances", hasSize(2)));
+    verify(bankBalanceService).findAll(anyLong(), anyLong());
   }
 
   @Test
   void findBankBalanceById() throws Exception {
-    when(bankBalanceService.findById(anyLong(), anyLong(), anyLong())).thenReturn(bankBalanceDTO);
+    when(bankBalanceService.findById(anyLong())).thenReturn(bankBalanceDTO);
     mockMvc
         .perform(
             get(YearBalanceController.BASE_URL + "/1/monthBalances/1/bankBalances/1")
@@ -77,8 +75,27 @@ public class BankBalanceControllerTest {
         .andExpect(jsonPath("$.result", equalTo(100)))
         .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)))
         .andExpect(jsonPath("$.bank.id", equalTo(1)));
+    verify(bankBalanceService).findById(anyLong());
   }
 
+  @Test
+  void createNewBankBalance() throws Exception {
+    when(bankBalanceService.createNewBankBalance(any(BankBalanceDTO.class)))
+        .thenReturn(bankBalanceDTO);
+    mockMvc
+        .perform(
+            post(YearBalanceController.BASE_URL + "/1/monthBalances/1/bankBalances/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id", equalTo(1)))
+        .andExpect(jsonPath("$.result", equalTo(RESULT.intValue())))
+        .andExpect(jsonPath("$.monthBalanceId", equalTo(1)))
+        .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)));
+    verify(bankBalanceService).createNewBankBalance(any(BankBalanceDTO.class));
+  }
+
+  /*
   @Test
   void findBankBalanceByBankName() throws Exception {
     when(bankBalanceService.findByBankName(anyLong(), anyLong(), anyString()))
@@ -94,4 +111,5 @@ public class BankBalanceControllerTest {
         .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)))
         .andExpect(jsonPath("$.bank.id", equalTo(1)));
   }
+   */
 }
