@@ -58,7 +58,6 @@ class BankServiceTest {
     verify(bankRepository, times(1)).findById(anyLong());
   }
 
-  /*
   @Test
   void findBankByName() {
     when(bankRepository.findBankByName(anyString())).thenReturn(bank);
@@ -66,7 +65,6 @@ class BankServiceTest {
     assertNotNull(bankDTO);
     assertEquals(BankMapperTest.NAME, bankDTO.getName());
   }
-   */
 
   @Test
   void createNewBank() {

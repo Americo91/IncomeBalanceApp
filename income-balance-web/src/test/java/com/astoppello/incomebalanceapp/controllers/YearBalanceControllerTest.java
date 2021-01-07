@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class YearBalanceControllerTest {
 
-  private final int YEAR = 2002;
+  private final int YEAR = 2020;
   private final Long ID = 1L;
 
   @InjectMocks YearBalanceController yearBalanceController;
@@ -47,9 +47,9 @@ public class YearBalanceControllerTest {
     List<YearBalanceDTO> yearBalances = List.of(new YearBalanceDTO(), new YearBalanceDTO());
     when(yearBalanceService.findAll()).thenReturn(yearBalances);
     mockMvc
-        .perform(get(YearBalanceController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
+        .perform(get(YearBalanceController.BASE_URL + "/").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.yearbalances", hasSize(2)));
+        .andExpect(jsonPath("$.yearBalances", hasSize(2)));
     verify(yearBalanceService).findAll();
   }
 
@@ -64,27 +64,23 @@ public class YearBalanceControllerTest {
     verify(yearBalanceService).findById(anyLong());
   }
 
-  /*
   @Test
   void findYearBalanceByYear() throws Exception {
     when(yearBalanceService.findYearBalanceByYear(anyInt())).thenReturn(yearBalanceDTO);
     mockMvc
         .perform(
-            post(YearBalanceController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(AbstractRestControllerTest.asJsonString(YEAR)))
+            get(YearBalanceController.BASE_URL + "?year=2020")
+                .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.year", equalTo(YEAR)));
   }
-  */
 
   @Test
   void createNewYearBalance() throws Exception {
     YearBalanceDTO yearBalanceCreated = new YearBalanceDTO();
     yearBalanceCreated.setYear(yearBalanceDTO.getYear());
     yearBalanceCreated.setId(yearBalanceDTO.getId());
-    when(yearBalanceService.createNewYearBalance(yearBalanceDTO))
-        .thenReturn(yearBalanceCreated);
+    when(yearBalanceService.createNewYearBalance(yearBalanceDTO)).thenReturn(yearBalanceCreated);
     mockMvc
         .perform(
             post(YearBalanceController.BASE_URL)

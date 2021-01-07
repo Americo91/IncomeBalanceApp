@@ -8,40 +8,40 @@ import org.springframework.web.bind.annotation.*;
 
 /** Created by @author stopp on 20/12/2020 */
 @RestController
-@RequestMapping(MonthBalanceController.BASE_URL)
 public class MonthBalanceController {
 
-  public static final String BASE_URL = "/api/v1/yearBalances/{yearBalanceId}/monthBalances";
+  public static final String BASE_URL_BY_ID = "/api/v1/yearBalances/{yearBalanceId}/monthBalances";
+  public static final String BASE_URL = "/api/v1/monthBalances";
   private final MonthBalanceService monthBalanceService;
 
   public MonthBalanceController(MonthBalanceService monthBalanceService) {
     this.monthBalanceService = monthBalanceService;
   }
 
-  @GetMapping()
+  @GetMapping(BASE_URL_BY_ID + "/")
   @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceListDTO findAllMonthBalance(@PathVariable Long yearBalanceId) {
-    return new MonthBalanceListDTO(monthBalanceService.findAll(yearBalanceId));
+  public MonthBalanceListDTO findAllMonthBalanceById(
+      @PathVariable(name = "yearBalanceId") Long yearBalanceId) {
+    return new MonthBalanceListDTO(monthBalanceService.findAllById(yearBalanceId));
   }
 
-  @GetMapping("/{monthBalanceId}")
+  @GetMapping(BASE_URL_BY_ID + "/{monthBalanceId}")
   @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceDTO findMonthBalanceById(
+  public MonthBalanceDTO findMonthBalanceOfYearById(
       @PathVariable Long yearBalanceId, @PathVariable Long monthBalanceId) {
-    return monthBalanceService.findById(yearBalanceId, monthBalanceId);
+    return monthBalanceService.findMonthOfYearById(yearBalanceId, monthBalanceId);
   }
 
-  /*
-  @PostMapping()
-  @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceDTO findMonthBalanceByMonth(@PathVariable Long yearBalanceId, @RequestBody String month) {
-    return monthBalanceService.findByMonth(yearBalanceId, month);
-  }
-  */
-
-  @PostMapping()
+  @PostMapping(BASE_URL_BY_ID)
   @ResponseStatus(HttpStatus.CREATED)
-  public MonthBalanceDTO createNewMonthBalance(@PathVariable Long yearBalanceId, @RequestBody MonthBalanceDTO monthBalanceDTO) {
-    return monthBalanceService.createNewMonthBalance(yearBalanceId, monthBalanceDTO);
+  public MonthBalanceDTO createNewMonthBalanceById(
+      @PathVariable Long yearBalanceId, @RequestBody MonthBalanceDTO monthBalanceDTO) {
+    return monthBalanceService.createNewMonthBalanceById(yearBalanceId, monthBalanceDTO);
+  }
+
+  @GetMapping(BASE_URL)
+  @ResponseStatus(HttpStatus.OK)
+  public MonthBalanceListDTO findMonthBalanceByMonth(@RequestParam String month) {
+    return new MonthBalanceListDTO(monthBalanceService.findByMonth(month));
   }
 }

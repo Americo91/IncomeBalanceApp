@@ -45,53 +45,52 @@ public class MonthBalanceControllerTest {
   @Test
   void findAllMonthBalance() throws Exception {
     List<MonthBalanceDTO> monthBalanceDTOS = List.of(new MonthBalanceDTO(), new MonthBalanceDTO());
-    when(monthBalanceService.findAll(anyLong())).thenReturn(monthBalanceDTOS);
+    when(monthBalanceService.findAllById(anyLong())).thenReturn(monthBalanceDTOS);
     mockMvc
         .perform(
-            get(YearBalanceController.BASE_URL + "/1/monthBalances")
+            get(YearBalanceController.BASE_URL + "/1/monthBalances/")
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.monthbalances", hasSize(2)));
-    verify(monthBalanceService).findAll(anyLong());
+        .andExpect(jsonPath("$.monthBalances", hasSize(2)));
+    verify(monthBalanceService).findAllById(anyLong());
   }
 
   @Test
   void findMonthBalanceById() throws Exception {
-    when(monthBalanceService.findById(anyLong(), anyLong())).thenReturn(monthBalanceDTO);
+    when(monthBalanceService.findMonthOfYearById(anyLong(), anyLong())).thenReturn(monthBalanceDTO);
     mockMvc
         .perform(
             get(YearBalanceController.BASE_URL + "/1/monthBalances/" + ID)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)));
-    verify(monthBalanceService).findById(anyLong(), anyLong());
+    verify(monthBalanceService).findMonthOfYearById(anyLong(), anyLong());
   }
 
-  /*
   @Test
   void findMonthBalanceByMonth() throws Exception {
-    when(monthBalanceService.findByMonth(anyLong(), anyString())).thenReturn(monthBalanceDTO);
+    when(monthBalanceService.findByMonth(anyString())).thenReturn(List.of(monthBalanceDTO));
+    mockMvc
+        .perform(
+            get(MonthBalanceController.BASE_URL + "?month=September")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(AbstractRestControllerTest.asJsonString(MONTH)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.monthBalances.[0].month", equalTo(MONTH)));
+  }
+
+  @Test
+  void createNewMonthBalance() throws Exception {
+    when(monthBalanceService.createNewMonthBalanceById(anyLong(), any(MonthBalanceDTO.class)))
+        .thenReturn(monthBalanceDTO);
     mockMvc
         .perform(
             post(YearBalanceController.BASE_URL + "/1/monthBalances")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(AbstractRestControllerTest.asJsonString(MONTH)))
-        .andExpect(status().isOk())
+                .content(AbstractRestControllerTest.asJsonString(monthBalanceDTO)))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id", equalTo(1)))
         .andExpect(jsonPath("$.month", equalTo(MONTH)));
-  }
-   */
-
-  @Test
-  void createNewMonthBalance() throws Exception {
-    when(monthBalanceService.createNewMonthBalance(anyLong(), any(MonthBalanceDTO.class)))
-        .thenReturn(monthBalanceDTO);
-    mockMvc.perform(
-        post(YearBalanceController.BASE_URL + "/1/monthBalances")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(AbstractRestControllerTest.asJsonString(monthBalanceDTO)))
-    .andExpect(status().isCreated())
-    .andExpect(jsonPath("$.id", equalTo(1)))
-    .andExpect(jsonPath("$.month", equalTo(MONTH)));
-    verify(monthBalanceService).createNewMonthBalance(anyLong(), any(MonthBalanceDTO.class));
+    verify(monthBalanceService).createNewMonthBalanceById(anyLong(), any(MonthBalanceDTO.class));
   }
 }

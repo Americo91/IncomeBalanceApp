@@ -30,20 +30,16 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
     this.yearBalanceRepository = yearBalanceRepository;
   }
 
-  /*
   @Override
-  public MonthBalanceDTO findByMonth(Long yearBalanceId, String month) {
-    return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceList())
-        .stream()
+  public List<MonthBalanceDTO> findByMonth(String month) {
+    return monthBalanceRepository.findAll().stream()
         .filter(monthBalance -> month.equals(monthBalance.getMonth()))
-        .findFirst()
         .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
-        .orElseThrow(() -> new ResourceNotFoundException(MONTH_BALANCE_NOT_FOUND + month));
+        .collect(Collectors.toList());
   }
-   */
 
   @Override
-  public MonthBalanceDTO createNewMonthBalance(
+  public MonthBalanceDTO createNewMonthBalanceById(
       Long yearBalanceId, MonthBalanceDTO monthBalanceDTO) {
     YearBalance yearBalance = getYearBalanceById(yearBalanceId);
     return savedAndReturnDto(
@@ -58,7 +54,7 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
   }
 
   @Override
-  public List<MonthBalanceDTO> findAll(Long yearBalanceId) {
+  public List<MonthBalanceDTO> findAllById(Long yearBalanceId) {
     return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceList())
         .stream()
         .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
@@ -66,7 +62,7 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
   }
 
   @Override
-  public MonthBalanceDTO findById(Long yearBalanceId, Long monthBalanceId) {
+  public MonthBalanceDTO findMonthOfYearById(Long yearBalanceId, Long monthBalanceId) {
     return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceList())
         .stream()
         .filter(monthBalance -> monthBalanceId.equals(monthBalance.getId()))

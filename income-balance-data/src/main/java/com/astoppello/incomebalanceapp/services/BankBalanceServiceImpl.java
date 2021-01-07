@@ -40,12 +40,19 @@ public class BankBalanceServiceImpl implements BankBalanceService {
   }
 
   @Override
-  public List<BankBalanceDTO> findAll(Long yearBalanceId, Long monthBalanceId) {
+  public List<BankBalanceDTO> findAllById(Long yearBalanceId, Long monthBalanceId) {
     return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceList())
         .stream()
         .filter(monthBalance -> monthBalanceId.equals(monthBalance.getId()))
         .map(MonthBalance::getBankBalanceList)
         .flatMap(Collection::stream)
+        .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<BankBalanceDTO> findAll() {
+    return bankBalanceRepository.findAll().stream()
         .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)
         .collect(Collectors.toList());
   }
@@ -59,17 +66,12 @@ public class BankBalanceServiceImpl implements BankBalanceService {
   }
 
   @Override
-  public BankBalanceDTO findByBankName(Long yearBalanceId, Long monthBalanceId, String bankName) {
-    return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceList())
-        .stream()
-        .filter(monthBalance -> monthBalanceId.equals(monthBalance.getId()))
-        .map(MonthBalance::getBankBalanceList)
-        .flatMap(Collection::stream)
+  public List<BankBalanceDTO> findByBankName(String bankName) {
+    return bankBalanceRepository.findAll().stream()
         .filter(bankBalance -> Objects.nonNull(bankBalance.getBank()))
         .filter(bankBalance -> bankName.equals(bankBalance.getBank().getName()))
-        .findFirst()
         .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)
-        .orElseThrow(() -> new ResourceNotFoundException(BANK_BALANCE_NOT_FOUND + bankName));
+        .collect(Collectors.toList());
   }
 
   @Override

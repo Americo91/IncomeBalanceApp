@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class YearBalanceListDTO {
-  @JsonProperty("yearbalances")
+  @JsonProperty("yearBalances")
   private List<YearBalanceDTO> yearBalances;
 }

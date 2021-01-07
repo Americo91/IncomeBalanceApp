@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class BankBalanceListDTO {
-  @JsonProperty("bankbalances")
+  @JsonProperty("bankBalances")
   List<BankBalanceDTO> bankBalances;
 }

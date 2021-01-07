@@ -70,7 +70,7 @@ class MonthBalanceServiceTest {
   @Test
   void findById() {
     when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.of(yearBalance));
-    MonthBalanceDTO monthBalanceDTO = monthBalanceService.findById(ID, ID);
+    MonthBalanceDTO monthBalanceDTO = monthBalanceService.findMonthOfYearById(ID, ID);
     assertNotNull(monthBalanceDTO);
     ModelEqualUtils.assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
     verify(yearBalanceRepository, times(1)).findById(anyLong());
@@ -79,7 +79,7 @@ class MonthBalanceServiceTest {
   @Test
   void findAll() {
     when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
-    assertEquals(yearBalance.getMonthBalanceList().size(), monthBalanceService.findAll(ID).size());
+    assertEquals(yearBalance.getMonthBalanceList().size(), monthBalanceService.findAllById(ID).size());
     verify(yearBalanceRepository, times(1)).findById(anyLong());
   }
 
@@ -101,7 +101,7 @@ class MonthBalanceServiceTest {
 
     //then
     MonthBalanceDTO savedMonthBalance =
-        monthBalanceService.createNewMonthBalance(yearBalance.getId(), monthBalanceDTO);
+        monthBalanceService.createNewMonthBalanceById(yearBalance.getId(), monthBalanceDTO);
     assertNotNull(savedMonthBalance);
     //assertNotNull(savedMonthBalance.getId());
     assertNotNull(savedMonthBalance.getYearBalanceId());

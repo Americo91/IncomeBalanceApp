@@ -9,11 +9,11 @@ public interface MonthBalanceService {
 
   String MONTH_BALANCE_NOT_FOUND = "MonthBalace not found:";
 
-  List<MonthBalanceDTO> findAll(Long yearBalanceId);
+  List<MonthBalanceDTO> findAllById(Long yearBalanceId);
 
-  MonthBalanceDTO findById(Long yearBalanceId, Long monthBalanceId);
+  MonthBalanceDTO findMonthOfYearById(Long yearBalanceId, Long monthBalanceId);
 
-  //MonthBalanceDTO findByMonth(Long yearBalanceId, String month);
+  List<MonthBalanceDTO> findByMonth(String month);
 
-  MonthBalanceDTO createNewMonthBalance(Long yearBalanceId, MonthBalanceDTO monthBalanceDTO);
+  MonthBalanceDTO createNewMonthBalanceById(Long yearBalanceId, MonthBalanceDTO monthBalanceDTO);
 }

@@ -9,11 +9,13 @@ public interface BankBalanceService {
 
   String BANK_BALANCE_NOT_FOUND = "BankBalance not found: ";
 
-  List<BankBalanceDTO> findAll(Long yearBalanceId, Long monthBalanceId);
+  List<BankBalanceDTO> findAllById(Long yearBalanceId, Long monthBalanceId);
+
+  List<BankBalanceDTO> findAll();
 
   BankBalanceDTO findById(Long bankBalanceId);
 
-  BankBalanceDTO findByBankName(Long yearBalanceId, Long monthBalanceId, String bankName);
+  List<BankBalanceDTO> findByBankName(String bankName);
 
   BankBalanceDTO createNewBankBalance(BankBalanceDTO bankBalanceDTO);
 }

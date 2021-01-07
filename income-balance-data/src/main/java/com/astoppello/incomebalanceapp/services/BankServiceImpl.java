@@ -18,8 +18,9 @@ public class BankServiceImpl implements BankService {
 
     private final BankRepository repository;
     private final BankMapper bankMapper;
+    public static final String BANK_NOT_FOUND = "Bank not found. Name: ";
 
-  public BankServiceImpl(BankRepository repository, BankMapper bankMapper) {
+    public BankServiceImpl(BankRepository repository, BankMapper bankMapper) {
         this.repository = repository;
         this.bankMapper = bankMapper;
     }
@@ -43,7 +44,7 @@ public class BankServiceImpl implements BankService {
     public BankDTO findBankByName(String name) {
         Bank bank = repository.findBankByName(name);
         if (bank == null) {
-            throw new ResourceNotFoundException("Bank not found. Name: " + name);
+            throw new ResourceNotFoundException(BANK_NOT_FOUND + name);
         }
         return bankMapper.bankToBankDto(bank);
     }
