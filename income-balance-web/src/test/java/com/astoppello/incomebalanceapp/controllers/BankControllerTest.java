@@ -46,7 +46,7 @@ public class BankControllerTest {
     List<BankDTO> bankDTOS = List.of(new BankDTO(), new BankDTO());
     when(bankService.findAll()).thenReturn(bankDTOS);
     mockMvc
-        .perform(get(BankController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
+        .perform(get(BankController.BASE_URL+"/").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.banks", hasSize(2)));
     verify(bankService).findAll();
@@ -62,19 +62,14 @@ public class BankControllerTest {
     verify(bankService).findById(anyLong());
   }
 
-  /*
   @Test
   void findBankByName() throws Exception {
     when(bankService.findBankByName(anyString())).thenReturn(bankDTO);
     mockMvc
-        .perform(
-            post(BankController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(AbstractRestControllerTest.asJsonString(NAME)))
+        .perform(get(BankController.BASE_URL+"?name="+NAME).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name", equalTo(NAME)));
   }
-  */
 
   @Test
   void createNewBank() throws Exception {

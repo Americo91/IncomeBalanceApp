@@ -18,7 +18,7 @@ public class BankController {
     this.bankService = bankService;
   }
 
-  @GetMapping
+  @GetMapping("/")
   @ResponseStatus(HttpStatus.OK)
   public BankListDTO findAllBanks() {
     return new BankListDTO(bankService.findAll());
@@ -30,13 +30,12 @@ public class BankController {
     return bankService.findById(id);
   }
 
-  /*
-  @PostMapping()
+
+  @GetMapping()
   @ResponseStatus(HttpStatus.OK)
-  public BankDTO findBankByName(@RequestBody String name) {
+  public BankDTO findBankByName(@RequestParam String name) {
     return bankService.findBankByName(name);
   }
-   */
 
   @PostMapping()
   @ResponseStatus(HttpStatus.CREATED)

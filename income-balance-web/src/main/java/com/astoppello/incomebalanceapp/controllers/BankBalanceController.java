@@ -8,45 +8,43 @@ import org.springframework.web.bind.annotation.*;
 
 /** Created by @author stopp on 28/11/2020 */
 @RestController
-@RequestMapping(BankBalanceController.BASE_URL)
 public class BankBalanceController {
 
-  public static final String BASE_URL =
+  public static final String BASE_URL_BY_ID =
       "/api/v1/yearBalances/{yearBalanceId}/monthBalances/{monthBalanceId}/bankBalances";
+  public static final String BASE_URL = "/api/v1/bankBalances";
   private final BankBalanceService bankBalanceService;
 
   public BankBalanceController(BankBalanceService bankBalanceService) {
     this.bankBalanceService = bankBalanceService;
   }
 
-  @GetMapping()
+  @GetMapping(BASE_URL_BY_ID + "/")
   @ResponseStatus(HttpStatus.OK)
-  public BankBalanceListDTO findAllBankBalances(
+  public BankBalanceListDTO findAllBankBalancesById(
       @PathVariable Long yearBalanceId, @PathVariable Long monthBalanceId) {
-    return new BankBalanceListDTO(bankBalanceService.findAll(yearBalanceId, monthBalanceId));
+    return new BankBalanceListDTO(bankBalanceService.findAllById(yearBalanceId, monthBalanceId));
   }
 
-  @GetMapping("/{bankBalanceId}")
+  @GetMapping(BASE_URL + "/")
   @ResponseStatus(HttpStatus.OK)
-  public BankBalanceDTO findBankBalanceById(
-      @PathVariable Long yearBalanceId,
-      @PathVariable Long monthBalanceId,
-      @PathVariable Long bankBalanceId) {
+  public BankBalanceListDTO findAllBankBalances() {
+    return new BankBalanceListDTO(bankBalanceService.findAll());
+  }
+
+  @GetMapping(BASE_URL + "/{bankBalanceId}")
+  @ResponseStatus(HttpStatus.OK)
+  public BankBalanceDTO findBankBalanceById(@PathVariable Long bankBalanceId) {
     return bankBalanceService.findById(bankBalanceId);
   }
 
-  /*
-  @PostMapping()
+  @GetMapping(BASE_URL)
   @ResponseStatus(HttpStatus.OK)
-  public BankBalanceDTO findBankBalanceByName(
-      @PathVariable Long yearBalanceId,
-      @PathVariable Long monthBalanceId,
-      @RequestBody String bankName) {
-    return bankBalanceService.findByBankName(yearBalanceId, monthBalanceId, bankName);
+  public BankBalanceListDTO findBankBalanceByName(@RequestParam String bankName) {
+    return new BankBalanceListDTO(bankBalanceService.findByBankName(bankName));
   }
-   */
 
-  @PostMapping
+  @PostMapping(BASE_URL)
   @ResponseStatus(HttpStatus.CREATED)
   public BankBalanceDTO createNewBankBalance(@RequestBody BankBalanceDTO bankBalanceDTO) {
     return bankBalanceService.createNewBankBalance(bankBalanceDTO);

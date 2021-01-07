@@ -6,42 +6,63 @@ import com.astoppello.incomebalanceapp.services.MonthBalanceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-/** Created by @author stopp on 20/12/2020 */
+/**
+ * Created by @author stopp on 20/12/2020
+ */
 @RestController
-@RequestMapping(MonthBalanceController.BASE_URL)
 public class MonthBalanceController {
 
-  public static final String BASE_URL = "/api/v1/yearBalances/{yearBalanceId}/monthBalances";
-  private final MonthBalanceService monthBalanceService;
+    public static final String BASE_URL_BY_ID = "/api/v1/yearBalances/{yearBalanceId}/monthBalances";
+    public static final String BASE_URL = "/api/v1/monthBalances";
+    private final MonthBalanceService monthBalanceService;
 
-  public MonthBalanceController(MonthBalanceService monthBalanceService) {
-    this.monthBalanceService = monthBalanceService;
-  }
+    public MonthBalanceController(MonthBalanceService monthBalanceService) {
+        this.monthBalanceService = monthBalanceService;
+    }
 
-  @GetMapping()
-  @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceListDTO findAllMonthBalance(@PathVariable Long yearBalanceId) {
-    return new MonthBalanceListDTO(monthBalanceService.findAll(yearBalanceId));
-  }
+    @GetMapping(BASE_URL_BY_ID + "/")
+    @ResponseStatus(HttpStatus.OK)
+    public MonthBalanceListDTO findAllMonthBalanceById(@PathVariable Long yearBalanceId) {
+        return new MonthBalanceListDTO(monthBalanceService.findAllById(yearBalanceId));
+    }
 
-  @GetMapping("/{monthBalanceId}")
-  @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceDTO findMonthBalanceById(
-      @PathVariable Long yearBalanceId, @PathVariable Long monthBalanceId) {
-    return monthBalanceService.findById(yearBalanceId, monthBalanceId);
-  }
+    @GetMapping(BASE_URL_BY_ID + "/{monthBalanceId}")
+    @ResponseStatus(HttpStatus.OK)
+    public MonthBalanceDTO findMonthBalanceOfYearById(
+            @PathVariable Long yearBalanceId,
+            @PathVariable Long monthBalanceId) {
+        return monthBalanceService.findMonthOfYearById(yearBalanceId, monthBalanceId);
+    }
 
-  /*
-  @PostMapping()
-  @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceDTO findMonthBalanceByMonth(@PathVariable Long yearBalanceId, @RequestBody String month) {
-    return monthBalanceService.findByMonth(yearBalanceId, month);
-  }
-  */
+    @PostMapping(BASE_URL_BY_ID)
+    @ResponseStatus(HttpStatus.CREATED)
+    public MonthBalanceDTO createNewMonthBalanceById(
+            @PathVariable Long yearBalanceId,
+            @RequestBody MonthBalanceDTO monthBalanceDTO) {
+        return monthBalanceService.createNewMonthBalanceById(yearBalanceId, monthBalanceDTO);
+    }
 
-  @PostMapping()
-  @ResponseStatus(HttpStatus.CREATED)
-  public MonthBalanceDTO createNewMonthBalance(@PathVariable Long yearBalanceId, @RequestBody MonthBalanceDTO monthBalanceDTO) {
-    return monthBalanceService.createNewMonthBalance(yearBalanceId, monthBalanceDTO);
-  }
+    @GetMapping(BASE_URL)
+    @ResponseStatus(HttpStatus.OK)
+    public MonthBalanceListDTO findMonthBalanceByMonth(@RequestParam String month) {
+        return new MonthBalanceListDTO(monthBalanceService.findByMonth(month));
+    }
+
+    @GetMapping(BASE_URL + "/")
+    @ResponseStatus(HttpStatus.OK)
+    public MonthBalanceListDTO findAllMonthBalance() {
+        return new MonthBalanceListDTO(monthBalanceService.findAll());
+    }
+
+    @GetMapping(BASE_URL + "/{monthBalanceId}")
+    @ResponseStatus(HttpStatus.OK)
+    public MonthBalanceDTO findMonthBalanceById(@PathVariable Long monthBalanceId) {
+        return monthBalanceService.findById(monthBalanceId);
+    }
+
+    @PostMapping(BASE_URL)
+    @ResponseStatus(HttpStatus.CREATED)
+    public MonthBalanceDTO createNewMonthBalance(@RequestBody MonthBalanceDTO monthBalanceDTO) {
+        return monthBalanceService.createNewMonthBalance(monthBalanceDTO);
+    }
 }

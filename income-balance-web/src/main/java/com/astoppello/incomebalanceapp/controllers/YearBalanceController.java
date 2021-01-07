@@ -18,7 +18,7 @@ public class YearBalanceController {
     this.yearBalanceService = yearBalanceService;
   }
 
-  @GetMapping
+  @GetMapping("/")
   @ResponseStatus(HttpStatus.OK)
   public YearBalanceListDTO findAllYearBalance() {
     return new YearBalanceListDTO(yearBalanceService.findAll());
@@ -30,13 +30,11 @@ public class YearBalanceController {
     return yearBalanceService.findById(id);
   }
 
-  /*
-  @PostMapping
+  @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public YearBalanceDTO findYearBalanceByYear(@RequestBody Integer year) {
+  public YearBalanceDTO findYearBalanceByYear(@RequestParam Integer year) {
     return yearBalanceService.findYearBalanceByYear(year);
   }
-   */
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)

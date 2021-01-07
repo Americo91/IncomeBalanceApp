@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -71,10 +72,17 @@ class BankBalanceServiceTest {
   }
 
   @Test
-  void findAll() {
+  void findAllById() {
     when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
-    assertEquals(1, service.findAll(ID, ID).size());
+    assertEquals(1, service.findAllById(ID, ID).size());
     verify(yearBalanceRepository, times(1)).findById(anyLong());
+  }
+
+  @Test
+  void findAll() {
+    when(bankBalanceRepository.findAll()).thenReturn(List.of(bankBalance));
+    assertEquals(1, service.findAll().size());
+    verify(bankBalanceRepository, times(1)).findAll();
   }
 
   @Test
@@ -92,25 +100,26 @@ class BankBalanceServiceTest {
 
   @Test
   void findByBankName() {
-    when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.of(yearBalance));
-    BankBalanceDTO bankBalanceDTO = service.findByBankName(ID, ID, REVOLUT);
+    when(bankBalanceRepository.findAll()).thenReturn(List.of(bankBalance));
+    BankBalanceDTO bankBalanceDTO = service.findByBankName(REVOLUT).get(0);
     assertNotNull(bankBalanceDTO);
     assertEquals(ID, bankBalanceDTO.getId());
     assertEquals(EXPENSES, bankBalanceDTO.getExpenses());
     assertEquals(SALARY, bankBalanceDTO.getSalary());
     assertEquals(ID, bankBalanceDTO.getBank().getId());
     assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
-    verify(yearBalanceRepository, times(1)).findById(anyLong());
+    verify(bankBalanceRepository, times(1)).findAll();
   }
 
   @Test
   void createNewBankBalance() {
     BankBalanceDTO bankBalanceDTO = bankBalanceMapper.bankBalanceToBankBalanceDTO(bankBalance);
+    bankBalanceDTO.setMonthBalanceId(monthBalance.getId());
     when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
     when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(monthBalance));
     BankBalanceDTO savedBankBalanceDto = service.createNewBankBalance(bankBalanceDTO);
     assertNotNull(savedBankBalanceDto);
-    // assertEquals(ID, bankBalanceDTO.getId());
+    assertEquals(ID, bankBalanceDTO.getId());
     ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, savedBankBalanceDto);
     verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
     assertNotNull(savedBankBalanceDto.getMonthBalanceId());
