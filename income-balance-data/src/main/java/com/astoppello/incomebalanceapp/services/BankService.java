@@ -14,4 +14,10 @@ public interface BankService {
   BankDTO findBankByName(String name);
 
   BankDTO createNewBank(BankDTO bankDTO);
+
+  BankDTO saveBankById(Long id, BankDTO bankDTO);
+
+  BankDTO updateBank(Long id, BankDTO bankDTO);
+
+  void deleteBank(Long id);
 }

@@ -30,7 +30,6 @@ public class BankController {
     return bankService.findById(id);
   }
 
-
   @GetMapping()
   @ResponseStatus(HttpStatus.OK)
   public BankDTO findBankByName(@RequestParam String name) {
@@ -41,5 +40,23 @@ public class BankController {
   @ResponseStatus(HttpStatus.CREATED)
   public BankDTO createNewBank(@RequestBody BankDTO bankDTO) {
     return bankService.createNewBank(bankDTO);
+  }
+
+  @PutMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public BankDTO saveBankById(@PathVariable Long id, @RequestBody BankDTO bankDTO) {
+    return bankService.saveBankById(id, bankDTO);
+  }
+
+  @PatchMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public BankDTO updateBank(@PathVariable Long id, @RequestBody BankDTO bankDTO) {
+    return bankService.updateBank(id, bankDTO);
+  }
+
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public void deleteBank(@PathVariable Long id) {
+    bankService.deleteBank(id);
   }
 }
