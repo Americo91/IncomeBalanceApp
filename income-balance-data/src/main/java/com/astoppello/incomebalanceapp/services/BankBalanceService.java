@@ -18,4 +18,10 @@ public interface BankBalanceService {
   List<BankBalanceDTO> findByBankName(String bankName);
 
   BankBalanceDTO createNewBankBalance(BankBalanceDTO bankBalanceDTO);
+
+  BankBalanceDTO saveBankBalance(Long bankBalanceId, BankBalanceDTO bankBalanceDTO);
+
+  BankBalanceDTO updateBankBalance(Long bankBalanceId, BankBalanceDTO bankBalanceDTO);
+
+  void deleteBankBalance(Long bankBalanceId);
 }

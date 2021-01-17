@@ -2,6 +2,8 @@ package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.BankBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.BankDTO;
+import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
+import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.services.BankBalanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,16 +14,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,7 +39,7 @@ public class BankBalanceControllerTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestResponseEntityExceptionHanlder()).build();
     bankBalanceDTO = new BankBalanceDTO();
     bankBalanceDTO.setId(ID);
     bankBalanceDTO.setResult(RESULT);
@@ -117,5 +118,51 @@ public class BankBalanceControllerTest {
         .andExpect(jsonPath("$.monthBalanceId", equalTo(1)))
         .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)));
     verify(bankBalanceService).createNewBankBalance(any(BankBalanceDTO.class));
+  }
+
+  @Test
+  void saveBankBalance() throws Exception {
+    BankBalanceDTO bankBalanceDTO1 = new BankBalanceDTO();
+    bankBalanceDTO1.setId(2L);
+    when(bankBalanceService.saveBankBalance(anyLong(), any(BankBalanceDTO.class)))
+        .thenReturn(bankBalanceDTO1);
+    mockMvc
+        .perform(
+            put(BankBalanceController.BASE_URL + "/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", equalTo(2)))
+        .andExpect(jsonPath("$.result", equalTo(null)));
+    verify(bankBalanceService).saveBankBalance(anyLong(), any(BankBalanceDTO.class));
+  }
+
+  @Test
+  void updateBankBalance() throws Exception {
+    BankBalanceDTO bankBalanceDTO1 = bankBalanceDTO;
+    bankBalanceDTO1.setExpenses(new BigDecimal(200));
+    when(bankBalanceService.updateBankBalance(anyLong(), any(BankBalanceDTO.class))).thenReturn(bankBalanceDTO1);
+    mockMvc.perform(patch(BankBalanceController.BASE_URL+"/1").contentType(MediaType.APPLICATION_JSON).content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
+    .andExpect(status().isOk())
+           .andExpect(jsonPath("$.id", equalTo(1)))
+           .andExpect(jsonPath("$.result", equalTo(100)))
+           .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)))
+           .andExpect(jsonPath("$.bank.id", equalTo(1)))
+    .andExpect(jsonPath("$.expenses", equalTo(200)));
+    verify(bankBalanceService, times(1)).updateBankBalance(anyLong(), any(BankBalanceDTO.class));
+  }
+
+  @Test
+  void deleteBankBalance() throws Exception{
+    mockMvc.perform(delete(BankBalanceController.BASE_URL+"/1").contentType(MediaType.APPLICATION_JSON))
+           .andExpect(status().isOk());
+    verify(bankBalanceService, times(1)).deleteBankBalance(anyLong());
+  }
+
+  @Test
+  void testNonFoundException() throws Exception {
+    when(bankBalanceService.findById(anyLong())).thenThrow(ResourceNotFoundException.class);
+    mockMvc.perform(get(BankBalanceController.BASE_URL+"/111").contentType(MediaType.APPLICATION_JSON))
+           .andExpect(status().isNotFound());
   }
 }

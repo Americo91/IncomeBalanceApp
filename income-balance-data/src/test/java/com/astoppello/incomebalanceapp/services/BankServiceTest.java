@@ -83,7 +83,7 @@ class BankServiceTest {
     BankDTO bankDTO = new BankDTO();
     bankDTO.setName(NAME);
     when(bankRepository.save(any(Bank.class))).thenReturn(bank);
-    BankDTO savedBankDto = bankService.saveBankById(ID, bankDTO);
+    BankDTO savedBankDto = bankService.saveBank(ID, bankDTO);
     assertNotNull(savedBankDto);
     assertNotNull(savedBankDto.getId());
     assertEquals(savedBankDto.getName(), NAME);

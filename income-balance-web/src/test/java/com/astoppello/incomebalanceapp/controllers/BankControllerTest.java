@@ -92,7 +92,7 @@ public class BankControllerTest {
 
   @Test
   void saveBankById() throws Exception {
-    when(bankService.saveBankById(anyLong(), any(BankDTO.class))).thenReturn(bankDTO);
+    when(bankService.saveBank(anyLong(), any(BankDTO.class))).thenReturn(bankDTO);
     mockMvc
         .perform(
             put(BankController.BASE_URL + "/1")
@@ -101,16 +101,18 @@ public class BankControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
         .andExpect(jsonPath("$.name", equalTo(NAME)));
-    verify(bankService).saveBankById(anyLong(), any());
+    verify(bankService).saveBank(anyLong(), any());
   }
 
   @Test
   void updateBank() throws Exception {
+    BankDTO bankDTO1 = new BankDTO();
+    bankDTO1.setId(ID);
     when(bankService.updateBank(anyLong(), any(BankDTO.class))).thenReturn(bankDTO);
     mockMvc
         .perform(
             patch(BankController.BASE_URL + "/1")
-                .content(AbstractRestControllerTest.asJsonString(bankDTO))
+                .content(AbstractRestControllerTest.asJsonString(bankDTO1))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
@@ -129,7 +131,8 @@ public class BankControllerTest {
   @Test
   void testNotFoundException() throws Exception {
     when(bankService.findById(anyLong())).thenThrow(ResourceNotFoundException.class);
-    mockMvc.perform(get(BankController.BASE_URL + "/222").contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isNotFound());
+    mockMvc
+        .perform(get(BankController.BASE_URL + "/222").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
   }
 }

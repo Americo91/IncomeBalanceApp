@@ -44,8 +44,8 @@ public class BankController {
 
   @PutMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public BankDTO saveBankById(@PathVariable Long id, @RequestBody BankDTO bankDTO) {
-    return bankService.saveBankById(id, bankDTO);
+  public BankDTO saveBank(@PathVariable Long id, @RequestBody BankDTO bankDTO) {
+    return bankService.saveBank(id, bankDTO);
   }
 
   @PatchMapping("/{id}")

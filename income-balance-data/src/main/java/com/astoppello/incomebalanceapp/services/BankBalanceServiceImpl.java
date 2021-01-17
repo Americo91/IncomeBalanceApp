@@ -11,6 +11,7 @@ import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -77,6 +78,48 @@ public class BankBalanceServiceImpl implements BankBalanceService {
   @Override
   public BankBalanceDTO createNewBankBalance(BankBalanceDTO bankBalanceDTO) {
     return createAndReturnDto(bankBalanceMapper.bankBalanceDtoToBankBalance(bankBalanceDTO));
+  }
+
+  @Override
+  public BankBalanceDTO saveBankBalance(Long bankBalanceId, BankBalanceDTO bankBalanceDTO) {
+    bankBalanceDTO.setId(bankBalanceId);
+    return createAndReturnDto(bankBalanceMapper.bankBalanceDtoToBankBalance(bankBalanceDTO));
+  }
+
+  @Override
+  public BankBalanceDTO updateBankBalance(Long bankBalanceId, BankBalanceDTO bankBalanceDTO) {
+    return bankBalanceRepository
+        .findById(bankBalanceId)
+        .map(
+            bankBalance -> {
+              if (bankBalanceDTO.getBank() != null
+                  && StringUtils.isNotBlank(bankBalanceDTO.getBank().getName())
+                  && bankBalanceDTO.getBank().getId() != null) {
+                bankBalance.setBank(bankBalance.getBank());
+              }
+              if (bankBalanceDTO.getExpenses() != null) {
+                bankBalance.setExpenses(bankBalanceDTO.getExpenses());
+              }
+              if (bankBalanceDTO.getIncomes() != null) {
+                bankBalance.setIncomes(bankBalance.getIncomes());
+              }
+              if (bankBalanceDTO.getResult() != null) {
+                bankBalance.setResult(bankBalanceDTO.getResult());
+              }
+              if (bankBalanceDTO.getSalary() != null) {
+                bankBalance.setSalary(bankBalanceDTO.getSalary());
+              }
+              monthBalanceRepository
+                  .findById(bankBalanceDTO.getMonthBalanceId())
+                  .ifPresent(bankBalance::setMonthBalance);
+              return createAndReturnDto(bankBalance);
+            })
+        .orElseThrow(() -> new ResourceNotFoundException(BANK_BALANCE_NOT_FOUND + bankBalanceId));
+  }
+
+  @Override
+  public void deleteBankBalance(Long bankBalanceId) {
+    bankBalanceRepository.deleteById(bankBalanceId);
   }
 
   private BankBalanceDTO createAndReturnDto(BankBalance bankBalance) {

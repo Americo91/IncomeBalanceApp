@@ -1,9 +1,11 @@
 package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.BankBalanceDTO;
+import com.astoppello.incomebalanceapp.dto.domain.BankDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.BankBalanceMapper;
 import com.astoppello.incomebalanceapp.dto.mappers.BankBalanceMapperImpl;
 import com.astoppello.incomebalanceapp.dto.mappers.BankMapperImpl;
+import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
@@ -25,8 +27,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static com.astoppello.incomebalanceapp.dto.mappers.BankMapperTest.ID;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -113,7 +115,7 @@ class BankBalanceServiceTest {
 
   @Test
   void createNewBankBalance() {
-    BankBalanceDTO bankBalanceDTO = bankBalanceMapper.bankBalanceToBankBalanceDTO(bankBalance);
+    BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
     bankBalanceDTO.setMonthBalanceId(monthBalance.getId());
     when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
     when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(monthBalance));
@@ -125,5 +127,59 @@ class BankBalanceServiceTest {
     assertNotNull(savedBankBalanceDto.getMonthBalanceId());
     verify(monthBalanceRepository).findById(anyLong());
     verify(monthBalanceRepository).save(any(MonthBalance.class));
+  }
+
+  @Test
+  void saveBankBalance() {
+    BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
+    bankBalanceDTO.setMonthBalanceId(monthBalance.getId());
+    when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
+    when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(monthBalance));
+    BankBalanceDTO savedBankBalanceDto = service.saveBankBalance(ID, bankBalanceDTO);
+    assertNotNull(savedBankBalanceDto);
+    assertEquals(savedBankBalanceDto.getId(), ID);
+    ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, bankBalanceDTO);
+    verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
+    assertNotNull(savedBankBalanceDto.getMonthBalanceId());
+    verify(monthBalanceRepository, times(1)).findById(anyLong());
+    verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
+  }
+
+  @Test
+  void updateBankBalance() {
+    BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
+    final BigDecimal result = new BigDecimal(100);
+    bankBalanceDTO.setResult(result);
+    when(bankBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(bankBalance));
+    BankBalance savedBankBalance = bankBalance;
+    savedBankBalance.setResult(result);
+    when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(savedBankBalance);
+    BankBalanceDTO savedBankBalanceDto = service.updateBankBalance(ID, bankBalanceDTO);
+    assertNotNull(savedBankBalanceDto);
+    assertEquals(savedBankBalanceDto.getId(), ID);
+    assertEquals(savedBankBalanceDto.getResult(), result);
+    assertEquals(savedBankBalanceDto.getExpenses(), EXPENSES);
+    assertEquals(savedBankBalanceDto.getSalary(), SALARY);
+    verify(bankBalanceRepository, times(1)).findById(anyLong());
+    verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
+  }
+
+  @Test
+  void deleteBankBalance() {
+    service.deleteBankBalance(ID);
+    assertThrows(ResourceNotFoundException.class, () -> service.findById(ID));
+    verify(bankBalanceRepository).deleteById(anyLong());
+  }
+
+  private BankBalanceDTO createBankBalanceDto() {
+    BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
+    bankBalanceDTO.setExpenses(EXPENSES);
+    bankBalanceDTO.setSalary(SALARY);
+    bankBalanceDTO.setId(ID);
+    BankDTO bankDTO = new BankDTO();
+    bankDTO.setName(REVOLUT);
+    bankDTO.setId(ID);
+    bankBalanceDTO.setBank(bankDTO);
+    return bankBalanceDTO;
   }
 }

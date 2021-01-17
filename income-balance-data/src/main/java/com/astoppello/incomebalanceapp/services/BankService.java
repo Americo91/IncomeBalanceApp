@@ -15,7 +15,7 @@ public interface BankService {
 
   BankDTO createNewBank(BankDTO bankDTO);
 
-  BankDTO saveBankById(Long id, BankDTO bankDTO);
+  BankDTO saveBank(Long id, BankDTO bankDTO);
 
   BankDTO updateBank(Long id, BankDTO bankDTO);
 

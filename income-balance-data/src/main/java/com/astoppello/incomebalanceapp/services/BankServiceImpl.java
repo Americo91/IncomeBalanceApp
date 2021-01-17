@@ -60,7 +60,7 @@ public class BankServiceImpl implements BankService {
   }
 
   @Override
-  public BankDTO saveBankById(Long id, BankDTO bankDTO) {
+  public BankDTO saveBank(Long id, BankDTO bankDTO) {
     log.info("Put bank " + bankDTO.toString());
     Bank bank = bankMapper.bankDtoToBank(bankDTO);
     bank.setId(id);
