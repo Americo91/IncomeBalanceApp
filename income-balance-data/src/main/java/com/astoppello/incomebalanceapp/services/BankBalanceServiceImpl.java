@@ -52,6 +52,20 @@ public class BankBalanceServiceImpl implements BankBalanceService {
   }
 
   @Override
+  public BankBalanceDTO createNewBankBalanceById(
+      long yearBalanceId, long monthBalanceId, BankBalanceDTO bankBalanceDTO) {
+    BankBalance bankBalance = bankBalanceMapper.bankBalanceDtoToBankBalance(bankBalanceDTO);
+    monthBalanceRepository
+        .findById(monthBalanceId)
+        .ifPresent(
+            monthBalance -> {
+              bankBalance.setMonthBalance(monthBalance);
+              yearBalanceRepository.findById(yearBalanceId).ifPresent(monthBalance::setYearBalance);
+            });
+    return createAndReturnDto(bankBalance);
+  }
+
+  @Override
   public List<BankBalanceDTO> findAll() {
     return bankBalanceRepository.findAll().stream()
         .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)

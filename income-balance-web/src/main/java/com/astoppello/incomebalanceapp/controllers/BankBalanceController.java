@@ -26,6 +26,15 @@ public class BankBalanceController {
     return new BankBalanceListDTO(bankBalanceService.findAllById(yearBalanceId, monthBalanceId));
   }
 
+  @PostMapping(BASE_URL_BY_ID)
+  @ResponseStatus(HttpStatus.CREATED)
+  public BankBalanceDTO createNewBankBalancesById(
+      @PathVariable Long yearBalanceId,
+      @PathVariable Long monthBalanceId,
+      @RequestBody BankBalanceDTO bankBalanceDTO) {
+    return bankBalanceService.createNewBankBalanceById(yearBalanceId, monthBalanceId, bankBalanceDTO);
+  }
+
   @GetMapping(BASE_URL + "/")
   @ResponseStatus(HttpStatus.OK)
   public BankBalanceListDTO findAllBankBalances() {
@@ -52,19 +61,21 @@ public class BankBalanceController {
 
   @PutMapping(BASE_URL + "/{bankBalanceId}")
   @ResponseStatus(HttpStatus.OK)
-  public BankBalanceDTO saveBankBalance(@PathVariable Long bankBalanceId, @RequestBody BankBalanceDTO bankBalanceDTO) {
+  public BankBalanceDTO saveBankBalance(
+      @PathVariable Long bankBalanceId, @RequestBody BankBalanceDTO bankBalanceDTO) {
     return bankBalanceService.saveBankBalance(bankBalanceId, bankBalanceDTO);
   }
 
   @PatchMapping(BASE_URL + "/{bankBalanceId}")
   @ResponseStatus(HttpStatus.OK)
-  public BankBalanceDTO updateBankBalance(@PathVariable Long bankBalanceId, @RequestBody BankBalanceDTO bankBalanceDTO){
+  public BankBalanceDTO updateBankBalance(
+      @PathVariable Long bankBalanceId, @RequestBody BankBalanceDTO bankBalanceDTO) {
     return bankBalanceService.updateBankBalance(bankBalanceId, bankBalanceDTO);
   }
 
   @DeleteMapping(BASE_URL + "/{bankBalanceId}")
   @ResponseStatus(HttpStatus.OK)
-  public void deleteBankBalance(@PathVariable Long bankBalanceId){
+  public void deleteBankBalance(@PathVariable Long bankBalanceId) {
     bankBalanceService.deleteBankBalance(bankBalanceId);
   }
 }

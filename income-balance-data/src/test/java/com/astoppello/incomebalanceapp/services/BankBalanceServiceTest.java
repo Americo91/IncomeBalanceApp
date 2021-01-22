@@ -27,7 +27,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static com.astoppello.incomebalanceapp.dto.mappers.BankMapperTest.ID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -114,6 +113,24 @@ class BankBalanceServiceTest {
   }
 
   @Test
+  void createNewBankBalanceById() {
+    BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
+    bankBalanceDTO.setMonthBalanceId(monthBalance.getId());
+    when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
+    when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(monthBalance));
+    when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
+    BankBalanceDTO savedBankBalanced = service.createNewBankBalanceById(ID, ID, bankBalanceDTO);
+    assertNotNull(savedBankBalanced);
+    assertEquals(ID, bankBalanceDTO.getId());
+    ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, savedBankBalanced);
+    verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
+    assertNotNull(savedBankBalanced.getMonthBalanceId());
+    verify(monthBalanceRepository, times(2)).findById(anyLong());
+    verify(yearBalanceRepository, times(1)).findById(anyLong());
+    verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
+  }
+
+  @Test
   void createNewBankBalance() {
     BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
     bankBalanceDTO.setMonthBalanceId(monthBalance.getId());
@@ -168,7 +185,7 @@ class BankBalanceServiceTest {
   void deleteBankBalance() {
     service.deleteBankBalance(ID);
     assertThrows(ResourceNotFoundException.class, () -> service.findById(ID));
-    verify(bankBalanceRepository).deleteById(anyLong());
+    verify(bankBalanceRepository, times(1)).deleteById(anyLong());
   }
 
   private BankBalanceDTO createBankBalanceDto() {
