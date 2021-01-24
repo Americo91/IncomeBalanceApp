@@ -126,12 +126,12 @@ class MonthBalanceServiceTest {
     }
 
     @Test
-    void testfindById() {
+    void testFindById() {
       when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(monthBalance));
         MonthBalanceDTO monthBalanceDto = monthBalanceService.findById(ID);
         assertNotNull(monthBalanceDto);
         ModelEqualUtils.assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDto);
-        verify(monthBalanceRepository).findById(anyLong());
+        verify(monthBalanceRepository, times(1)).findById(anyLong());
     }
 
     @Test
@@ -144,6 +144,8 @@ class MonthBalanceServiceTest {
       assertNotNull(savedMonthBalanceDTO);
       ModelEqualUtils.assertMonthBalanceAndDtoAreEqual(monthBalance, savedMonthBalanceDTO);
       verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
+      verify(yearBalanceRepository, times(1)).findById(anyLong());
+      verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
     }
 
   private YearBalance buildYearBalanceForTest() {

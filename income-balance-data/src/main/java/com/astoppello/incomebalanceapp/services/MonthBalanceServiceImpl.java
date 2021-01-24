@@ -10,6 +10,7 @@ import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.Month;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,16 +45,16 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
 
     @Override
     public MonthBalanceDTO createNewMonthBalanceById(Long yearBalanceId, MonthBalanceDTO monthBalanceDTO) {
-        return savedAndReturnDto(
-                getYearBalanceById(yearBalanceId),
-                monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO));
+        MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
+        yearBalanceRepository.findById(yearBalanceId).ifPresent(monthBalance::setYearBalance);
+        return createAndReturnDto(monthBalance);
     }
 
-    private MonthBalanceDTO savedAndReturnDto(YearBalance yearBalance, MonthBalance monthBalance) {
+    private MonthBalanceDTO createAndReturnDto(MonthBalance monthBalance) {
         MonthBalance savedMonthBalance = monthBalanceRepository.save(monthBalance);
-        if (yearBalance != null) {
-            yearBalance.addMonthBalance(savedMonthBalance);
-            yearBalanceRepository.save(yearBalance);
+        if (savedMonthBalance.getYearBalance() != null) {
+            savedMonthBalance.getYearBalance().addMonthBalance(savedMonthBalance);
+            yearBalanceRepository.save(savedMonthBalance.getYearBalance());
         }
         return monthBalanceMapper.monthBalanceToMonthBalanceDto(savedMonthBalance);
     }
@@ -98,9 +99,9 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
 
     @Override
     public MonthBalanceDTO createNewMonthBalance(MonthBalanceDTO monthBalanceDTO) {
-        YearBalance yearBalance = (monthBalanceDTO.getYearBalanceId() != null)
-                ? getYearBalanceById(monthBalanceDTO.getYearBalanceId()) : null;
-        return savedAndReturnDto(yearBalance, monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO));
+        MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
+        yearBalanceRepository.findById(monthBalanceDTO.getYearBalanceId()).ifPresent(monthBalance::setYearBalance);
+        return createAndReturnDto(monthBalance);
     }
 
     private YearBalance getYearBalanceById(Long yearBalanceId) {

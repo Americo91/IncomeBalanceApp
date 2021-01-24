@@ -142,8 +142,8 @@ class BankBalanceServiceTest {
     ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, savedBankBalanceDto);
     verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
     assertNotNull(savedBankBalanceDto.getMonthBalanceId());
-    verify(monthBalanceRepository).findById(anyLong());
-    verify(monthBalanceRepository).save(any(MonthBalance.class));
+    verify(monthBalanceRepository, times(2)).findById(anyLong());
+    verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
   }
 
   @Test
