@@ -71,7 +71,7 @@ public class MonthBalance extends AbstractBalanceEntity {
   public String toString() {
     return new StringJoiner(", ", MonthBalance.class.getSimpleName() + "[", "]")
         .merge(super.getStringJoiner())
-        .add("bankBalanceLis=" + bankBalanceList.toString())
+        .add("bankBalanceLis=" + (CollectionUtils.isNotEmpty(bankBalanceList) ? bankBalanceList.toString() : "null"))
         .add("month=" + month)
         .toString();
   }

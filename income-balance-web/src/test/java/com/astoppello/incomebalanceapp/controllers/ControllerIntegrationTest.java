@@ -73,7 +73,7 @@ public class ControllerIntegrationTest {
     bankService = new BankServiceImpl(bankRepository, bankMapper);
     monthBalanceService =
         new MonthBalanceServiceImpl(
-            monthBalanceRepository, monthBalanceMapper, yearBalanceRepository);
+            monthBalanceRepository, monthBalanceMapper, yearBalanceRepository, bankBalanceMapper);
   }
 
   // YearBalance Tests

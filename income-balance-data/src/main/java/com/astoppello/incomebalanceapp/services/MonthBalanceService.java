@@ -24,4 +24,8 @@ public interface MonthBalanceService {
     MonthBalanceDTO findById(Long id);
 
     MonthBalanceDTO createNewMonthBalance(MonthBalanceDTO monthBalanceDTO);
+
+    MonthBalanceDTO saveMonthBalance(Long monthBalanceId, MonthBalanceDTO monthBalanceDTO);
+
+    MonthBalanceDTO updateMonthBalance(Long monthBalanceId, MonthBalanceDTO monthBalanceDTO);
 }

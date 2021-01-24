@@ -65,4 +65,17 @@ public class MonthBalanceController {
     public MonthBalanceDTO createNewMonthBalance(@RequestBody MonthBalanceDTO monthBalanceDTO) {
         return monthBalanceService.createNewMonthBalance(monthBalanceDTO);
     }
+
+    @PutMapping(BASE_URL + "/{monthBalanceId}")
+    @ResponseStatus(HttpStatus.OK)
+    public MonthBalanceDTO saveMonthBalance(@PathVariable Long monthBalanceId, @RequestBody MonthBalanceDTO monthBalanceDTO) {
+        return monthBalanceService.saveMonthBalance(monthBalanceId, monthBalanceDTO);
+    }
+
+    @PatchMapping(BASE_URL + "/{monthBalanceId}")
+    @ResponseStatus(HttpStatus.OK)
+    public MonthBalanceDTO updateMonthBalance(@PathVariable Long monthBalanceId, @RequestBody MonthBalanceDTO monthBalanceDTO) {
+        return monthBalanceService.updateMonthBalance(monthBalanceId, monthBalanceDTO);
+    }
+
 }

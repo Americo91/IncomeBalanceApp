@@ -125,7 +125,7 @@ class BankBalanceServiceTest {
     ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, savedBankBalanced);
     verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
     assertNotNull(savedBankBalanced.getMonthBalanceId());
-    verify(monthBalanceRepository, times(2)).findById(anyLong());
+    verify(monthBalanceRepository, times(1)).findById(anyLong());
     verify(yearBalanceRepository, times(1)).findById(anyLong());
     verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
   }
@@ -142,7 +142,7 @@ class BankBalanceServiceTest {
     ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, savedBankBalanceDto);
     verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
     assertNotNull(savedBankBalanceDto.getMonthBalanceId());
-    verify(monthBalanceRepository, times(2)).findById(anyLong());
+    verify(monthBalanceRepository, times(1)).findById(anyLong());
     verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
   }
 
@@ -150,6 +150,7 @@ class BankBalanceServiceTest {
   void saveBankBalance() {
     BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
     bankBalanceDTO.setMonthBalanceId(monthBalance.getId());
+    bankBalance.setMonthBalance(monthBalance);
     when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
     when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(monthBalance));
     BankBalanceDTO savedBankBalanceDto = service.saveBankBalance(ID, bankBalanceDTO);

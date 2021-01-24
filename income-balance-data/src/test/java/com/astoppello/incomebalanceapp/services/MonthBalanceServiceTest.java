@@ -1,10 +1,7 @@
 package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
-import com.astoppello.incomebalanceapp.dto.mappers.BankBalanceMapperImpl;
-import com.astoppello.incomebalanceapp.dto.mappers.BankMapperImpl;
-import com.astoppello.incomebalanceapp.dto.mappers.MonthBalanceMapper;
-import com.astoppello.incomebalanceapp.dto.mappers.MonthBalanceMapperImpl;
+import com.astoppello.incomebalanceapp.dto.mappers.*;
 import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
@@ -44,6 +41,8 @@ class MonthBalanceServiceTest {
   MonthBalance monthBalance;
   MonthBalanceService monthBalanceService;
   @Autowired MonthBalanceMapper monthBalanceMapper;
+  @Autowired
+  BankBalanceMapper bankBalanceMapper;
   @Mock private YearBalanceRepository yearBalanceRepository;
   private YearBalance yearBalance;
 
@@ -52,9 +51,9 @@ class MonthBalanceServiceTest {
     MockitoAnnotations.openMocks(this);
     monthBalanceService =
         new MonthBalanceServiceImpl(
-            monthBalanceRepository, monthBalanceMapper, yearBalanceRepository);
+            monthBalanceRepository, monthBalanceMapper, yearBalanceRepository, bankBalanceMapper);
     monthBalance = MonthBalance.builder().id(ID).month(MONTH).build();
-    yearBalance = YearBalance.builder().id(1L).build().addMonthBalance(monthBalance);
+    yearBalance = YearBalance.builder().id(ID).build().addMonthBalance(monthBalance);
   }
 
   @Test
@@ -91,12 +90,16 @@ class MonthBalanceServiceTest {
     monthBalanceDTO.setSalary(SALARY);
     monthBalanceDTO.setMonth(MONTH);
     monthBalanceDTO.setExpenses(EXPENSES);
+    monthBalanceDTO.setYearBalanceId(ID);
+    MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
+    monthBalance.setYearBalance(yearBalance);
+
     yearBalance.addMonthBalance(
         MonthBalance.builder().month(MONTH).expenses(EXPENSES).salary(SALARY).build());
 
     //given
     when(monthBalanceRepository.save(any((MonthBalance.class))))
-        .thenReturn(monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO));
+        .thenReturn(monthBalance);
     when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
     when(yearBalanceRepository.save(any(YearBalance.class))).thenReturn(yearBalance);
 
@@ -147,6 +150,45 @@ class MonthBalanceServiceTest {
       verify(yearBalanceRepository, times(1)).findById(anyLong());
       verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
     }
+
+
+  @Test
+  void saveMonthBalance() {
+    MonthBalanceDTO monthBalanceDTO = monthBalanceMapper.monthBalanceToMonthBalanceDto(monthBalance);
+    monthBalanceDTO.setYearBalanceId(ID);
+    monthBalance.setYearBalance(yearBalance);
+    when(monthBalanceRepository.save(any(MonthBalance.class))).thenReturn(monthBalance);
+    when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
+    MonthBalanceDTO savedMonthBalanceDto = monthBalanceService.saveMonthBalance(ID, monthBalanceDTO);
+    assertNotNull(savedMonthBalanceDto);
+    assertEquals(ID, savedMonthBalanceDto.getId());
+    assertNotNull(savedMonthBalanceDto.getYearBalanceId());
+    ModelEqualUtils.assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
+    verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
+    verify(yearBalanceRepository, times(1)).findById(anyLong());
+    verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
+  }
+
+
+  @Test
+  void updateMonthBalance() {
+    MonthBalanceDTO monthBalanceDTO = monthBalanceMapper.monthBalanceToMonthBalanceDto(monthBalance);
+    monthBalanceDTO.setYearBalanceId(ID);
+    monthBalanceDTO.setIncomes(new BigDecimal(200));
+    monthBalance.setYearBalance(yearBalance);
+    when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(monthBalance));
+    when(monthBalanceRepository.save(any(MonthBalance.class))).thenReturn(monthBalance);
+    when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
+    MonthBalanceDTO savedMonthBalanceDto = monthBalanceService.updateMonthBalance(ID, monthBalanceDTO);
+    assertNotNull(savedMonthBalanceDto);
+    assertEquals(ID, savedMonthBalanceDto.getId());
+    assertNotNull(savedMonthBalanceDto.getYearBalanceId());
+    ModelEqualUtils.assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
+    verify(monthBalanceRepository, times(1)).findById(anyLong());
+    verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
+    verify(yearBalanceRepository, times(1)).findById(anyLong());
+    verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
+  }
 
   private YearBalance buildYearBalanceForTest() {
     return YearBalance.builder()
