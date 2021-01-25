@@ -151,6 +151,11 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
         }).orElseThrow(() -> new ResourceNotFoundException(MONTH_BALANCE_NOT_FOUND + monthBalanceId));
     }
 
+    @Override
+    public void delete(Long monthBalanceId) {
+        monthBalanceRepository.deleteById(monthBalanceId);
+    }
+
     private YearBalance getYearBalanceById(Long yearBalanceId) {
         return yearBalanceRepository
                 .findById(yearBalanceId)

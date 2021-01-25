@@ -2,6 +2,7 @@ package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.*;
+import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
@@ -23,8 +24,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -188,6 +188,13 @@ class MonthBalanceServiceTest {
     verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
     verify(yearBalanceRepository, times(1)).findById(anyLong());
     verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
+  }
+
+  @Test
+  void delete() {
+    monthBalanceService.delete(monthBalance.getId());
+    assertThrows(ResourceNotFoundException.class, () -> monthBalanceService.findById(ID));
+    verify(monthBalanceRepository, times(1)).deleteById(anyLong());
   }
 
   private YearBalance buildYearBalanceForTest() {
