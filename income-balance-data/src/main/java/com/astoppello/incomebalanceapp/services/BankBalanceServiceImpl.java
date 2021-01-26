@@ -121,7 +121,7 @@ public class BankBalanceServiceImpl implements BankBalanceService {
                                 bankBalance.setExpenses(bankBalanceDTO.getExpenses());
                             }
                             if (bankBalanceDTO.getIncomes() != null) {
-                                bankBalance.setIncomes(bankBalance.getIncomes());
+                                bankBalance.setIncomes(bankBalanceDTO.getIncomes());
                             }
                             if (bankBalanceDTO.getResult() != null) {
                                 bankBalance.setResult(bankBalanceDTO.getResult());

@@ -79,7 +79,7 @@ public class MonthBalanceControllerTest {
   }
 
   @Test
-  void createNewMonthBalance() throws Exception {
+  void createNewMonthBalanceById() throws Exception {
     when(monthBalanceService.createNewMonthBalanceById(anyLong(), any(MonthBalanceDTO.class)))
         .thenReturn(monthBalanceDTO);
     mockMvc
