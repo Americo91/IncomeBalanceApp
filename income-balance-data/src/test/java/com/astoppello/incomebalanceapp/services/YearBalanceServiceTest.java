@@ -2,8 +2,10 @@ package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.*;
+import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
+import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +19,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -47,7 +48,7 @@ class YearBalanceServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper);
+    yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper, monthBalanceMapper);
     yearBalance = YearBalance.builder().year(YEAR).id(ID).build();
   }
 
@@ -56,7 +57,7 @@ class YearBalanceServiceTest {
     List<YearBalance> list = List.of(yearBalance, YearBalance.builder().build());
     when(yearBalanceRepository.findAll()).thenReturn(list);
     assertEquals(list.size(), yearBalanceService.findAll().size());
-    verify(yearBalanceRepository).findAll();
+    verify(yearBalanceRepository, times(1)).findAll();
   }
 
   @Test
@@ -93,6 +94,38 @@ class YearBalanceServiceTest {
     assertEquals(yearBalanceDTO.getId(), savedDto.getId());
     assertEquals(yearBalanceDTO.getYear(), savedDto.getYear());
     assertEquals(yearBalanceDTO.getExpenses(), savedDto.getExpenses());
-    verify(yearBalanceRepository).save(any(YearBalance.class));
+    verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
+  }
+
+  @Test
+  void saveYearBalance() {
+    yearBalance.setSalary(new BigDecimal(200));
+    YearBalanceDTO yearBalanceDTO = yearBalanceMapper.yearBalanceToYearBalanceDto(yearBalance);
+    when(yearBalanceRepository.save(any(YearBalance.class))).thenReturn(yearBalance);
+    YearBalanceDTO savedYearBalanceDto = yearBalanceService.saveYearBalance(ID, yearBalanceDTO);
+    assertNotNull(savedYearBalanceDto);
+    ModelEqualUtils.assertYearBalanceAndYearBalanceDtoAreEquals(yearBalance, savedYearBalanceDto);
+    verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
+  }
+
+  @Test
+  void updateYearBalance() {
+    YearBalanceDTO yearBalanceDTO = yearBalanceMapper.yearBalanceToYearBalanceDto(yearBalance);
+    yearBalanceDTO.setSalary(new BigDecimal(200));
+    when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
+    when(yearBalanceRepository.save(any(YearBalance.class))).thenReturn(yearBalance);
+    YearBalance savedYearBalance = yearBalanceMapper.yearBalanceDtoToYearBalance(yearBalanceDTO);
+    YearBalanceDTO savedYearBalanceDto = yearBalanceService.updateYearBalance(ID, yearBalanceDTO);
+    assertNotNull(savedYearBalanceDto);
+    ModelEqualUtils.assertYearBalanceAndYearBalanceDtoAreEquals(savedYearBalance, savedYearBalanceDto);
+    verify(yearBalanceRepository,times(1)).findById(anyLong());
+    verify(yearBalanceRepository,times(1)).save(any(YearBalance.class));
+  }
+
+  @Test
+  void deleteYearBalance() {
+    yearBalanceService.deleteYearBalance(ID);
+    verify(yearBalanceRepository, times(1)).deleteById(anyLong());
+    assertThrows(ResourceNotFoundException.class, () -> yearBalanceService.findById(ID));
   }
 }

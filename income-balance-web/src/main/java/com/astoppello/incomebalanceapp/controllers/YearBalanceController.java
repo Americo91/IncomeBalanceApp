@@ -41,4 +41,22 @@ public class YearBalanceController {
   public YearBalanceDTO createNewYearBalance(@RequestBody YearBalanceDTO yearBalanceDTO) {
     return yearBalanceService.createNewYearBalance(yearBalanceDTO);
   }
+
+  @PutMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public YearBalanceDTO saveYearBalance(@PathVariable Long id, @RequestBody YearBalanceDTO yearBalanceDTO) {
+    return yearBalanceService.saveYearBalance(id, yearBalanceDTO);
+  }
+
+  @PatchMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public YearBalanceDTO patchYearBalance(@PathVariable Long id, @RequestBody YearBalanceDTO yearBalanceDTO) {
+    return yearBalanceService.updateYearBalance(id, yearBalanceDTO);
+  }
+
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public void deleteYearBalance(@PathVariable Long id) {
+    yearBalanceService.deleteYearBalance(id);
+  }
 }
