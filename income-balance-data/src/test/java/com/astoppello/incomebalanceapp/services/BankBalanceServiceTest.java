@@ -69,13 +69,21 @@ class BankBalanceServiceTest {
         YearBalance.builder()
             .id(ID)
             .build()
-            .addMonthBalance(monthBalance.addBankBalance(bankBalance));
+            .addMonthBalance(monthBalance.addBankBalance(bankBalance))
+            .addBankBalance(bankBalance);
   }
 
   @Test
   void findAllById() {
     when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
-    assertEquals(1, service.findAllById(ID, ID).size());
+    assertEquals(1, service.findAllByIds(ID, ID).size());
+    verify(yearBalanceRepository, times(1)).findById(anyLong());
+  }
+
+  @Test
+  void findAllByYearBalanceId() {
+    when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
+    assertEquals(1, service.findAllByYearBalanceId(ID).size());
     verify(yearBalanceRepository, times(1)).findById(anyLong());
   }
 
@@ -116,6 +124,7 @@ class BankBalanceServiceTest {
   void createNewBankBalanceById() {
     BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
     bankBalanceDTO.setMonthBalanceId(monthBalance.getId());
+    bankBalanceDTO.setYearBalanceId(yearBalance.getId());
     when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
     when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(monthBalance));
     when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
@@ -126,8 +135,10 @@ class BankBalanceServiceTest {
     verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
     assertNotNull(savedBankBalanced.getMonthBalanceId());
     verify(monthBalanceRepository, times(1)).findById(anyLong());
-    verify(yearBalanceRepository, times(1)).findById(anyLong());
     verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
+    assertNotNull(savedBankBalanced.getYearBalanceId());
+    verify(yearBalanceRepository, times(1)).findById(anyLong());
+    verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
   }
 
   @Test
@@ -200,4 +211,5 @@ class BankBalanceServiceTest {
     bankBalanceDTO.setBank(bankDTO);
     return bankBalanceDTO;
   }
+
 }

@@ -69,7 +69,7 @@ public class ControllerIntegrationTest {
             bankBalanceMapper,
             monthBalanceRepository,
             yearBalanceRepository);
-    yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper, monthBalanceMapper);
+    yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper, monthBalanceMapper, bankBalanceMapper);
     bankService = new BankServiceImpl(bankRepository, bankMapper);
     monthBalanceService =
         new MonthBalanceServiceImpl(
@@ -157,7 +157,7 @@ public class ControllerIntegrationTest {
   // BankBalance Tests
   @Test
   void getAllBankBalancesTest() {
-    assertEquals(bankBalanceRepository.count(), bankBalanceService.findAllById(3L, 3L).size());
+    assertEquals(bankBalanceRepository.count(), bankBalanceService.findAllByIds(3L, 3L).size());
   }
 
   @Test

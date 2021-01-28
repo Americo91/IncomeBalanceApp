@@ -14,4 +14,5 @@ public class BankBalanceDTO {
   private BigDecimal incomes;
   private BigDecimal result;
   private Long monthBalanceId;
+  private Long yearBalanceId;
 }

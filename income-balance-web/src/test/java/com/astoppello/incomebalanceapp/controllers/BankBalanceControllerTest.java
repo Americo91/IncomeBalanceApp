@@ -53,14 +53,27 @@ public class BankBalanceControllerTest {
   @Test
   void findAllBankBalancesById() throws Exception {
     List<BankBalanceDTO> bankBalanceDTOS = List.of(new BankBalanceDTO(), new BankBalanceDTO());
-    when(bankBalanceService.findAllById(anyLong(), anyLong())).thenReturn(bankBalanceDTOS);
+    when(bankBalanceService.findAllByIds(anyLong(), anyLong())).thenReturn(bankBalanceDTOS);
     mockMvc
         .perform(
             get(YearBalanceController.BASE_URL + "/1/monthBalances/1/bankBalances/")
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.bankBalances", hasSize(2)));
-    verify(bankBalanceService).findAllById(anyLong(), anyLong());
+    verify(bankBalanceService).findAllByIds(anyLong(), anyLong());
+  }
+
+  @Test
+  void findAllBankBalancesByYearBalanceId() throws Exception {
+    List<BankBalanceDTO> bankBalanceDTOS = List.of(new BankBalanceDTO(), new BankBalanceDTO());
+    when(bankBalanceService.findAllByYearBalanceId(anyLong())).thenReturn(bankBalanceDTOS);
+    mockMvc
+            .perform(
+                    get(YearBalanceController.BASE_URL + "/1/bankBalances/")
+                            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.bankBalances", hasSize(2)));
+    verify(bankBalanceService).findAllByYearBalanceId(anyLong());
   }
 
   @Test

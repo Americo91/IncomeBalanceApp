@@ -5,6 +5,7 @@ import com.astoppello.incomebalanceapp.model.YearBalance;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 /** Created by @author stopp on 16/11/2020 */
 @Mapper(
@@ -12,7 +13,10 @@ import org.mapstruct.Mapping;
     componentModel = "spring")
 public interface YearBalanceMapper {
 
-  @Mapping(source = "monthBalances", target = "monthBalanceList")
+  @Mappings({
+    @Mapping(source = "monthBalances", target = "monthBalanceList"),
+    @Mapping(source = "bankBalances", target = "bankBalanceList")
+  })
   YearBalance yearBalanceDtoToYearBalance(YearBalanceDTO yearBalanceDTO);
 
   @InheritInverseConfiguration

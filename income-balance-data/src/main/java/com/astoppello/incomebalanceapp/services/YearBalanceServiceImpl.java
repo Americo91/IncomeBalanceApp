@@ -1,6 +1,7 @@
 package com.astoppello.incomebalanceapp.services;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
+import com.astoppello.incomebalanceapp.dto.mappers.BankBalanceMapper;
 import com.astoppello.incomebalanceapp.dto.mappers.MonthBalanceMapper;
 import com.astoppello.incomebalanceapp.dto.mappers.YearBalanceMapper;
 import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
@@ -19,14 +20,17 @@ public class YearBalanceServiceImpl implements YearBalanceService {
   private final YearBalanceRepository yearBalanceRepository;
   private final YearBalanceMapper yearBalanceMapper;
   private final MonthBalanceMapper monthBalanceMapper;
+  private final BankBalanceMapper bankBalanceMapper;
 
   public YearBalanceServiceImpl(
       YearBalanceRepository yearBalanceRepository,
       YearBalanceMapper yearBalanceMapper,
-      MonthBalanceMapper monthBalanceMapper) {
+      MonthBalanceMapper monthBalanceMapper,
+      BankBalanceMapper bankBalanceMapper) {
     this.yearBalanceRepository = yearBalanceRepository;
     this.yearBalanceMapper = yearBalanceMapper;
     this.monthBalanceMapper = monthBalanceMapper;
+    this.bankBalanceMapper = bankBalanceMapper;
   }
 
   @Override
@@ -91,17 +95,23 @@ public class YearBalanceServiceImpl implements YearBalanceService {
                         .map(monthBalanceMapper::monthBalanceDtoToMonthBalance)
                         .collect(Collectors.toList()));
               }
+              if (CollectionUtils.isNotEmpty(yearBalanceDTO.getBankBalances())) {
+                yearBalance.setBankBalanceList(
+                    yearBalanceDTO.getBankBalances().stream()
+                        .map(bankBalanceMapper::bankBalanceDtoToBankBalance)
+                        .collect(Collectors.toList()));
+              }
               return saveAndReturnDto(yearBalance);
             })
         .orElseThrow(() -> new ResourceNotFoundException(YEAR_BALANCE_NOT_FOUND + id));
   }
 
-    @Override
-    public void deleteYearBalance(Long id) {
-        yearBalanceRepository.deleteById(id);
-    }
+  @Override
+  public void deleteYearBalance(Long id) {
+    yearBalanceRepository.deleteById(id);
+  }
 
-    private YearBalanceDTO saveAndReturnDto(YearBalance yearBalance) {
+  private YearBalanceDTO saveAndReturnDto(YearBalance yearBalance) {
     YearBalance savedYearBalance = yearBalanceRepository.save(yearBalance);
     return yearBalanceMapper.yearBalanceToYearBalanceDto(savedYearBalance);
   }

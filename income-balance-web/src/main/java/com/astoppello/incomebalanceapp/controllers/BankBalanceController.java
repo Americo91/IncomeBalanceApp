@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class BankBalanceController {
 
-  public static final String BASE_URL_BY_ID =
+  public static final String BASE_URL_BY_IDS =
       "/api/v1/yearBalances/{yearBalanceId}/monthBalances/{monthBalanceId}/bankBalances";
+  public static final String BASE_URL_BY_YEARBALANCEID = "/api/v1/yearBalances/{yearBalanceId}/bankBalances/";
   public static final String BASE_URL = "/api/v1/bankBalances";
   private final BankBalanceService bankBalanceService;
 
@@ -19,14 +20,20 @@ public class BankBalanceController {
     this.bankBalanceService = bankBalanceService;
   }
 
-  @GetMapping(BASE_URL_BY_ID + "/")
+  @GetMapping(BASE_URL_BY_IDS + "/")
   @ResponseStatus(HttpStatus.OK)
-  public BankBalanceListDTO findAllBankBalancesById(
+  public BankBalanceListDTO findAllBankBalancesByIds(
       @PathVariable Long yearBalanceId, @PathVariable Long monthBalanceId) {
-    return new BankBalanceListDTO(bankBalanceService.findAllById(yearBalanceId, monthBalanceId));
+    return new BankBalanceListDTO(bankBalanceService.findAllByIds(yearBalanceId, monthBalanceId));
   }
 
-  @PostMapping(BASE_URL_BY_ID)
+  @GetMapping(BASE_URL_BY_YEARBALANCEID)
+  @ResponseStatus(HttpStatus.OK)
+  public BankBalanceListDTO findAllBankBalancesByYearBalanceId(@PathVariable Long yearBalanceId) {
+    return new BankBalanceListDTO(bankBalanceService.findAllByYearBalanceId(yearBalanceId));
+  }
+
+  @PostMapping(BASE_URL_BY_IDS)
   @ResponseStatus(HttpStatus.CREATED)
   public BankBalanceDTO createNewBankBalancesById(
       @PathVariable Long yearBalanceId,

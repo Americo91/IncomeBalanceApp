@@ -48,7 +48,7 @@ class YearBalanceServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper, monthBalanceMapper);
+    yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper, monthBalanceMapper, bankBalanceMapper);
     yearBalance = YearBalance.builder().year(YEAR).id(ID).build();
   }
 

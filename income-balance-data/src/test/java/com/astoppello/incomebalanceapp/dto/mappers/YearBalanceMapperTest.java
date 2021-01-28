@@ -1,6 +1,7 @@
 package com.astoppello.incomebalanceapp.dto.mappers;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
+import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
@@ -39,7 +40,8 @@ public class YearBalanceMapperTest {
                                              .id(ID)
                                              .year(YEAR)
                                              .build()
-                                             .addMonthBalance(MonthBalance.builder().month("September").build());
+                                             .addMonthBalance(MonthBalance.builder().id(ID).month("September").build())
+                .addBankBalance(BankBalance.builder().id(ID).build());
         YearBalanceDTO yearBalanceDTO = mapper.yearBalanceToYearBalanceDto(yearBalance);
         assertNotNull(yearBalanceDTO);
         assertYearBalanceAndYearBalanceDtoAreEquals(yearBalance, yearBalanceDTO);

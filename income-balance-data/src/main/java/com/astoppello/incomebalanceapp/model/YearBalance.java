@@ -28,6 +28,9 @@ public class YearBalance extends AbstractBalanceEntity {
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "yearBalance")
   private List<MonthBalance> monthBalanceList = new LinkedList<>();
 
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "yearBalance")
+  private List<BankBalance> bankBalanceList = new LinkedList<>();
+
   @Builder
   public YearBalance(
       Long id,
@@ -36,17 +39,27 @@ public class YearBalance extends AbstractBalanceEntity {
       BigDecimal incomes,
       BigDecimal result,
       Integer year,
-      List<MonthBalance> monthBalanceList) {
+      List<MonthBalance> monthBalanceList,
+      List<BankBalance> bankBalanceList) {
     super(id, salary, expenses, incomes, result);
     this.year = year;
     if (CollectionUtils.isNotEmpty(monthBalanceList)) {
       this.monthBalanceList = monthBalanceList;
+    }
+    if (CollectionUtils.isNotEmpty(bankBalanceList)) {
+      this.bankBalanceList = bankBalanceList;
     }
   }
 
   public YearBalance addMonthBalance(MonthBalance monthBalance) {
     monthBalance.setYearBalance(this);
     monthBalanceList.add(monthBalance);
+    return this;
+  }
+
+  public YearBalance addBankBalance(BankBalance bankBalance) {
+    bankBalance.setYearBalance(this);
+    bankBalanceList.add(bankBalance);
     return this;
   }
 
@@ -57,19 +70,29 @@ public class YearBalance extends AbstractBalanceEntity {
     if (!super.equals(o)) return false;
     YearBalance that = (YearBalance) o;
     return Objects.equals(year, that.year)
-        && Objects.equals(monthBalanceList, that.monthBalanceList);
+        && Objects.equals(monthBalanceList, that.monthBalanceList)
+        && Objects.equals(bankBalanceList, that.bankBalanceList);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), year, monthBalanceList);
+    return Objects.hash(super.hashCode(), year, monthBalanceList, bankBalanceList);
   }
 
   @Override
   public String toString() {
     return new StringJoiner(", ", YearBalance.class.getSimpleName() + "[", "]")
         .merge(super.getStringJoiner())
-        .add("MonthBalanceList=" + (CollectionUtils.isNotEmpty(monthBalanceList) ? monthBalanceList.toString() : "null"))
+        .add(
+            "MonthBalanceList="
+                + (CollectionUtils.isNotEmpty(monthBalanceList)
+                    ? monthBalanceList.toString()
+                    : "null"))
+        .add(
+            "BankBalanceList="
+                + (CollectionUtils.isNotEmpty(bankBalanceList)
+                    ? monthBalanceList.toString()
+                    : "null"))
         .add("year=" + year)
         .toString();
   }

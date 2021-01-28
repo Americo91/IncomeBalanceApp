@@ -17,4 +17,6 @@ public class YearBalanceDTO {
   private BigDecimal result;
   @JsonProperty("monthBalances")
   private List<MonthBalanceDTO> monthBalances;
+  @JsonProperty("bankBalances")
+  private List<BankBalanceDTO> bankBalances;
 }
