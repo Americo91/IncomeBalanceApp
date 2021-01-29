@@ -53,14 +53,6 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
     return createAndReturnDto(monthBalance);
   }
 
-  private MonthBalanceDTO createAndReturnDto(MonthBalance monthBalance) {
-    MonthBalance savedMonthBalance = monthBalanceRepository.save(monthBalance);
-    if (savedMonthBalance.getYearBalance() != null) {
-      savedMonthBalance.getYearBalance().addMonthBalance(savedMonthBalance);
-      yearBalanceRepository.save(savedMonthBalance.getYearBalance());
-    }
-    return monthBalanceMapper.monthBalanceToMonthBalanceDto(savedMonthBalance);
-  }
 
   @Override
   public List<MonthBalanceDTO> findAllById(Long yearBalanceId) {
@@ -69,7 +61,6 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
         .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
         .collect(Collectors.toList());
   }
-
   @Override
   public MonthBalanceDTO findMonthOfYearById(Long yearBalanceId, Long monthBalanceId) {
     return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceList())
@@ -109,6 +100,7 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
   @Override
   public MonthBalanceDTO saveMonthBalance(Long monthBalanceId, MonthBalanceDTO monthBalanceDTO) {
     MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
+    monthBalance.setId(monthBalanceId);
     if (monthBalanceDTO.getYearBalanceId() != null) {
       yearBalanceRepository
           .findById(monthBalanceDTO.getYearBalanceId())
@@ -129,7 +121,7 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
               if (monthBalanceDTO.getIncomes() != null) {
                 monthBalance.setIncomes(monthBalanceDTO.getIncomes());
               }
-              if (StringUtils.isBlank(monthBalanceDTO.getMonth())) {
+              if (StringUtils.isNotBlank(monthBalanceDTO.getMonth())) {
                 monthBalance.setMonth(monthBalanceDTO.getMonth());
               }
               if (monthBalanceDTO.getResult() != null) {
@@ -158,6 +150,15 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
   @Override
   public void delete(Long monthBalanceId) {
     monthBalanceRepository.deleteById(monthBalanceId);
+  }
+
+  private MonthBalanceDTO createAndReturnDto(MonthBalance monthBalance) {
+    MonthBalance savedMonthBalance = monthBalanceRepository.save(monthBalance);
+    if (savedMonthBalance.getYearBalance() != null) {
+      savedMonthBalance.getYearBalance().addMonthBalance(savedMonthBalance);
+      yearBalanceRepository.save(savedMonthBalance.getYearBalance());
+    }
+    return monthBalanceMapper.monthBalanceToMonthBalanceDto(savedMonthBalance);
   }
 
   private YearBalance getYearBalanceById(Long yearBalanceId) {

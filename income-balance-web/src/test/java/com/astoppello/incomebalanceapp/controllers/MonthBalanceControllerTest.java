@@ -1,6 +1,7 @@
 package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
+import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.services.MonthBalanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ public class MonthBalanceControllerTest {
   @Test
   void findAllMonthBalance() throws Exception {
     List<MonthBalanceDTO> monthBalanceDTOS = List.of(new MonthBalanceDTO(), new MonthBalanceDTO());
-    when(monthBalanceService.findAllById(anyLong())).thenReturn(monthBalanceDTOS);
+    when(monthBalanceService.findAllById(ID)).thenReturn(monthBalanceDTOS);
     mockMvc
         .perform(
             get(YearBalanceController.BASE_URL + "/1/monthBalances/")
@@ -56,7 +57,7 @@ public class MonthBalanceControllerTest {
 
   @Test
   void findMonthBalanceById() throws Exception {
-    when(monthBalanceService.findMonthOfYearById(anyLong(), anyLong())).thenReturn(monthBalanceDTO);
+    when(monthBalanceService.findMonthOfYearById(ID, ID)).thenReturn(monthBalanceDTO);
     mockMvc
         .perform(
             get(YearBalanceController.BASE_URL + "/1/monthBalances/" + ID)
@@ -68,19 +69,18 @@ public class MonthBalanceControllerTest {
 
   @Test
   void findMonthBalanceByMonth() throws Exception {
-    when(monthBalanceService.findByMonth(anyString())).thenReturn(List.of(monthBalanceDTO));
+    when(monthBalanceService.findByMonth(MONTH)).thenReturn(List.of(monthBalanceDTO));
     mockMvc
         .perform(
             get(MonthBalanceController.BASE_URL + "?month=September")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(AbstractRestControllerTest.asJsonString(MONTH)))
+                .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.monthBalances.[0].month", equalTo(MONTH)));
   }
 
   @Test
   void createNewMonthBalanceById() throws Exception {
-    when(monthBalanceService.createNewMonthBalanceById(anyLong(), any(MonthBalanceDTO.class)))
+    when(monthBalanceService.createNewMonthBalanceById(ID, monthBalanceDTO))
         .thenReturn(monthBalanceDTO);
     mockMvc
         .perform(
@@ -107,7 +107,7 @@ public class MonthBalanceControllerTest {
 
   @Test
   void testFindMonthBalanceById() throws Exception {
-    when(monthBalanceService.findById(anyLong())).thenReturn(monthBalanceDTO);
+    when(monthBalanceService.findById(ID)).thenReturn(monthBalanceDTO);
     mockMvc
         .perform(
             get(MonthBalanceController.BASE_URL + "/1").contentType(MediaType.APPLICATION_JSON))
@@ -120,7 +120,7 @@ public class MonthBalanceControllerTest {
   @Test
   void testCreateNewMonthBalance() throws Exception {
     monthBalanceDTO.setYearBalanceId(ID);
-    when(monthBalanceService.createNewMonthBalance(any(MonthBalanceDTO.class)))
+    when(monthBalanceService.createNewMonthBalance(monthBalanceDTO))
         .thenReturn(monthBalanceDTO);
     mockMvc
         .perform(
@@ -136,13 +136,14 @@ public class MonthBalanceControllerTest {
 
   @Test
   void saveMonthBalance() throws Exception {
-    monthBalanceDTO.setYearBalanceId(ID);
-    when(monthBalanceService.saveMonthBalance(anyLong(), any(MonthBalanceDTO.class)))
-        .thenReturn(monthBalanceDTO);
+    MonthBalanceDTO savedMonthBalanceDto = monthBalanceDTO;
+    savedMonthBalanceDto.setYearBalanceId(ID);
+    when(monthBalanceService.saveMonthBalance(ID, monthBalanceDTO))
+        .thenReturn(savedMonthBalanceDto);
     mockMvc
         .perform(
             put(MonthBalanceController.BASE_URL + "/1")
-                .content(AbstractRestControllerTest.asJsonString(monthBalanceDTO))
+                .content(AbstractRestControllerTest.asJsonString(savedMonthBalanceDto))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
@@ -155,13 +156,13 @@ public class MonthBalanceControllerTest {
   void updateMonthBalance() throws Exception {
     MonthBalanceDTO monthBalanceDTO1 = monthBalanceDTO;
     monthBalanceDTO1.setIncomes(new BigDecimal(200));
-    when(monthBalanceService.updateMonthBalance(anyLong(), any(MonthBalanceDTO.class)))
+    when(monthBalanceService.updateMonthBalance(ID, monthBalanceDTO))
         .thenReturn(monthBalanceDTO1);
     mockMvc
         .perform(
             patch(MonthBalanceController.BASE_URL + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(AbstractRestControllerTest.asJsonString(monthBalanceDTO)))
+                .content(AbstractRestControllerTest.asJsonString(monthBalanceDTO1)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
         .andExpect(jsonPath("$.month", equalTo(MONTH)))

@@ -82,42 +82,45 @@ class YearBalanceServiceTest {
 
   @Test
   void createNewYearBalance() {
-    yearBalance.setExpenses(new BigDecimal(200));
     YearBalanceDTO yearBalanceDTO = new YearBalanceDTO();
     yearBalanceDTO.setId(ID);
     yearBalanceDTO.setYear(YEAR);
-    yearBalanceDTO.setExpenses(new BigDecimal(200));
     when(yearBalanceRepository.save(any(YearBalance.class))).thenReturn(yearBalance);
 
     YearBalanceDTO savedDto = yearBalanceService.createNewYearBalance(yearBalanceDTO);
     assertNotNull(savedDto);
-    assertEquals(yearBalanceDTO.getId(), savedDto.getId());
-    assertEquals(yearBalanceDTO.getYear(), savedDto.getYear());
-    assertEquals(yearBalanceDTO.getExpenses(), savedDto.getExpenses());
+    assertEquals(ID, savedDto.getId());
+    assertEquals(YEAR, savedDto.getYear());
     verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
   }
 
   @Test
   void saveYearBalance() {
-    yearBalance.setSalary(new BigDecimal(200));
-    YearBalanceDTO yearBalanceDTO = yearBalanceMapper.yearBalanceToYearBalanceDto(yearBalance);
+    YearBalance yearBalance = YearBalance.builder().id(ID).year(YEAR).build();
+
+    YearBalanceDTO yearBalanceDTO = new YearBalanceDTO();
+    yearBalanceDTO.setYear(yearBalance.getYear());
     when(yearBalanceRepository.save(any(YearBalance.class))).thenReturn(yearBalance);
     YearBalanceDTO savedYearBalanceDto = yearBalanceService.saveYearBalance(ID, yearBalanceDTO);
     assertNotNull(savedYearBalanceDto);
-    ModelEqualUtils.assertYearBalanceAndYearBalanceDtoAreEquals(yearBalance, savedYearBalanceDto);
+    assertEquals(ID, savedYearBalanceDto.getId());
+    assertEquals(YEAR, savedYearBalanceDto.getYear());
     verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
   }
 
   @Test
   void updateYearBalance() {
-    YearBalanceDTO yearBalanceDTO = yearBalanceMapper.yearBalanceToYearBalanceDto(yearBalance);
-    yearBalanceDTO.setSalary(new BigDecimal(200));
+    YearBalanceDTO yearBalanceDTO = new YearBalanceDTO();
+    yearBalanceDTO.setId(ID);
+    yearBalanceDTO.setYear(2019);
+
     when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
     when(yearBalanceRepository.save(any(YearBalance.class))).thenReturn(yearBalance);
-    YearBalance savedYearBalance = yearBalanceMapper.yearBalanceDtoToYearBalance(yearBalanceDTO);
+
     YearBalanceDTO savedYearBalanceDto = yearBalanceService.updateYearBalance(ID, yearBalanceDTO);
     assertNotNull(savedYearBalanceDto);
-    ModelEqualUtils.assertYearBalanceAndYearBalanceDtoAreEquals(savedYearBalance, savedYearBalanceDto);
+    assertEquals(ID, savedYearBalanceDto.getId());
+    assertNotEquals(YEAR, savedYearBalanceDto.getYear());
     verify(yearBalanceRepository,times(1)).findById(anyLong());
     verify(yearBalanceRepository,times(1)).save(any(YearBalance.class));
   }

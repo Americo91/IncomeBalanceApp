@@ -2,6 +2,7 @@ package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.BankBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.BankDTO;
+import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
 import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
 import com.astoppello.incomebalanceapp.services.BankBalanceService;
 import org.junit.jupiter.api.BeforeEach;
@@ -119,7 +120,7 @@ public class BankBalanceControllerTest {
   @Test
   void createNewBankBalance() throws Exception {
     bankBalanceDTO.setMonthBalanceId(ID);
-    when(bankBalanceService.createNewBankBalance(any(BankBalanceDTO.class)))
+    when(bankBalanceService.createNewBankBalance(bankBalanceDTO))
         .thenReturn(bankBalanceDTO);
     mockMvc
         .perform(
@@ -137,16 +138,16 @@ public class BankBalanceControllerTest {
   @Test
   void saveBankBalance() throws Exception {
     BankBalanceDTO bankBalanceDTO1 = new BankBalanceDTO();
-    bankBalanceDTO1.setId(2L);
-    when(bankBalanceService.saveBankBalance(anyLong(), any(BankBalanceDTO.class)))
+    bankBalanceDTO1.setId(3L);
+    when(bankBalanceService.saveBankBalance(3L, bankBalanceDTO))
         .thenReturn(bankBalanceDTO1);
     mockMvc
         .perform(
-            put(BankBalanceController.BASE_URL + "/2")
+            put(BankBalanceController.BASE_URL + "/3")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", equalTo(2)))
+        .andExpect(jsonPath("$.id", equalTo(3)))
         .andExpect(jsonPath("$.result", equalTo(null)));
     verify(bankBalanceService).saveBankBalance(anyLong(), any(BankBalanceDTO.class));
   }
@@ -155,7 +156,7 @@ public class BankBalanceControllerTest {
   void updateBankBalance() throws Exception {
     BankBalanceDTO bankBalanceDTO1 = bankBalanceDTO;
     bankBalanceDTO1.setExpenses(new BigDecimal(200));
-    when(bankBalanceService.updateBankBalance(anyLong(), any(BankBalanceDTO.class)))
+    when(bankBalanceService.updateBankBalance(ID, bankBalanceDTO))
         .thenReturn(bankBalanceDTO1);
     mockMvc
         .perform(
@@ -191,11 +192,12 @@ public class BankBalanceControllerTest {
 
   @Test
   void createNewBankBalancesById() throws Exception {
-    bankBalanceDTO.setId(ID);
-    bankBalanceDTO.setMonthBalanceId(ID);
+    BankBalanceDTO savedDto = bankBalanceDTO;
+    savedDto.setId(ID);
+    savedDto.setMonthBalanceId(ID);
     when(bankBalanceService.createNewBankBalanceById(
-            anyLong(), anyLong(), any(BankBalanceDTO.class)))
-        .thenReturn(bankBalanceDTO);
+            ID, ID, bankBalanceDTO))
+        .thenReturn(savedDto);
     mockMvc
         .perform(
             post(YearBalanceController.BASE_URL + "/1/monthBalances/1/bankBalances")

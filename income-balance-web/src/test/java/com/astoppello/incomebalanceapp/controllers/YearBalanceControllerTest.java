@@ -1,7 +1,6 @@
 package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
-import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.services.YearBalanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -55,7 +55,7 @@ public class YearBalanceControllerTest {
 
   @Test
   void findYearBalanceById() throws Exception {
-    when(yearBalanceService.findById(anyLong())).thenReturn(yearBalanceDTO);
+    when(yearBalanceService.findById(ID)).thenReturn(yearBalanceDTO);
     mockMvc
         .perform(
             get(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
@@ -66,7 +66,7 @@ public class YearBalanceControllerTest {
 
   @Test
   void findYearBalanceByYear() throws Exception {
-    when(yearBalanceService.findYearBalanceByYear(anyInt())).thenReturn(yearBalanceDTO);
+    when(yearBalanceService.findYearBalanceByYear(YEAR)).thenReturn(yearBalanceDTO);
     mockMvc
         .perform(
             get(YearBalanceController.BASE_URL + "?year=2020")
@@ -96,11 +96,10 @@ public class YearBalanceControllerTest {
   void saveYearBalance() throws Exception {
     YearBalanceDTO yearBalanceDTOToSave = yearBalanceDTO;
     yearBalanceDTOToSave.setSalary(new BigDecimal(200));
-    when(yearBalanceService.saveYearBalance(anyLong(), any(YearBalanceDTO.class)))
-        .thenReturn(yearBalanceDTOToSave);
+    when(yearBalanceService.saveYearBalance(ID, yearBalanceDTO)).thenReturn(yearBalanceDTOToSave);
     mockMvc
         .perform(
-            put(YearBalanceController.BASE_URL + "/"+ID)
+            put(YearBalanceController.BASE_URL + "/" + ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(AbstractRestControllerTest.asJsonString(yearBalanceDTOToSave)))
         .andExpect(status().isOk())
@@ -112,17 +111,24 @@ public class YearBalanceControllerTest {
 
   @Test
   void patchYearBalance() throws Exception {
-    when(yearBalanceService.updateYearBalance(anyLong(), any(YearBalanceDTO.class))).thenReturn(yearBalanceDTO);
-    mockMvc.perform(patch(YearBalanceController.BASE_URL+"/"+ID).contentType(MediaType.APPLICATION_JSON).content(AbstractRestControllerTest.asJsonString(yearBalanceDTO)))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$.id", equalTo(1)))
-           .andExpect(jsonPath("$.year", equalTo(YEAR)));
+    YearBalanceDTO saved = yearBalanceDTO;
+    saved.setResult(new BigDecimal(200));
+    when(yearBalanceService.updateYearBalance(ID, yearBalanceDTO)).thenReturn(saved);
+    mockMvc
+        .perform(
+            patch(YearBalanceController.BASE_URL + "/" + ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(AbstractRestControllerTest.asJsonString(yearBalanceDTO)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", equalTo(1)))
+        .andExpect(jsonPath("$.year", equalTo(YEAR)))
+        .andExpect(jsonPath("$.result", equalTo(200)));
     verify(yearBalanceService, times(1)).updateYearBalance(anyLong(), any(YearBalanceDTO.class));
   }
 
   @Test
   void deleteYearBalance() throws Exception {
-    mockMvc.perform(delete(YearBalanceController.BASE_URL+"/"+ID)).andExpect(status().isOk());
+    mockMvc.perform(delete(YearBalanceController.BASE_URL + "/" + ID)).andExpect(status().isOk());
     verify(yearBalanceService, times(1)).deleteYearBalance(anyLong());
   }
 }

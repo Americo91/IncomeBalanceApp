@@ -64,8 +64,9 @@ public class YearBalanceServiceImpl implements YearBalanceService {
 
   @Override
   public YearBalanceDTO saveYearBalance(Long yearBalanceId, YearBalanceDTO yearBalanceDTO) {
-    yearBalanceDTO.setId(yearBalanceId);
-    return saveAndReturnDto(yearBalanceMapper.yearBalanceDtoToYearBalance(yearBalanceDTO));
+    YearBalance yearbalance = yearBalanceMapper.yearBalanceDtoToYearBalance(yearBalanceDTO);
+    yearbalance.setId(yearBalanceId);
+    return saveAndReturnDto(yearbalance);
   }
 
   @Override

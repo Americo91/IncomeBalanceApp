@@ -64,7 +64,6 @@ public class BankServiceImpl implements BankService {
     log.info("Put bank " + bankDTO.toString());
     Bank bank = bankMapper.bankDtoToBank(bankDTO);
     bank.setId(id);
-
     return saveAndReturnDto(bank);
   }
 

@@ -25,12 +25,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
 import static com.astoppello.incomebalanceapp.utils.ModelEqualUtils.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Created by @author stopp on 28/11/2020 */
 @ExtendWith(SpringExtension.class)
@@ -153,6 +153,36 @@ public class ControllerIntegrationTest {
     assertNotNull(monthBalanceDTO);
     assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
   }
+  
+  @Test
+  void saveMonthBalance() {
+    MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
+    final var september = "September";
+    monthBalanceDTO.setMonth(september);
+    MonthBalanceDTO savedMonthBalanceDto = monthBalanceService.saveMonthBalance(2L, monthBalanceDTO);
+    assertNotNull(savedMonthBalanceDto);
+    assertNotNull(savedMonthBalanceDto.getId());
+    assertEquals(2L, savedMonthBalanceDto.getId());
+    assertEquals(september, savedMonthBalanceDto.getMonth());
+  }
+
+  @Test
+  void updateMonthBalance() {
+    MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
+    final var expenses = new BigDecimal(200);
+    monthBalanceDTO.setExpenses(expenses);
+
+    MonthBalanceDTO savedMonthBalanceDto = monthBalanceService.updateMonthBalance(2L, monthBalanceDTO);
+    assertNotNull(savedMonthBalanceDto);
+    assertNotNull(savedMonthBalanceDto.getId());
+    assertEquals(expenses, savedMonthBalanceDto.getExpenses());
+  }
+
+  @Test
+  void deleteMonthBalance() {
+    monthBalanceService.delete(1L);
+    assertThrows(ResourceNotFoundException.class, () -> monthBalanceService.findById(1L));
+  }
 
   // BankBalance Tests
   @Test
@@ -173,6 +203,8 @@ public class ControllerIntegrationTest {
     assertEquals(bankRepository.count(), bankService.findAll().size());
   }
 
+
+  //Bank tests
   @Test
   void getBankById() {
     Bank bank =
