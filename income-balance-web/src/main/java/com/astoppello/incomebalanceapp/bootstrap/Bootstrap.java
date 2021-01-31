@@ -50,12 +50,12 @@ public class Bootstrap implements CommandLineRunner {
     MonthBalance september =
         MonthBalance.builder().id(1L).month("September").salary(new BigDecimal("2229.58")).build();
     MonthBalance monthBalance =
-        MonthBalance.builder().id(2L).result(new BigDecimal("200.00")).build();
+        MonthBalance.builder().id(2L).salary(new BigDecimal("200.00")).build();
     MonthBalance october =
         MonthBalance.builder()
             .id(3L)
             .month("October")
-            .incomes(new BigDecimal("2000"))
+            .salary(new BigDecimal("2000"))
             .build()
             .addBankBalance(bankBalance);
     monthBalanceRepository.save(september);

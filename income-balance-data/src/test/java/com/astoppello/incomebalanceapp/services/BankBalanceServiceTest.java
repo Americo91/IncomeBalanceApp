@@ -69,8 +69,7 @@ class BankBalanceServiceTest {
         YearBalance.builder()
             .id(ID)
             .build()
-            .addMonthBalance(monthBalance.addBankBalance(bankBalance))
-            .addBankBalance(bankBalance);
+            .addMonthBalance(monthBalance.addBankBalance(bankBalance));
   }
 
   @Test

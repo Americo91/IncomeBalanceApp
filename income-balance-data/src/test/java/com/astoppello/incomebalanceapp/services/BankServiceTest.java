@@ -93,9 +93,9 @@ class BankServiceTest {
   @Test
   void updateBank() {
     BankDTO bankDTO = new BankDTO();
-    bankDTO.setId(ID);
     String updatedBankName = "NewBankName";
     bankDTO.setName(updatedBankName);
+    bankDTO.setId(ID);
     when(bankRepository.findById(anyLong())).thenReturn(Optional.ofNullable(bank));
     when(bankRepository.save(any(Bank.class))).thenReturn(bank);
     BankDTO updatedBankDto = bankService.updateBank(ID, bankDTO);

@@ -17,7 +17,7 @@ public interface YearBalanceService {
 
   YearBalanceDTO createNewYearBalance(YearBalanceDTO yearBalanceDTO);
 
-  YearBalanceDTO saveYearBalance(Long yearBalanceId, YearBalanceDTO yearBalanceDTO);
+  YearBalanceDTO saveYearBalance(Long id, YearBalanceDTO yearBalanceDTO);
 
   YearBalanceDTO updateYearBalance(Long id, YearBalanceDTO yearBalanceDTO);
 

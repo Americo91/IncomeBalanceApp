@@ -2,6 +2,7 @@ package com.astoppello.incomebalanceapp.dto.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -10,12 +11,12 @@ import java.util.List;
 @Data
 public class MonthBalanceDTO {
   private Long id;
-  private String month;
-  private BigDecimal salary;
-  private BigDecimal expenses;
-  private BigDecimal incomes;
-  private BigDecimal result;
+  @Nullable private String month;
+  @Nullable private BigDecimal salary;
+  @Nullable private BigDecimal expenses;
+  @Nullable private BigDecimal incomes;
+  @Nullable private BigDecimal result;
   @JsonProperty("bankBalances")
-  private List<BankBalanceDTO> bankBalances;
-  private Long yearBalanceId;
+  @Nullable private List<BankBalanceDTO> bankBalances;
+  @Nullable private Long yearBalanceId;
 }

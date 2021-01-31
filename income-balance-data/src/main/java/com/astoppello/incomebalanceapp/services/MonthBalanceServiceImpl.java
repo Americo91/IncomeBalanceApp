@@ -8,16 +8,22 @@ import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
+import com.astoppello.incomebalanceapp.utils.MonthBalanceUtils;
+import com.astoppello.incomebalanceapp.utils.YearBalanceUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.astoppello.incomebalanceapp.services.YearBalanceService.YEAR_BALANCE_NOT_FOUND;
 
 /** Created by @author stopp on 20/12/2020 */
+@Slf4j
 @Service
 public class MonthBalanceServiceImpl implements MonthBalanceService {
 
@@ -39,6 +45,7 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
 
   @Override
   public List<MonthBalanceDTO> findByMonth(String month) {
+    log.info("Find MonthBalance by month: " + month);
     return monthBalanceRepository.findAll().stream()
         .filter(monthBalance -> month.equals(monthBalance.getMonth()))
         .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
@@ -48,21 +55,32 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
   @Override
   public MonthBalanceDTO createNewMonthBalanceById(
       Long yearBalanceId, MonthBalanceDTO monthBalanceDTO) {
+    log.info(
+        "Create MonthBalance.  yearBalanceId: "
+            + yearBalanceId
+            + ". MonthBalance: "
+            + monthBalanceDTO);
     MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
     monthBalance.setYearBalance(getYearBalanceById(yearBalanceId));
     return createAndReturnDto(monthBalance);
   }
 
-
   @Override
   public List<MonthBalanceDTO> findAllById(Long yearBalanceId) {
+    log.info("Find all MonthBalance of yearBalanceId: " + yearBalanceId);
     return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceList())
         .stream()
         .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
         .collect(Collectors.toList());
   }
+
   @Override
   public MonthBalanceDTO findMonthOfYearById(Long yearBalanceId, Long monthBalanceId) {
+    log.info(
+        "Find MonthBalance of yearBalanceId: "
+            + yearBalanceId
+            + ". MonthBalanceId: "
+            + monthBalanceId);
     return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceList())
         .stream()
         .filter(monthBalance -> monthBalanceId.equals(monthBalance.getId()))
@@ -73,6 +91,7 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
 
   @Override
   public List<MonthBalanceDTO> findAll() {
+    log.info("Find all MonthBalance");
     return monthBalanceRepository.findAll().stream()
         .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
         .collect(Collectors.toList());
@@ -80,6 +99,7 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
 
   @Override
   public MonthBalanceDTO findById(Long id) {
+    log.info("Find MonthBalance id:" + id);
     return monthBalanceRepository
         .findById(id)
         .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
@@ -88,29 +108,24 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
 
   @Override
   public MonthBalanceDTO createNewMonthBalance(MonthBalanceDTO monthBalanceDTO) {
+    log.info("Create MonthBalance: " + monthBalanceDTO);
     MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
-    if (monthBalanceDTO.getYearBalanceId() != null) {
-      yearBalanceRepository
-          .findById(monthBalanceDTO.getYearBalanceId())
-          .ifPresent(monthBalance::setYearBalance);
-    }
+    setYearBalanceIfPresent(monthBalanceDTO.getYearBalanceId(), monthBalance);
     return createAndReturnDto(monthBalance);
   }
 
   @Override
-  public MonthBalanceDTO saveMonthBalance(Long monthBalanceId, MonthBalanceDTO monthBalanceDTO) {
+  public MonthBalanceDTO saveMonthBalance(Long id, MonthBalanceDTO monthBalanceDTO) {
+    log.info("Put MonthBalance id: " + id + "MonthBalance: " + monthBalanceDTO);
     MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
-    monthBalance.setId(monthBalanceId);
-    if (monthBalanceDTO.getYearBalanceId() != null) {
-      yearBalanceRepository
-          .findById(monthBalanceDTO.getYearBalanceId())
-          .ifPresent(monthBalance::setYearBalance);
-    }
+    monthBalance.setId(id);
+    setYearBalanceIfPresent(monthBalanceDTO.getYearBalanceId(), monthBalance);
     return createAndReturnDto(monthBalance);
   }
 
   @Override
   public MonthBalanceDTO updateMonthBalance(Long monthBalanceId, MonthBalanceDTO monthBalanceDTO) {
+    log.info("Patch MonthBalance with id: " + monthBalanceId + "MonthBalance: " + monthBalanceDTO);
     return monthBalanceRepository
         .findById(monthBalanceId)
         .map(
@@ -130,11 +145,7 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
               if (monthBalanceDTO.getSalary() != null) {
                 monthBalance.setSalary(monthBalanceDTO.getSalary());
               }
-              if (monthBalanceDTO.getYearBalanceId() != null) {
-                yearBalanceRepository
-                    .findById(monthBalanceDTO.getYearBalanceId())
-                    .ifPresent(monthBalance::setYearBalance);
-              }
+              setYearBalanceIfPresent(monthBalanceDTO.getYearBalanceId(), monthBalance);
               // TODO: Check this better
               if (CollectionUtils.isNotEmpty(monthBalanceDTO.getBankBalances())) {
                 monthBalance.setBankBalanceList(
@@ -149,21 +160,31 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
 
   @Override
   public void delete(Long monthBalanceId) {
+    log.info("Delete MonthBalance: " + monthBalanceId);
     monthBalanceRepository.deleteById(monthBalanceId);
   }
 
-  private MonthBalanceDTO createAndReturnDto(MonthBalance monthBalance) {
-    MonthBalance savedMonthBalance = monthBalanceRepository.save(monthBalance);
-    if (savedMonthBalance.getYearBalance() != null) {
-      savedMonthBalance.getYearBalance().addMonthBalance(savedMonthBalance);
-      yearBalanceRepository.save(savedMonthBalance.getYearBalance());
+  private void setYearBalanceIfPresent(Long yearBalanceId, MonthBalance monthBalance) {
+    if (yearBalanceId != null) {
+      yearBalanceRepository.findById(yearBalanceId).ifPresent(monthBalance::setYearBalance);
     }
-    return monthBalanceMapper.monthBalanceToMonthBalanceDto(savedMonthBalance);
   }
 
   private YearBalance getYearBalanceById(Long yearBalanceId) {
     return yearBalanceRepository
         .findById(yearBalanceId)
         .orElseThrow(() -> new ResourceNotFoundException(YEAR_BALANCE_NOT_FOUND + yearBalanceId));
+  }
+
+  private MonthBalanceDTO createAndReturnDto(MonthBalance monthBalance) {
+    MonthBalanceUtils.computeMontlyAmount(monthBalance);
+    MonthBalance savedMonthBalance = monthBalanceRepository.save(monthBalance);
+    final YearBalance yearBalance = savedMonthBalance.getYearBalance();
+    if (yearBalance != null) {
+      yearBalance.addMonthBalance(savedMonthBalance);
+      YearBalanceUtils.computeYearlyAmount(yearBalance);
+      yearBalanceRepository.save(yearBalance);
+    }
+    return monthBalanceMapper.monthBalanceToMonthBalanceDto(savedMonthBalance);
   }
 }

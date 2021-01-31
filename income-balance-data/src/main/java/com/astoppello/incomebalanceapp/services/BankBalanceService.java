@@ -23,7 +23,7 @@ public interface BankBalanceService {
 
   BankBalanceDTO createNewBankBalance(BankBalanceDTO bankBalanceDTO);
 
-  BankBalanceDTO saveBankBalance(Long bankBalanceId, BankBalanceDTO bankBalanceDTO);
+  BankBalanceDTO saveBankBalance(Long id, BankBalanceDTO bankBalanceDTO);
 
   BankBalanceDTO updateBankBalance(Long bankBalanceId, BankBalanceDTO bankBalanceDTO);
 

@@ -23,7 +23,7 @@ public interface MonthBalanceService {
 
   MonthBalanceDTO createNewMonthBalance(MonthBalanceDTO monthBalanceDTO);
 
-  MonthBalanceDTO saveMonthBalance(Long monthBalanceId, MonthBalanceDTO monthBalanceDTO);
+  MonthBalanceDTO saveMonthBalance(Long id, MonthBalanceDTO monthBalanceDTO);
 
   MonthBalanceDTO updateMonthBalance(Long monthBalanceId, MonthBalanceDTO monthBalanceDTO);
 

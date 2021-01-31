@@ -109,10 +109,10 @@ public class BankControllerTest {
 
   @Test
   void updateBank() throws Exception {
+    String mediolanum = "Mediolanum";
     BankDTO bankDTO1 = new BankDTO();
+    bankDTO1.setName(mediolanum);
     bankDTO1.setId(ID);
-    String pippo = "pippo";
-    bankDTO1.setName(pippo);
     when(bankService.updateBank(ID, bankDTO)).thenReturn(bankDTO1);
     mockMvc
         .perform(
@@ -121,7 +121,7 @@ public class BankControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
-        .andExpect(jsonPath("$.name", equalTo(pippo)));
+        .andExpect(jsonPath("$.name", equalTo(mediolanum)));
     verify(bankService).updateBank(anyLong(), any());
   }
 

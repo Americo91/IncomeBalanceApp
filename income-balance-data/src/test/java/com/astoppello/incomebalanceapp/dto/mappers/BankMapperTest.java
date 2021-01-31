@@ -22,8 +22,8 @@ public class BankMapperTest {
     @Test
     void bankDtoToBank() {
         BankDTO bankDTO = new BankDTO();
-        bankDTO.setId(ID);
         bankDTO.setName(NAME);
+        bankDTO.setId(ID);
 
         Bank bank = mapper.bankDtoToBank(bankDTO);
         assertNotNull(bank);

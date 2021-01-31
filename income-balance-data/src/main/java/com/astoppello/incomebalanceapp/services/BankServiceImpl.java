@@ -61,7 +61,7 @@ public class BankServiceImpl implements BankService {
 
   @Override
   public BankDTO saveBank(Long id, BankDTO bankDTO) {
-    log.info("Put bank " + bankDTO.toString());
+    log.info("Put bank with id:" +id+". Bank: " + bankDTO.toString());
     Bank bank = bankMapper.bankDtoToBank(bankDTO);
     bank.setId(id);
     return saveAndReturnDto(bank);
@@ -69,7 +69,7 @@ public class BankServiceImpl implements BankService {
 
   @Override
   public BankDTO updateBank(Long id, BankDTO bankDTO) {
-    log.info("Update bank by id: " + id + ". bank: " + bankDTO.toString());
+    log.info("Update bank by id: " + id + ". Bank: " + bankDTO.toString());
     return repository
         .findById(id)
         .map(

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,7 +25,8 @@ import java.util.StringJoiner;
 @Entity
 @Table(name = "yearbalances")
 public class YearBalance extends AbstractBalanceEntity {
-  private Integer year;
+
+  @Nullable private Integer year;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "yearBalance")
   private List<MonthBalance> monthBalanceList = new LinkedList<>();
@@ -51,13 +54,14 @@ public class YearBalance extends AbstractBalanceEntity {
     }
   }
 
-  public YearBalance addMonthBalance(MonthBalance monthBalance) {
+  public YearBalance addMonthBalance(@NonNull MonthBalance monthBalance) {
     monthBalance.setYearBalance(this);
     monthBalanceList.add(monthBalance);
+    CollectionUtils.emptyIfNull(monthBalance.getBankBalanceList()).stream().filter(Objects::nonNull).forEach(this::addBankBalance);
     return this;
   }
 
-  public YearBalance addBankBalance(BankBalance bankBalance) {
+  public YearBalance addBankBalance(@NonNull BankBalance bankBalance) {
     bankBalance.setYearBalance(this);
     bankBalanceList.add(bankBalance);
     return this;

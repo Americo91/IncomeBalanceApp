@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -18,6 +19,7 @@ import java.util.StringJoiner;
 @Table(name = "banks")
 public class Bank extends AbstractBaseEntity {
 
+  @NonNull
   private String name;
 
   @Builder

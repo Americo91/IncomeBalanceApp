@@ -62,11 +62,11 @@ public class MonthBalanceController {
     return monthBalanceService.createNewMonthBalance(monthBalanceDTO);
   }
 
-  @PutMapping(BASE_URL + "/{monthBalanceId}")
+  @PutMapping(BASE_URL + "/{id}")
   @ResponseStatus(HttpStatus.OK)
   public MonthBalanceDTO saveMonthBalance(
-      @PathVariable Long monthBalanceId, @RequestBody MonthBalanceDTO monthBalanceDTO) {
-    return monthBalanceService.saveMonthBalance(monthBalanceId, monthBalanceDTO);
+      @PathVariable Long id, @RequestBody MonthBalanceDTO monthBalanceDTO) {
+    return monthBalanceService.saveMonthBalance(id, monthBalanceDTO);
   }
 
   @PatchMapping(BASE_URL + "/{monthBalanceId}")

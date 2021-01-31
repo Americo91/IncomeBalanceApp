@@ -66,11 +66,11 @@ public class BankBalanceController {
     return bankBalanceService.createNewBankBalance(bankBalanceDTO);
   }
 
-  @PutMapping(BASE_URL + "/{bankBalanceId}")
+  @PutMapping(BASE_URL + "/{id}")
   @ResponseStatus(HttpStatus.OK)
   public BankBalanceDTO saveBankBalance(
-      @PathVariable Long bankBalanceId, @RequestBody BankBalanceDTO bankBalanceDTO) {
-    return bankBalanceService.saveBankBalance(bankBalanceId, bankBalanceDTO);
+      @PathVariable Long id, @RequestBody BankBalanceDTO bankBalanceDTO) {
+    return bankBalanceService.saveBankBalance(id, bankBalanceDTO);
   }
 
   @PatchMapping(BASE_URL + "/{bankBalanceId}")

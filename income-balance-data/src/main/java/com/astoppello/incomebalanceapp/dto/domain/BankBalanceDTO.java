@@ -1,6 +1,7 @@
 package com.astoppello.incomebalanceapp.dto.domain;
 
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 
@@ -8,11 +9,11 @@ import java.math.BigDecimal;
 @Data
 public class BankBalanceDTO {
   private Long id;
-  private BankDTO bank;
-  private BigDecimal salary;
-  private BigDecimal expenses;
-  private BigDecimal incomes;
-  private BigDecimal result;
-  private Long monthBalanceId;
-  private Long yearBalanceId;
+  @Nullable private BankDTO bank;
+  @Nullable private BigDecimal salary;
+  @Nullable private BigDecimal expenses;
+  @Nullable private BigDecimal incomes;
+  @Nullable private BigDecimal result;
+  @Nullable private Long monthBalanceId;
+  @Nullable private Long yearBalanceId;
 }

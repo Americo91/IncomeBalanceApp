@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -18,14 +19,17 @@ import java.util.StringJoiner;
 @Table(name = "bankBalances")
 public class BankBalance extends AbstractBalanceEntity {
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @Nullable
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "bank")
   private Bank bank;
 
+  @Nullable
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "monthBalance_id")
   private MonthBalance monthBalance;
 
+  @Nullable
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "yearBalance_id")
   private YearBalance yearBalance;

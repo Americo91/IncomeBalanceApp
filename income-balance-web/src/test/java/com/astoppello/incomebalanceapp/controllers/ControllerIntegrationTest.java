@@ -16,6 +16,7 @@ import com.astoppello.incomebalanceapp.repositories.BankRepository;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import com.astoppello.incomebalanceapp.services.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -69,7 +70,9 @@ public class ControllerIntegrationTest {
             bankBalanceMapper,
             monthBalanceRepository,
             yearBalanceRepository);
-    yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper, monthBalanceMapper, bankBalanceMapper);
+    yearBalanceService =
+        new YearBalanceServiceImpl(
+            yearBalanceRepository, yearBalanceMapper, monthBalanceMapper, bankBalanceMapper);
     bankService = new BankServiceImpl(bankRepository, bankMapper);
     monthBalanceService =
         new MonthBalanceServiceImpl(
@@ -117,6 +120,31 @@ public class ControllerIntegrationTest {
     assertEquals(savedYearBalanceDto.getYear(), 2021);
   }
 
+  @Test
+  void createOneShot() {
+    YearBalanceDTO yearBalanceDTO = new YearBalanceDTO();
+    yearBalanceDTO.setYear(2022);
+    BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
+    BigDecimal expenses = new BigDecimal(200);
+    bankBalanceDTO.setExpenses(expenses);
+    MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
+    String september = "September";
+    monthBalanceDTO.setMonth(september);
+    BigDecimal salary = new BigDecimal(1000);
+    monthBalanceDTO.setSalary(salary);
+    yearBalanceDTO.setMonthBalances(List.of(monthBalanceDTO));
+    yearBalanceDTO.setBankBalances(List.of(bankBalanceDTO));
+    YearBalanceDTO savedDto = yearBalanceService.createNewYearBalance(yearBalanceDTO);
+    assertNotNull(savedDto);
+    assertNotNull(savedDto.getId());
+    assertTrue(CollectionUtils.isNotEmpty(savedDto.getBankBalances()));
+    assertTrue(CollectionUtils.isNotEmpty(savedDto.getMonthBalances()));
+    assertEquals(expenses, savedDto.getExpenses());
+    assertEquals(salary, savedDto.getSalary());
+    assertEquals(savedDto.getId(), savedDto.getBankBalances().get(0).getYearBalanceId());
+    assertEquals(savedDto.getId(), savedDto.getMonthBalances().get(0).getYearBalanceId());
+  }
+
   // MonthBalance Tests
   @Test
   void getAllMonthBalanceTest() {
@@ -149,17 +177,19 @@ public class ControllerIntegrationTest {
   void getMonthBalanceByMonth() {
     MonthBalance monthBalance =
         monthBalanceRepository.findById(3L).orElseThrow(ResourceNotFoundException::new);
-    MonthBalanceDTO monthBalanceDTO = monthBalanceService.findByMonth(monthBalance.getMonth()).get(0);
+    MonthBalanceDTO monthBalanceDTO =
+        monthBalanceService.findByMonth(monthBalance.getMonth()).get(0);
     assertNotNull(monthBalanceDTO);
     assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
   }
-  
+
   @Test
   void saveMonthBalance() {
     MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
     final var september = "September";
     monthBalanceDTO.setMonth(september);
-    MonthBalanceDTO savedMonthBalanceDto = monthBalanceService.saveMonthBalance(2L, monthBalanceDTO);
+    MonthBalanceDTO savedMonthBalanceDto =
+        monthBalanceService.saveMonthBalance(2L, monthBalanceDTO);
     assertNotNull(savedMonthBalanceDto);
     assertNotNull(savedMonthBalanceDto.getId());
     assertEquals(2L, savedMonthBalanceDto.getId());
@@ -169,13 +199,14 @@ public class ControllerIntegrationTest {
   @Test
   void updateMonthBalance() {
     MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
-    final var expenses = new BigDecimal(200);
-    monthBalanceDTO.setExpenses(expenses);
+    final var salary = new BigDecimal(200);
+    monthBalanceDTO.setSalary(salary);
 
-    MonthBalanceDTO savedMonthBalanceDto = monthBalanceService.updateMonthBalance(2L, monthBalanceDTO);
+    MonthBalanceDTO savedMonthBalanceDto =
+        monthBalanceService.updateMonthBalance(2L, monthBalanceDTO);
     assertNotNull(savedMonthBalanceDto);
     assertNotNull(savedMonthBalanceDto.getId());
-    assertEquals(expenses, savedMonthBalanceDto.getExpenses());
+    assertEquals(salary, savedMonthBalanceDto.getSalary());
   }
 
   @Test
@@ -203,8 +234,7 @@ public class ControllerIntegrationTest {
     assertEquals(bankRepository.count(), bankService.findAll().size());
   }
 
-
-  //Bank tests
+  // Bank tests
   @Test
   void getBankById() {
     Bank bank =
