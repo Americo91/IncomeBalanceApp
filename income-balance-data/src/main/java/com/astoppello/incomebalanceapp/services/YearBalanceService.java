@@ -4,14 +4,22 @@ import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 
 import java.util.List;
 
-/**
- * Created by @author stopp on 15/11/2020
- */
-public interface YearBalanceService extends CrudService<YearBalanceDTO, Long>{
+/** Created by @author stopp on 15/11/2020 */
+public interface YearBalanceService {
 
-    List<YearBalanceDTO> findAll();
+  String YEAR_BALANCE_NOT_FOUND = "YearBalance not found: ";
 
-    YearBalanceDTO findById(Long id);
+  List<YearBalanceDTO> findAll();
 
-    YearBalanceDTO findYearBalanceByYear(int year);
+  YearBalanceDTO findById(Long id);
+
+  YearBalanceDTO findYearBalanceByYear(int year);
+
+  YearBalanceDTO createNewYearBalance(YearBalanceDTO yearBalanceDTO);
+
+  YearBalanceDTO saveYearBalance(Long id, YearBalanceDTO yearBalanceDTO);
+
+  YearBalanceDTO updateYearBalance(Long id, YearBalanceDTO yearBalanceDTO);
+
+  void deleteYearBalance(Long id);
 }

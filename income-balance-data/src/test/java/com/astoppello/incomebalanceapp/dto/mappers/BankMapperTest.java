@@ -2,33 +2,32 @@ package com.astoppello.incomebalanceapp.dto.mappers;
 
 import com.astoppello.incomebalanceapp.dto.domain.BankDTO;
 import com.astoppello.incomebalanceapp.model.Bank;
+import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.ui.Model;
 
+import static com.astoppello.incomebalanceapp.utils.ModelEqualUtils.assertBankAndBankDtoAreEquals;
 import static org.junit.jupiter.api.Assertions.*;
-
+@SpringBootTest(classes = {BankMapperImpl.class})
 public class BankMapperTest {
 
+    @Autowired
     private BankMapper mapper;
     public static final Long ID = 1L;
     public static final String NAME = "Revolut";
 
-    @BeforeEach
-    void setUp() {
-        mapper = BankMapper.INSTANCE;
-    }
-
     @Test
     void bankDtoToBank() {
         BankDTO bankDTO = new BankDTO();
-        bankDTO.setId(ID);
         bankDTO.setName(NAME);
+        bankDTO.setId(ID);
 
         Bank bank = mapper.bankDtoToBank(bankDTO);
         assertNotNull(bank);
-        assertEquals(ID, bank.getId());
-        assertEquals(NAME, bank.getName());
-
+        assertBankAndBankDtoAreEquals(bank, bankDTO);
     }
 
     @Test
@@ -36,7 +35,6 @@ public class BankMapperTest {
         Bank bank = Bank.builder().id(ID).name(NAME).build();
         BankDTO bankDTO = mapper.bankToBankDto(bank);
         assertNotNull(bankDTO);
-        assertEquals(ID, bankDTO.getId());
-        assertEquals(NAME, bankDTO.getName());
+        assertBankAndBankDtoAreEquals(bank, bankDTO);
     }
 }
