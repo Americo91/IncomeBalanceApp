@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 /** Created by @author stopp on 16/11/2020 */
-@Component
+//@Component
 public class Bootstrap implements CommandLineRunner {
 
   private final YearBalanceRepository yearBalanceRepository;

@@ -9,6 +9,7 @@ import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.BankBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
+import com.astoppello.incomebalanceapp.utils.BankBalanceUtils;
 import com.astoppello.incomebalanceapp.utils.MonthBalanceUtils;
 import com.astoppello.incomebalanceapp.utils.YearBalanceUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -168,6 +169,7 @@ public class BankBalanceServiceImpl implements BankBalanceService {
   }
 
   private BankBalanceDTO createAndReturnDto(BankBalance bankBalance) {
+    bankBalance.setResult(BankBalanceUtils.computeResult(bankBalance));
     BankBalance savedBankBalance = bankBalanceRepository.save(bankBalance);
     final MonthBalance monthBalance = savedBankBalance.getMonthBalance();
     if (monthBalance != null) {

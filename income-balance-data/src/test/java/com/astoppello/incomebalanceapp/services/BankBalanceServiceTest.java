@@ -13,7 +13,6 @@ import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.BankBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
-import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +35,7 @@ import static org.mockito.Mockito.*;
 class BankBalanceServiceTest {
 
   public static final BigDecimal EXPENSES = BigDecimal.valueOf(100);
-  public static final BigDecimal SALARY = BigDecimal.valueOf(200);
+  public static final BigDecimal INCOMES = BigDecimal.valueOf(200);
   public static final String REVOLUT = "Revolut";
   private static final Long ID = 1L;
   BankBalance bankBalance;
@@ -62,7 +61,7 @@ class BankBalanceServiceTest {
         BankBalance.builder()
             .bank(Bank.builder().id(ID).name(REVOLUT).build())
             .expenses(EXPENSES)
-            .salary(SALARY)
+            .incomes(INCOMES)
             .id(ID)
             .build();
     yearBalance =
@@ -100,7 +99,7 @@ class BankBalanceServiceTest {
     assertNotNull(bankBalanceDTO);
     assertEquals(ID, bankBalanceDTO.getId());
     assertEquals(EXPENSES, bankBalanceDTO.getExpenses());
-    assertEquals(SALARY, bankBalanceDTO.getSalary());
+    assertEquals(INCOMES, bankBalanceDTO.getIncomes());
     assertEquals(ID, bankBalanceDTO.getBank().getId());
     assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
     verify(bankBalanceRepository, times(1)).findById(anyLong());
@@ -113,7 +112,7 @@ class BankBalanceServiceTest {
     assertNotNull(bankBalanceDTO);
     assertEquals(ID, bankBalanceDTO.getId());
     assertEquals(EXPENSES, bankBalanceDTO.getExpenses());
-    assertEquals(SALARY, bankBalanceDTO.getSalary());
+    assertEquals(INCOMES, bankBalanceDTO.getIncomes());
     assertEquals(ID, bankBalanceDTO.getBank().getId());
     assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
     verify(bankBalanceRepository, times(1)).findAll();
@@ -131,7 +130,7 @@ class BankBalanceServiceTest {
     assertNotNull(savedBankBalanced);
     assertEquals(ID, savedBankBalanced.getId());
     assertEquals(EXPENSES, savedBankBalanced.getExpenses());
-    assertEquals(SALARY, savedBankBalanced.getSalary());
+    assertEquals(INCOMES, savedBankBalanced.getIncomes());
     assertEquals(ID, savedBankBalanced.getBank().getId());
     assertEquals(REVOLUT, savedBankBalanced.getBank().getName());
     verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
@@ -155,7 +154,7 @@ class BankBalanceServiceTest {
     assertNotNull(savedBankBalanceDto);
     assertEquals(ID, savedBankBalanceDto.getId());
     assertEquals(EXPENSES, savedBankBalanceDto.getExpenses());
-    assertEquals(SALARY, savedBankBalanceDto.getSalary());
+    assertEquals(INCOMES, savedBankBalanceDto.getIncomes());
     assertEquals(ID, savedBankBalanceDto.getBank().getId());
     assertEquals(REVOLUT, savedBankBalanceDto.getBank().getName());
     verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
@@ -192,7 +191,7 @@ class BankBalanceServiceTest {
     assertNotNull(savedBankBalanceDto);
     assertEquals(ID, savedBankBalanceDto.getId());
     assertEquals(EXPENSES, savedBankBalanceDto.getExpenses());
-    assertEquals(SALARY, savedBankBalanceDto.getSalary());
+    assertEquals(INCOMES, savedBankBalanceDto.getIncomes());
     assertEquals(ID, savedBankBalanceDto.getBank().getId());
     assertEquals(REVOLUT, savedBankBalanceDto.getBank().getName());
     assertEquals(result, savedBankBalanceDto.getResult());
@@ -210,7 +209,7 @@ class BankBalanceServiceTest {
   private BankBalanceDTO createBankBalanceDto() {
     BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
     bankBalanceDTO.setExpenses(EXPENSES);
-    bankBalanceDTO.setSalary(SALARY);
+    bankBalanceDTO.setIncomes(INCOMES);
     bankBalanceDTO.setId(ID);
     BankDTO bankDTO = new BankDTO();
     bankDTO.setName(REVOLUT);
