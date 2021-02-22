@@ -17,6 +17,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -144,13 +145,13 @@ public class BankBalanceServiceImpl implements BankBalanceService {
                 bankBalance.setBank(bankBalance.getBank());
               }
               if (bankBalanceDTO.getExpenses() != null) {
-                bankBalance.setExpenses(bankBalanceDTO.getExpenses());
+                bankBalance.setExpenses(new BigDecimal(bankBalanceDTO.getExpenses()));
               }
               if (bankBalanceDTO.getIncomes() != null) {
-                bankBalance.setIncomes(bankBalanceDTO.getIncomes());
+                bankBalance.setIncomes(new BigDecimal(bankBalanceDTO.getIncomes()));
               }
               if (bankBalanceDTO.getResult() != null) {
-                bankBalance.setResult(bankBalanceDTO.getResult());
+                bankBalance.setResult(new BigDecimal(bankBalanceDTO.getResult()));
               }
               setMonthBalanceIfPresent(bankBalance, bankBalanceDTO.getMonthBalanceId());
               setYearBalanceIfPresent(bankBalance, bankBalanceDTO.getYearBalanceId());

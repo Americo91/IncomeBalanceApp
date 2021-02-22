@@ -8,18 +8,31 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-/** Created by @author stopp on 16/11/2020 */
+/**
+ * Created by @author stopp on 16/11/2020
+ */
 @Mapper(
-    uses = {MonthBalanceMapper.class, BankBalanceMapper.class},
-    componentModel = "spring")
+        uses = {MonthBalanceMapper.class, BankBalanceMapper.class},
+        componentModel = "spring")
 public interface YearBalanceMapper {
 
-  @Mappings({
-    @Mapping(source = "monthBalances", target = "monthBalanceList"),
-    @Mapping(source = "bankBalances", target = "bankBalanceList")
-  })
-  YearBalance yearBalanceDtoToYearBalance(YearBalanceDTO yearBalanceDTO);
+    @Mappings({
+            @Mapping(source = "monthBalances", target = "monthBalanceList"),
+            @Mapping(source = "bankBalances", target = "bankBalanceList"),
+            @Mapping(source = "expenses", target = "expenses", qualifiedByName = "StringToBigDecimal"),
+            @Mapping(source = "incomes", target = "incomes", qualifiedByName = "StringToBigDecimal"),
+            @Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal"),
+            @Mapping(source = "salary", target = "salary", qualifiedByName = "StringToBigDecimal"),
+    })
+    YearBalance yearBalanceDtoToYearBalance(YearBalanceDTO yearBalanceDTO);
 
-  @InheritInverseConfiguration
-  YearBalanceDTO yearBalanceToYearBalanceDto(YearBalance yearBalance);
+    @Mappings({
+            @Mapping(source = "bankBalanceList", target = "bankBalances"),
+            @Mapping(source = "monthBalanceList", target = "monthBalances"),
+            @Mapping(source = "expenses", target = "expenses", qualifiedByName = "BigDecimalToString"),
+            @Mapping(source = "incomes", target = "incomes", qualifiedByName = "BigDecimalToString"),
+            @Mapping(source = "result", target = "result", qualifiedByName = "BigDecimalToString"),
+            @Mapping(source = "salary", target = "salary", qualifiedByName = "BigDecimalToString"),
+    })
+    YearBalanceDTO yearBalanceToYearBalanceDto(YearBalance yearBalance);
 }

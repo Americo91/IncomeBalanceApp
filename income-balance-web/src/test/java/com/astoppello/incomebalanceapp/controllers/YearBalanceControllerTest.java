@@ -95,7 +95,7 @@ public class YearBalanceControllerTest {
   @Test
   void saveYearBalance() throws Exception {
     YearBalanceDTO yearBalanceDTOToSave = yearBalanceDTO;
-    yearBalanceDTOToSave.setSalary(new BigDecimal(200));
+    yearBalanceDTOToSave.setSalary("200.00");
     when(yearBalanceService.saveYearBalance(ID, yearBalanceDTO)).thenReturn(yearBalanceDTOToSave);
     mockMvc
         .perform(
@@ -105,14 +105,14 @@ public class YearBalanceControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
         .andExpect(jsonPath("$.year", equalTo(YEAR)))
-        .andExpect(jsonPath("$.salary", equalTo(200)));
+        .andExpect(jsonPath("$.salary", equalTo("200.00")));
     verify(yearBalanceService, times(1)).saveYearBalance(anyLong(), any(YearBalanceDTO.class));
   }
 
   @Test
   void patchYearBalance() throws Exception {
     YearBalanceDTO saved = yearBalanceDTO;
-    saved.setResult(new BigDecimal(200));
+    saved.setResult("200");
     when(yearBalanceService.updateYearBalance(ID, yearBalanceDTO)).thenReturn(saved);
     mockMvc
         .perform(
@@ -122,7 +122,7 @@ public class YearBalanceControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
         .andExpect(jsonPath("$.year", equalTo(YEAR)))
-        .andExpect(jsonPath("$.result", equalTo(200)));
+        .andExpect(jsonPath("$.result", equalTo("200")));
     verify(yearBalanceService, times(1)).updateYearBalance(anyLong(), any(YearBalanceDTO.class));
   }
 

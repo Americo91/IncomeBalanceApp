@@ -135,13 +135,14 @@ public class ControllerIntegrationTest {
         YearBalanceDTO yearBalanceDTO = new YearBalanceDTO();
         yearBalanceDTO.setYear(2022);
         BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
-        BigDecimal expenses = new BigDecimal(200);
-        bankBalanceDTO.setExpenses(expenses);
+        String expensesString = "200.00";
+        bankBalanceDTO.setExpenses(expensesString);
         MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
         String september = "September";
         monthBalanceDTO.setMonth(september);
-        BigDecimal salary = new BigDecimal(1000);
-        monthBalanceDTO.setSalary(salary);
+
+        String salaryString = "1000.00";
+        monthBalanceDTO.setSalary(salaryString);
         yearBalanceDTO.setMonthBalances(List.of(monthBalanceDTO));
         yearBalanceDTO.setBankBalances(List.of(bankBalanceDTO));
         YearBalanceDTO savedDto = yearBalanceService.createNewYearBalance(yearBalanceDTO);
@@ -149,8 +150,8 @@ public class ControllerIntegrationTest {
         assertNotNull(savedDto.getId());
         assertTrue(CollectionUtils.isNotEmpty(savedDto.getBankBalances()));
         assertTrue(CollectionUtils.isNotEmpty(savedDto.getMonthBalances()));
-        assertEquals(expenses, savedDto.getExpenses());
-        assertEquals(salary, savedDto.getSalary());
+        assertEquals(expensesString, savedDto.getExpenses());
+        assertEquals(salaryString, savedDto.getSalary());
         assertEquals(savedDto.getId(), savedDto.getBankBalances().get(0).getYearBalanceId());
         assertEquals(savedDto.getId(), savedDto.getMonthBalances().get(0).getYearBalanceId());
     }
@@ -209,7 +210,7 @@ public class ControllerIntegrationTest {
     @Test
     void updateMonthBalance() {
         MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
-        final var salary = new BigDecimal(200);
+        String salary = "200";
         monthBalanceDTO.setSalary(salary);
 
         MonthBalanceDTO savedMonthBalanceDto =
@@ -241,17 +242,19 @@ public class ControllerIntegrationTest {
 
     @Test
     void createBankBalanceTest() {
-        final BigDecimal incomes = new BigDecimal(100);
-        final BigDecimal expenses = new BigDecimal(50);
+        String incomesString = "100.00";
+        final BigDecimal incomes = new BigDecimal(incomesString);
+        String expensesString = "50.00";
+        final BigDecimal expenses = new BigDecimal(expensesString);
         BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
-        bankBalanceDTO.setIncomes(incomes);
-        bankBalanceDTO.setExpenses(expenses);
+        bankBalanceDTO.setIncomes(incomesString);
+        bankBalanceDTO.setExpenses(expensesString);
         BankBalanceDTO savedBankBalanceDTO = bankBalanceService.createNewBankBalance(bankBalanceDTO);
         assertNotNull(savedBankBalanceDTO);
-        assertEquals(incomes, savedBankBalanceDTO.getIncomes());
-        assertEquals(expenses, savedBankBalanceDTO.getExpenses());
+        assertEquals(incomesString, savedBankBalanceDTO.getIncomes());
+        assertEquals(expensesString, savedBankBalanceDTO.getExpenses());
         assertNotNull(savedBankBalanceDTO.getId());
-        assertEquals(incomes.subtract(expenses), savedBankBalanceDTO.getResult());
+        assertEquals(incomes.subtract(expenses).toString(), savedBankBalanceDTO.getResult());
 
     }
 
