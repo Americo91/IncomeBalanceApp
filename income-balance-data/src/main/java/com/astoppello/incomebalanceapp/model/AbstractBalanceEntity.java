@@ -18,15 +18,13 @@ import java.util.StringJoiner;
 @MappedSuperclass
 public abstract class AbstractBalanceEntity extends AbstractBaseEntity {
 
-  private BigDecimal salary;
   private BigDecimal expenses;
   private BigDecimal incomes;
   private BigDecimal result;
 
   public AbstractBalanceEntity(
-      Long id, BigDecimal salary, BigDecimal expenses, BigDecimal incomes, BigDecimal result) {
+      Long id, BigDecimal expenses, BigDecimal incomes, BigDecimal result) {
     super(id);
-    this.salary = salary;
     this.expenses = expenses;
     this.incomes = incomes;
     this.result = result;
@@ -38,21 +36,19 @@ public abstract class AbstractBalanceEntity extends AbstractBaseEntity {
     if (!(o instanceof AbstractBalanceEntity)) return false;
     if (!super.equals(o)) return false;
     AbstractBalanceEntity that = (AbstractBalanceEntity) o;
-    return Objects.equals(salary, that.salary)
-        && Objects.equals(expenses, that.expenses)
+    return Objects.equals(expenses, that.expenses)
         && Objects.equals(incomes, that.incomes)
         && Objects.equals(result, that.result);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), salary, expenses, incomes, result);
+    return Objects.hash(super.hashCode(), expenses, incomes, result);
   }
 
   @Override
   public StringJoiner getStringJoiner() {
     return new StringJoiner(", ")
-        .add("salary=" + salary)
         .add("expenses=" + expenses)
         .add("incomes=" + incomes)
         .add("result=" + result)

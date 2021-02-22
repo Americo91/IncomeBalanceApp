@@ -87,7 +87,6 @@ public class MonthBalanceMapperTest {
         BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
         bankBalanceDTO.setBank(bankDto);
         bankBalanceDTO.setExpenses(expenses);
-        bankBalanceDTO.setSalary(salary);
         bankBalanceDTO.setId(ID);
         bankBalanceDTO.setIncomes(incomes);
         bankBalanceDTO.setResult(result);

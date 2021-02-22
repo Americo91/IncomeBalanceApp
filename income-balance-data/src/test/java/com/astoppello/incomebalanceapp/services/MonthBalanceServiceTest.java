@@ -32,6 +32,7 @@ class MonthBalanceServiceTest {
 
   public static final BigDecimal EXPENSES = BigDecimal.valueOf(100);
   public static final BigDecimal SALARY = BigDecimal.valueOf(200);
+  public static final BigDecimal INCOMES = BigDecimal.valueOf(200);
   public static final String REVOLUT = "Revolut";
   private static final Long ID = 1L;
   private static final String MONTH = "September";
@@ -220,7 +221,7 @@ class MonthBalanceServiceTest {
                         .id(ID)
                         .bank(Bank.builder().id(ID).name(REVOLUT).build())
                         .expenses(EXPENSES)
-                        .salary(SALARY)
+                        .incomes(INCOMES)
                         .build()));
   }
 }

@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 public class BankBalanceDTO {
   private Long id;
   @Nullable private BankDTO bank;
-  @Nullable private BigDecimal salary;
   @Nullable private BigDecimal expenses;
   @Nullable private BigDecimal incomes;
   @Nullable private BigDecimal result;

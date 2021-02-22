@@ -57,7 +57,6 @@ public class BankBalanceMapperTest {
                               .build())
                 .expenses(expenses)
                 .incomes(incomes)
-                .salary(salary)
                 .result(result)
                 .build();
         bankBalance.setMonthBalance(MonthBalance.builder().id(ID).build());
@@ -73,7 +72,6 @@ public class BankBalanceMapperTest {
         BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
         bankBalanceDTO.setBank(bankDto);
         bankBalanceDTO.setExpenses(expenses);
-        bankBalanceDTO.setSalary(salary);
         bankBalanceDTO.setId(ID);
         bankBalanceDTO.setIncomes(incomes);
         bankBalanceDTO.setResult(result);

@@ -35,7 +35,6 @@ public class ModelEqualUtils {
     assertEquals(bankBalance.getExpenses(), bankBalanceDTO.getExpenses());
     assertEquals(bankBalance.getIncomes(), bankBalanceDTO.getIncomes());
     assertEquals(bankBalance.getResult(), bankBalanceDTO.getResult());
-    assertEquals(bankBalance.getSalary(), bankBalanceDTO.getSalary());
     if (bankBalance.getYearBalance() != null && bankBalanceDTO.getYearBalanceId() != null) {
       assertEquals(bankBalance.getYearBalance().getId(), bankBalanceDTO.getYearBalanceId());
     }

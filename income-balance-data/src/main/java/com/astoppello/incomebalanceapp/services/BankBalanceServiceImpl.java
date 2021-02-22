@@ -152,9 +152,6 @@ public class BankBalanceServiceImpl implements BankBalanceService {
               if (bankBalanceDTO.getResult() != null) {
                 bankBalance.setResult(bankBalanceDTO.getResult());
               }
-              if (bankBalanceDTO.getSalary() != null) {
-                bankBalance.setSalary(bankBalanceDTO.getSalary());
-              }
               setMonthBalanceIfPresent(bankBalance, bankBalanceDTO.getMonthBalanceId());
               setYearBalanceIfPresent(bankBalance, bankBalanceDTO.getYearBalanceId());
               return createAndReturnDto(bankBalance);

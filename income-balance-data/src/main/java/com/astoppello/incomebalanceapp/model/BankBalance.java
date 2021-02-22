@@ -37,12 +37,11 @@ public class BankBalance extends AbstractBalanceEntity {
   @Builder
   public BankBalance(
       Long id,
-      BigDecimal salary,
       BigDecimal expenses,
       BigDecimal incomes,
       BigDecimal result,
       Bank bank) {
-    super(id, salary, expenses, incomes, result);
+    super(id, expenses, incomes, result);
     this.bank = bank;
   }
 

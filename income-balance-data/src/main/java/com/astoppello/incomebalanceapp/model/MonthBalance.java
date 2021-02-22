@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** Created by @author stopp on 20/12/2020 */
+/**
+ * Created by @author stopp on 20/12/2020
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,62 +24,68 @@ import java.util.StringJoiner;
 @Table(name = "monthBalances")
 public class MonthBalance extends AbstractBalanceEntity {
 
-  @Nullable
-  private String month;
+    @Nullable
+    private String month;
 
-  @Nullable
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "monthBalance")
-  private List<BankBalance> bankBalanceList = new LinkedList<>();
+    @Nullable
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "monthBalance")
+    private List<BankBalance> bankBalanceList = new LinkedList<>();
 
-  @Nullable
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "yearBalance_id")
-  private YearBalance yearBalance;
+    @Nullable
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "yearBalance_id")
+    private YearBalance yearBalance;
 
-  @Builder
-  public MonthBalance(
-      Long id,
-      BigDecimal salary,
-      BigDecimal expenses,
-      BigDecimal incomes,
-      BigDecimal result,
-      String month,
-      List<BankBalance> bankBalanceList) {
-    super(id, salary, expenses, incomes, result);
-    this.month = month;
-    if (CollectionUtils.isNotEmpty(bankBalanceList)) {
-      this.bankBalanceList = bankBalanceList;
+    private BigDecimal salary;
+
+    @Builder
+    public MonthBalance(
+            Long id,
+            BigDecimal salary,
+            BigDecimal expenses,
+            BigDecimal incomes,
+            BigDecimal result,
+            String month,
+            List<BankBalance> bankBalanceList) {
+        super(id, expenses, incomes, result);
+        this.month = month;
+        this.salary = salary;
+        if (CollectionUtils.isNotEmpty(bankBalanceList)) {
+            this.bankBalanceList = bankBalanceList;
+        }
     }
-  }
 
-  public MonthBalance addBankBalance(BankBalance bankBalance) {
-    bankBalance.setMonthBalance(this);
-    bankBalanceList.add(bankBalance);
-    return this;
-  }
+    public MonthBalance addBankBalance(BankBalance bankBalance) {
+        bankBalance.setMonthBalance(this);
+        bankBalanceList.add(bankBalance);
+        return this;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof MonthBalance)) return false;
-    if (!super.equals(o)) return false;
-    MonthBalance that = (MonthBalance) o;
-    return Objects.equals(month, that.month)
-        && Objects.equals(bankBalanceList, that.bankBalanceList);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MonthBalance)) return false;
+        if (!super.equals(o)) return false;
+        MonthBalance that = (MonthBalance) o;
+        return Objects.equals(month, that.month)
+                && Objects.equals(salary, that.salary)
+                && Objects.equals(bankBalanceList, that.bankBalanceList);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(super.hashCode(), month, bankBalanceList);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), month, salary, bankBalanceList);
+    }
 
-  @Override
-  public String toString() {
-    return new StringJoiner(", ", MonthBalance.class.getSimpleName() + "[", "]")
-        .merge(super.getStringJoiner())
-        .add("yearBalanceId=" + ((yearBalance!= null) ? yearBalance.getId() : "null"))
-        .add("bankBalanceList=" + (CollectionUtils.isNotEmpty(bankBalanceList) ? bankBalanceList.toString() : "null"))
-        .add("month=" + month)
-        .toString();
-  }
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", MonthBalance.class.getSimpleName() + "[", "]")
+                .merge(super.getStringJoiner())
+                .add("yearBalanceId= " + ((yearBalance != null) ? yearBalance.getId() : "null"))
+                .add("bankBalanceList= " + (CollectionUtils.isNotEmpty(bankBalanceList) ? bankBalanceList
+                        .toString() : "null"))
+                .add("month= " + month)
+                .add("salary= " + salary)
+                .toString();
+    }
 }

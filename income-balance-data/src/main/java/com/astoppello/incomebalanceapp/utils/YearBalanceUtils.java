@@ -16,18 +16,18 @@ public class YearBalanceUtils {
         yearBalance.setResult(computeResults(yearBalance));
     }
 
-    private static BigDecimal computeResults(YearBalance yearBalance) {
-        return CollectionUtils.emptyIfNull(yearBalance.getBankBalanceList()).stream()
-                              .filter(Objects::nonNull)
-                              .map(BankBalance::getResult)
-                              .filter(Objects::nonNull)
-                              .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
     private static BigDecimal computeSalaries(YearBalance yearBalance) {
         return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceList()).stream()
                               .filter(Objects::nonNull)
                               .map(MonthBalance::getSalary)
+                              .filter(Objects::nonNull)
+                              .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private static BigDecimal computeResults(YearBalance yearBalance) {
+        return CollectionUtils.emptyIfNull(yearBalance.getBankBalanceList()).stream()
+                              .filter(Objects::nonNull)
+                              .map(BankBalance::getResult)
                               .filter(Objects::nonNull)
                               .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
