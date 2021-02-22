@@ -34,9 +34,11 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = {BankBalanceMapperImpl.class, BankMapperImpl.class})
 class BankBalanceServiceTest {
 
-  public static final BigDecimal EXPENSES = BigDecimal.valueOf(100);
-  public static final BigDecimal INCOMES = BigDecimal.valueOf(200);
-  public static final String REVOLUT = "Revolut";
+  private String expenses = "100";
+  final BigDecimal EXPENSES = new BigDecimal(expenses);
+  private String incomes = "200";
+  final BigDecimal INCOMES = new BigDecimal(incomes);
+  final String REVOLUT = "Revolut";
   private static final Long ID = 1L;
   BankBalance bankBalance;
   @Autowired BankBalanceMapper bankBalanceMapper;
@@ -98,8 +100,8 @@ class BankBalanceServiceTest {
     BankBalanceDTO bankBalanceDTO = service.findById(ID);
     assertNotNull(bankBalanceDTO);
     assertEquals(ID, bankBalanceDTO.getId());
-    assertEquals(EXPENSES, bankBalanceDTO.getExpenses());
-    assertEquals(INCOMES, bankBalanceDTO.getIncomes());
+    assertEquals(expenses, bankBalanceDTO.getExpenses());
+    assertEquals(incomes, bankBalanceDTO.getIncomes());
     assertEquals(ID, bankBalanceDTO.getBank().getId());
     assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
     verify(bankBalanceRepository, times(1)).findById(anyLong());
@@ -111,8 +113,8 @@ class BankBalanceServiceTest {
     BankBalanceDTO bankBalanceDTO = service.findByBankName(REVOLUT).get(0);
     assertNotNull(bankBalanceDTO);
     assertEquals(ID, bankBalanceDTO.getId());
-    assertEquals(EXPENSES, bankBalanceDTO.getExpenses());
-    assertEquals(INCOMES, bankBalanceDTO.getIncomes());
+    assertEquals(expenses, bankBalanceDTO.getExpenses());
+    assertEquals(incomes, bankBalanceDTO.getIncomes());
     assertEquals(ID, bankBalanceDTO.getBank().getId());
     assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
     verify(bankBalanceRepository, times(1)).findAll();
@@ -129,8 +131,8 @@ class BankBalanceServiceTest {
     BankBalanceDTO savedBankBalanced = service.createNewBankBalanceById(ID, ID, bankBalanceDTO);
     assertNotNull(savedBankBalanced);
     assertEquals(ID, savedBankBalanced.getId());
-    assertEquals(EXPENSES, savedBankBalanced.getExpenses());
-    assertEquals(INCOMES, savedBankBalanced.getIncomes());
+    assertEquals(expenses, savedBankBalanced.getExpenses());
+    assertEquals(incomes, savedBankBalanced.getIncomes());
     assertEquals(ID, savedBankBalanced.getBank().getId());
     assertEquals(REVOLUT, savedBankBalanced.getBank().getName());
     verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
@@ -153,8 +155,8 @@ class BankBalanceServiceTest {
     BankBalanceDTO savedBankBalanceDto = service.createNewBankBalance(bankBalanceDTO);
     assertNotNull(savedBankBalanceDto);
     assertEquals(ID, savedBankBalanceDto.getId());
-    assertEquals(EXPENSES, savedBankBalanceDto.getExpenses());
-    assertEquals(INCOMES, savedBankBalanceDto.getIncomes());
+    assertEquals(expenses, savedBankBalanceDto.getExpenses());
+    assertEquals(incomes, savedBankBalanceDto.getIncomes());
     assertEquals(ID, savedBankBalanceDto.getBank().getId());
     assertEquals(REVOLUT, savedBankBalanceDto.getBank().getName());
     verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
@@ -182,7 +184,7 @@ class BankBalanceServiceTest {
   @Test
   void updateBankBalance() {
     BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
-    final BigDecimal result = new BigDecimal(100);
+    String result = "100";
     bankBalanceDTO.setResult(result);
     when(bankBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(bankBalance));
     when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
@@ -190,8 +192,8 @@ class BankBalanceServiceTest {
     BankBalanceDTO savedBankBalanceDto = service.updateBankBalance(ID, bankBalanceDTO);
     assertNotNull(savedBankBalanceDto);
     assertEquals(ID, savedBankBalanceDto.getId());
-    assertEquals(EXPENSES, savedBankBalanceDto.getExpenses());
-    assertEquals(INCOMES, savedBankBalanceDto.getIncomes());
+    assertEquals(expenses, savedBankBalanceDto.getExpenses());
+    assertEquals(incomes, savedBankBalanceDto.getIncomes());
     assertEquals(ID, savedBankBalanceDto.getBank().getId());
     assertEquals(REVOLUT, savedBankBalanceDto.getBank().getName());
     assertEquals(result, savedBankBalanceDto.getResult());
@@ -208,8 +210,8 @@ class BankBalanceServiceTest {
 
   private BankBalanceDTO createBankBalanceDto() {
     BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
-    bankBalanceDTO.setExpenses(EXPENSES);
-    bankBalanceDTO.setIncomes(INCOMES);
+    bankBalanceDTO.setExpenses(expenses);
+    bankBalanceDTO.setIncomes(incomes);
     bankBalanceDTO.setId(ID);
     BankDTO bankDTO = new BankDTO();
     bankDTO.setName(REVOLUT);

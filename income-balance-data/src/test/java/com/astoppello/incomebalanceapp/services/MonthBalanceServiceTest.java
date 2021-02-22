@@ -30,10 +30,11 @@ import static org.mockito.Mockito.*;
     classes = {BankBalanceMapperImpl.class, BankMapperImpl.class, MonthBalanceMapperImpl.class})
 class MonthBalanceServiceTest {
 
-  public static final BigDecimal EXPENSES = BigDecimal.valueOf(100);
-  public static final BigDecimal SALARY = BigDecimal.valueOf(200);
-  public static final BigDecimal INCOMES = BigDecimal.valueOf(200);
-  public static final String REVOLUT = "Revolut";
+  final String expenses = "100.00", salary = "200.00", incomes = "200.00";
+  final BigDecimal EXPENSES = new BigDecimal(expenses);
+  final BigDecimal SALARY = new BigDecimal(salary);
+  final BigDecimal INCOMES = new BigDecimal(incomes);
+  final String REVOLUT = "Revolut";
   private static final Long ID = 1L;
   private static final String MONTH = "September";
   @Mock MonthBalanceRepository monthBalanceRepository;
@@ -88,9 +89,9 @@ class MonthBalanceServiceTest {
     // when
     MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
     monthBalanceDTO.setId(ID);
-    monthBalanceDTO.setSalary(SALARY);
+    monthBalanceDTO.setSalary(salary);
     monthBalanceDTO.setMonth(MONTH);
-    monthBalanceDTO.setExpenses(EXPENSES);
+    monthBalanceDTO.setExpenses(expenses);
     monthBalanceDTO.setYearBalanceId(ID);
     MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
     monthBalance.setYearBalance(yearBalance);
@@ -109,10 +110,10 @@ class MonthBalanceServiceTest {
     assertNotNull(savedMonthBalance);
     assertNotNull(savedMonthBalance.getId());
     assertNotNull(savedMonthBalance.getYearBalanceId());
-    assertEquals(savedMonthBalance.getExpenses(), EXPENSES);
+    assertEquals(savedMonthBalance.getExpenses(), expenses);
     assertEquals(savedMonthBalance.getMonth(), MONTH);
     assertEquals(savedMonthBalance.getYearBalanceId(), ID);
-    assertEquals(savedMonthBalance.getSalary(), SALARY);
+    assertEquals(savedMonthBalance.getSalary(), salary);
     verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
     verify(yearBalanceRepository, times(1)).findById(anyLong());
     verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));

@@ -27,9 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class BankBalanceControllerTest {
 
-  private static final Long ID = 1L;
-  private static final String REVOLUT = "Revolut";
-  private static final BigDecimal RESULT = BigDecimal.valueOf(100);
+  final Long ID = 1L;
+  final String REVOLUT = "Revolut";
+  private String result = "100";
+  final BigDecimal RESULT = new BigDecimal(result);
   @InjectMocks BankBalanceController controller;
   @Mock BankBalanceService bankBalanceService;
   MockMvc mockMvc;
@@ -44,7 +45,7 @@ public class BankBalanceControllerTest {
             .build();
     bankBalanceDTO = new BankBalanceDTO();
     bankBalanceDTO.setId(ID);
-    bankBalanceDTO.setResult(RESULT);
+    bankBalanceDTO.setResult(result);
     BankDTO bankDTO = new BankDTO();
     bankDTO.setName(REVOLUT);
     bankDTO.setId(ID);
@@ -96,7 +97,7 @@ public class BankBalanceControllerTest {
         .perform(get(BankBalanceController.BASE_URL + "/1").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
-        .andExpect(jsonPath("$.result", equalTo(100)))
+        .andExpect(jsonPath("$.result", equalTo(result)))
         .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)))
         .andExpect(jsonPath("$.bank.id", equalTo(1)));
     verify(bankBalanceService).findById(anyLong());
@@ -112,7 +113,7 @@ public class BankBalanceControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.bankBalances", hasSize(1)))
         .andExpect(jsonPath("$.bankBalances.[0].id", equalTo(1)))
-        .andExpect(jsonPath("$.bankBalances.[0].result", equalTo(100)))
+        .andExpect(jsonPath("$.bankBalances.[0].result", equalTo(result)))
         .andExpect(jsonPath("$.bankBalances.[0].bank.name", equalTo(REVOLUT)))
         .andExpect(jsonPath("$.bankBalances.[0].bank.id", equalTo(1)));
   }
@@ -129,7 +130,7 @@ public class BankBalanceControllerTest {
                 .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id", equalTo(1)))
-        .andExpect(jsonPath("$.result", equalTo(RESULT.intValue())))
+        .andExpect(jsonPath("$.result", equalTo(result)))
         .andExpect(jsonPath("$.monthBalanceId", equalTo(1)))
         .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)));
     verify(bankBalanceService).createNewBankBalance(any(BankBalanceDTO.class));
@@ -155,7 +156,8 @@ public class BankBalanceControllerTest {
   @Test
   void updateBankBalance() throws Exception {
     BankBalanceDTO bankBalanceDTO1 = bankBalanceDTO;
-    bankBalanceDTO1.setExpenses(new BigDecimal(200));
+    String expenses = "200";
+    bankBalanceDTO1.setExpenses(expenses);
     when(bankBalanceService.updateBankBalance(ID, bankBalanceDTO))
         .thenReturn(bankBalanceDTO1);
     mockMvc
@@ -165,10 +167,10 @@ public class BankBalanceControllerTest {
                 .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
-        .andExpect(jsonPath("$.result", equalTo(100)))
+        .andExpect(jsonPath("$.result", equalTo(result)))
         .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)))
         .andExpect(jsonPath("$.bank.id", equalTo(1)))
-        .andExpect(jsonPath("$.expenses", equalTo(200)));
+        .andExpect(jsonPath("$.expenses", equalTo(expenses)));
     verify(bankBalanceService, times(1)).updateBankBalance(anyLong(), any(BankBalanceDTO.class));
   }
 
@@ -205,7 +207,7 @@ public class BankBalanceControllerTest {
                 .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id", equalTo(1)))
-        .andExpect(jsonPath("$.result", equalTo(RESULT.intValue())))
+        .andExpect(jsonPath("$.result", equalTo(result)))
         .andExpect(jsonPath("$.monthBalanceId", equalTo(1)))
         .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)));
     verify(bankBalanceService)

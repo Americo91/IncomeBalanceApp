@@ -5,19 +5,35 @@ import com.astoppello.incomebalanceapp.model.MonthBalance;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.Named;
 
-/** Created by @author stopp on 20/12/2020 */
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+/**
+ * Created by @author stopp on 20/12/2020
+ */
 @Mapper(
-    uses = {BankBalanceMapper.class},
-    componentModel = "spring")
+        uses = {BankBalanceMapper.class},
+        componentModel = "spring")
 public interface MonthBalanceMapper {
 
-  @Mapping(source = "bankBalances", target = "bankBalanceList")
-  MonthBalance monthBalanceDtoToMonthBalance(MonthBalanceDTO monthBalanceDto);
+    @Mappings({
+            @Mapping(source = "bankBalances", target = "bankBalanceList"),
+            @Mapping(source = "expenses", target = "expenses", qualifiedByName = "StringToBigDecimal"),
+            @Mapping(source = "incomes", target = "incomes", qualifiedByName = "StringToBigDecimal"),
+            @Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal"),
+            @Mapping(source = "salary", target = "salary", qualifiedByName = "StringToBigDecimal"),
+    })
+    MonthBalance monthBalanceDtoToMonthBalance(MonthBalanceDTO monthBalanceDto);
 
-  @Mappings({
-    @Mapping(source = "bankBalanceList", target = "bankBalances"),
-    @Mapping(source = "yearBalance.id", target = "yearBalanceId")
-  })
-  MonthBalanceDTO monthBalanceToMonthBalanceDto(MonthBalance monthBalance);
+    @Mappings({
+            @Mapping(source = "bankBalanceList", target = "bankBalances"),
+            @Mapping(source = "yearBalance.id", target = "yearBalanceId"),
+            @Mapping(source = "expenses", target = "expenses", qualifiedByName = "BigDecimalToString"),
+            @Mapping(source = "incomes", target = "incomes", qualifiedByName = "BigDecimalToString"),
+            @Mapping(source = "result", target = "result", qualifiedByName = "BigDecimalToString"),
+            @Mapping(source = "salary", target = "salary", qualifiedByName = "BigDecimalToString"),
+    })
+    MonthBalanceDTO monthBalanceToMonthBalanceDto(MonthBalance monthBalance);
 }

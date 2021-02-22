@@ -155,7 +155,8 @@ public class MonthBalanceControllerTest {
   @Test
   void updateMonthBalance() throws Exception {
     MonthBalanceDTO monthBalanceDTO1 = monthBalanceDTO;
-    monthBalanceDTO1.setIncomes(new BigDecimal(200));
+    String incomes = "200";
+    monthBalanceDTO1.setIncomes(incomes);
     when(monthBalanceService.updateMonthBalance(ID, monthBalanceDTO))
         .thenReturn(monthBalanceDTO1);
     mockMvc
@@ -166,7 +167,7 @@ public class MonthBalanceControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo(1)))
         .andExpect(jsonPath("$.month", equalTo(MONTH)))
-        .andExpect(jsonPath("$.incomes", equalTo(200)));
+        .andExpect(jsonPath("$.incomes", equalTo(incomes)));
     verify(monthBalanceService, times(1)).updateMonthBalance(anyLong(), any(MonthBalanceDTO.class));
   }
 

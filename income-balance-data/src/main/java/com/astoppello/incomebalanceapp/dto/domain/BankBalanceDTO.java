@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 public class BankBalanceDTO {
   private Long id;
   @Nullable private BankDTO bank;
-  @Nullable private BigDecimal expenses;
-  @Nullable private BigDecimal incomes;
-  @Nullable private BigDecimal result;
+  @Nullable private String expenses;
+  @Nullable private String incomes;
+  @Nullable private String result;
   @Nullable private Long monthBalanceId;
   @Nullable private Long yearBalanceId;
 }

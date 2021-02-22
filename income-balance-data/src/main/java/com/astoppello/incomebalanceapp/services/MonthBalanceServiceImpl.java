@@ -130,20 +130,20 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
         .findById(monthBalanceId)
         .map(
             monthBalance -> {
-              if (monthBalanceDTO.getExpenses() != null) {
-                monthBalance.setExpenses(monthBalanceDTO.getExpenses());
+              if (StringUtils.isNotEmpty(monthBalanceDTO.getExpenses())) {
+                monthBalance.setExpenses(new BigDecimal(monthBalanceDTO.getExpenses()));
               }
-              if (monthBalanceDTO.getIncomes() != null) {
-                monthBalance.setIncomes(monthBalanceDTO.getIncomes());
+              if (StringUtils.isNotEmpty(monthBalanceDTO.getIncomes())) {
+                monthBalance.setIncomes(new BigDecimal(monthBalanceDTO.getIncomes()));
               }
               if (StringUtils.isNotBlank(monthBalanceDTO.getMonth())) {
                 monthBalance.setMonth(monthBalanceDTO.getMonth());
               }
-              if (monthBalanceDTO.getResult() != null) {
-                monthBalance.setResult(monthBalanceDTO.getResult());
+              if (StringUtils.isNotEmpty(monthBalanceDTO.getResult())) {
+                monthBalance.setResult(new BigDecimal(monthBalanceDTO.getResult()));
               }
-              if (monthBalanceDTO.getSalary() != null) {
-                monthBalance.setSalary(monthBalanceDTO.getSalary());
+              if (StringUtils.isNotEmpty(monthBalanceDTO.getSalary())) {
+                monthBalance.setSalary(new BigDecimal(monthBalanceDTO.getSalary()));
               }
               setYearBalanceIfPresent(monthBalanceDTO.getYearBalanceId(), monthBalance);
               // TODO: Check this better

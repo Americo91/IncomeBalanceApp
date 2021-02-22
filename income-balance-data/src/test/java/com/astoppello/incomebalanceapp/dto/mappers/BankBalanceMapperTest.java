@@ -25,10 +25,9 @@ public class BankBalanceMapperTest {
     @Autowired
     private BankBalanceMapper bankBalanceMapper;
     private static final Long ID = 1L;
-    private final BigDecimal expenses = BigDecimal.valueOf(100);
-    private final BigDecimal salary = BigDecimal.valueOf(150);
-    private final BigDecimal incomes = BigDecimal.valueOf(170);
-    private final BigDecimal result = BigDecimal.valueOf(190);
+    private final String expenses = "100.00";
+    private final String incomes = "170.00";
+    private final String result = "190.00";
 
 
     @Test
@@ -55,9 +54,9 @@ public class BankBalanceMapperTest {
                               .id(ID)
                               .name(BankMapperTest.NAME)
                               .build())
-                .expenses(expenses)
-                .incomes(incomes)
-                .result(result)
+                .expenses(new BigDecimal(expenses))
+                .incomes(new BigDecimal(incomes))
+                .result(new BigDecimal(result))
                 .build();
         bankBalance.setMonthBalance(MonthBalance.builder().id(ID).build());
         bankBalance.setYearBalance(YearBalance.builder().id(ID).build());

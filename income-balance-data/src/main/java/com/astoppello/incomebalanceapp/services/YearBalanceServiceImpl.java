@@ -92,16 +92,16 @@ public class YearBalanceServiceImpl implements YearBalanceService {
                 yearBalance.setYear(yearBalanceDTO.getYear());
               }
               if (yearBalanceDTO.getExpenses() != null) {
-                yearBalance.setExpenses(yearBalanceDTO.getExpenses());
+                yearBalance.setExpenses(new BigDecimal(yearBalanceDTO.getExpenses()));
               }
               if (yearBalanceDTO.getIncomes() != null) {
-                yearBalance.setIncomes(yearBalanceDTO.getIncomes());
+                yearBalance.setIncomes(new BigDecimal(yearBalanceDTO.getIncomes()));
               }
               if (yearBalanceDTO.getResult() != null) {
-                yearBalance.setResult(yearBalanceDTO.getResult());
+                yearBalance.setResult(new BigDecimal(yearBalanceDTO.getResult()));
               }
               if (yearBalanceDTO.getSalary() != null) {
-                yearBalance.setSalary(yearBalanceDTO.getSalary());
+                yearBalance.setSalary(new BigDecimal(yearBalanceDTO.getSalary()));
               }
               if (CollectionUtils.isNotEmpty(yearBalanceDTO.getMonthBalances())) {
                 yearBalance.setMonthBalanceList(

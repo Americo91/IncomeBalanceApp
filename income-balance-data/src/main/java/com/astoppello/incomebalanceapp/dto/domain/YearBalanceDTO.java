@@ -12,10 +12,10 @@ import java.util.List;
 public class YearBalanceDTO {
   private Long id;
   @Nullable private Integer year;
-  @Nullable private BigDecimal salary;
-  @Nullable private BigDecimal expenses;
-  @Nullable private BigDecimal incomes;
-  @Nullable private BigDecimal result;
+  @Nullable private String salary;
+  @Nullable private String expenses;
+  @Nullable private String incomes;
+  @Nullable private String result;
   @JsonProperty("monthBalances")
   @Nullable private List<MonthBalanceDTO> monthBalances;
   @JsonProperty("bankBalances")

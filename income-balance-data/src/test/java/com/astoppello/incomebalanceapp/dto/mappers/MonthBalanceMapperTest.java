@@ -7,9 +7,6 @@ import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
-import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,10 +26,11 @@ public class MonthBalanceMapperTest {
     MonthBalanceMapper monthBalanceMapper;
     private static final Long ID = 1L;
     private static final String MONTH = "September";
-    private final BigDecimal expenses = BigDecimal.valueOf(100);
-    private final BigDecimal salary = BigDecimal.valueOf(150);
-    private final BigDecimal incomes = BigDecimal.valueOf(170);
-    private final BigDecimal result = BigDecimal.valueOf(190);
+    String expenses = "100.00", salary = "150.00", incomes = "170.00", result = "190.00";
+    private final BigDecimal EXPENSES = new BigDecimal(expenses);
+    private final BigDecimal SALARY = new BigDecimal(salary);
+    private final BigDecimal INCOMES = new BigDecimal(incomes);
+    private final BigDecimal RESULT = new BigDecimal(result);
 
 
     @Test
@@ -55,10 +53,10 @@ public class MonthBalanceMapperTest {
         return MonthBalance.builder()
                            .id(ID)
                            .month(MONTH)
-                           .expenses(expenses)
-                           .incomes(incomes)
-                           .result(result)
-                           .salary(salary)
+                           .expenses(EXPENSES)
+                           .incomes(INCOMES)
+                           .result(RESULT)
+                           .salary(SALARY)
                            .build()
                            .addBankBalance(BankBalance.builder()
                                                       .id(1L)
