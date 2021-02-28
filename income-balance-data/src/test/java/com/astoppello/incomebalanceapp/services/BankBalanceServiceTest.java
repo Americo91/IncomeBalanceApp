@@ -11,6 +11,7 @@ import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.repositories.BankBalanceRepository;
+import com.astoppello.incomebalanceapp.repositories.BankRepository;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,16 +49,17 @@ class BankBalanceServiceTest {
   @Mock MonthBalanceRepository monthBalanceRepository;
   private YearBalance yearBalance;
   private MonthBalance monthBalance;
+  @Mock BankRepository bankRepository;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
     service =
         new BankBalanceServiceImpl(
-            bankBalanceRepository,
-            bankBalanceMapper,
-            monthBalanceRepository,
-            yearBalanceRepository);
+                bankBalanceRepository,
+                bankBalanceMapper,
+                monthBalanceRepository,
+                yearBalanceRepository, bankRepository);
     monthBalance = MonthBalance.builder().id(ID).build();
     bankBalance =
         BankBalance.builder()
@@ -204,6 +206,7 @@ class BankBalanceServiceTest {
   @Test
   void deleteBankBalance() {
     service.deleteBankBalance(ID);
+    verify(bankBalanceRepository, times(1)).findById(anyLong());
     assertThrows(ResourceNotFoundException.class, () -> service.findById(ID));
     verify(bankBalanceRepository, times(1)).deleteById(anyLong());
   }

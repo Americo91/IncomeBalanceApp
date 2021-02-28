@@ -199,6 +199,7 @@ class MonthBalanceServiceTest {
   @Test
   void delete() {
     monthBalanceService.delete(monthBalance.getId());
+    verify(monthBalanceRepository, times(1)).findById(anyLong());
     assertThrows(ResourceNotFoundException.class, () -> monthBalanceService.findById(ID));
     verify(monthBalanceRepository, times(1)).deleteById(anyLong());
   }

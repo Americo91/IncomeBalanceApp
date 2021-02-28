@@ -8,6 +8,7 @@ import com.astoppello.incomebalanceapp.model.Bank;
 import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
+import org.apache.commons.lang3.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,16 +23,16 @@ public class ModelEqualUtils {
         assertEquals(yearBalance.getYear(), yearBalanceDTO.getYear());
         assertEquals(
                 yearBalance.getExpenses() == null ? yearBalance.getExpenses() : yearBalance.getExpenses().toString(),
-                yearBalanceDTO.getExpenses());
+                StringUtils.isEmpty(yearBalanceDTO.getExpenses()) ? "0" : yearBalanceDTO.getExpenses());
         assertEquals(
                 yearBalance.getIncomes() == null ? yearBalance.getIncomes() : yearBalance.getIncomes().toString(),
-                yearBalanceDTO.getIncomes());
+                StringUtils.isEmpty(yearBalanceDTO.getIncomes()) ? "0" : yearBalanceDTO.getIncomes());
         assertEquals(
                 yearBalance.getSalary() == null ? yearBalance.getSalary() : yearBalance.getSalary().toString(),
-                yearBalanceDTO.getSalary());
+                StringUtils.isEmpty(yearBalanceDTO.getSalary()) ? "0" : yearBalanceDTO.getSalary());
         assertEquals(
                 yearBalance.getResult() == null ? yearBalance.getResult() : yearBalance.getResult().toString(),
-                yearBalanceDTO.getResult());
+                StringUtils.isEmpty(yearBalanceDTO.getResult()) ? "0" : yearBalanceDTO.getResult());
     }
 
     public static void assertBankAndBankDtoAreEquals(Bank bank, BankDTO bankDTO) {
@@ -44,13 +45,13 @@ public class ModelEqualUtils {
         assertEquals(bankBalance.getId(), bankBalanceDTO.getId());
         assertEquals(
                 bankBalance.getExpenses() == null ? bankBalance.getExpenses() : bankBalance.getExpenses().toString(),
-                bankBalanceDTO.getExpenses());
+                StringUtils.isEmpty(bankBalanceDTO.getExpenses()) ? "0" : bankBalanceDTO.getExpenses());
         assertEquals(
                 bankBalance.getIncomes() == null ? bankBalance.getIncomes() : bankBalance.getIncomes().toString(),
-                bankBalanceDTO.getIncomes());
+                StringUtils.isEmpty(bankBalanceDTO.getIncomes()) ? "0" : bankBalanceDTO.getIncomes());
         assertEquals(
                 bankBalance.getResult() == null ? bankBalance.getResult() : bankBalance.getResult().toString(),
-                bankBalanceDTO.getResult());
+                StringUtils.isEmpty(bankBalanceDTO.getResult()) ? "0" : bankBalanceDTO.getResult());
         if (bankBalance.getYearBalance() != null && bankBalanceDTO.getYearBalanceId() != null) {
             assertEquals(bankBalance.getYearBalance().getId(), bankBalanceDTO.getYearBalanceId());
         }

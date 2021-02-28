@@ -64,14 +64,16 @@ public class Bootstrap implements CommandLineRunner {
     System.out.println("MonthBalance loaded " + monthBalanceRepository.count());
 
     yearBalanceRepository.save(YearBalance.builder().id(1L).year(2020).build());
-    yearBalanceRepository.save(
-        YearBalance.builder().id(2L).year(2019).salary(new BigDecimal("500.00")).build());
-    yearBalanceRepository.save(
+    YearBalance yearBalance1 =
+        YearBalance.builder().id(2L).year(2019).build().addMonthBalance(september);
+    yearBalanceRepository.save(yearBalance1);
+    YearBalance yearBalance =
         YearBalance.builder()
             .id(3L)
             .expenses(new BigDecimal("500"))
             .build()
-            .addMonthBalance(october));
+            .addMonthBalance(october);
+    yearBalanceRepository.save(yearBalance);
     System.out.println("YearBalance data loaded " + yearBalanceRepository.count());
   }
 }

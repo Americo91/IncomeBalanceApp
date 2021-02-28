@@ -36,7 +36,7 @@ public interface BankBalanceMapper {
     @Named("StringToBigDecimal")
     public static BigDecimal stringToBigDecimal(String amount) {
         if (StringUtils.isEmpty(amount)) {
-            return null;
+            return BigDecimal.ZERO;
         }
         return NumberUtils.parseNumber(amount, BigDecimal.class);
     }

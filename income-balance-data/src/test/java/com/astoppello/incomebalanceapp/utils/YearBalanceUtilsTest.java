@@ -28,8 +28,11 @@ class YearBalanceUtilsTest {
                         BankBalance.builder().incomes(new BigDecimal("145.79"))
                                    .expenses(new BigDecimal("130.40")).result(new BigDecimal("-20.45")).build()
                 );
+        MonthBalance monthBalance = MonthBalance.builder().salary(new BigDecimal("2498.04")).build();
+        monthBalance.setBankBalanceList(bankBalanceList);
+        MonthBalanceUtils.computeMontlyAmount(monthBalance);
         List<MonthBalance> monthBalanceList = List.of(
-                MonthBalance.builder().salary(new BigDecimal("2498.04")).build(),
+                monthBalance,
                 MonthBalance.builder().salary(new BigDecimal("1340.67")).build()
         );
         yearBalance.setBankBalanceList(bankBalanceList);

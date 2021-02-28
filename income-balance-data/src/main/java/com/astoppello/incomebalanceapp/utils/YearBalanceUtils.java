@@ -25,25 +25,25 @@ public class YearBalanceUtils {
     }
 
     private static BigDecimal computeResults(YearBalance yearBalance) {
-        return CollectionUtils.emptyIfNull(yearBalance.getBankBalanceList()).stream()
+        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceList()).stream()
                               .filter(Objects::nonNull)
-                              .map(BankBalance::getResult)
+                              .map(MonthBalance::getResult)
                               .filter(Objects::nonNull)
                               .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private static BigDecimal computeExpenses(YearBalance yearBalance) {
-        return CollectionUtils.emptyIfNull(yearBalance.getBankBalanceList()).stream()
+        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceList()).stream()
                               .filter(Objects::nonNull)
-                              .map(BankBalance::getExpenses)
+                              .map(MonthBalance::getExpenses)
                               .filter(Objects::nonNull)
                               .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private static BigDecimal computeIncomes(YearBalance yearBalance) {
-        return CollectionUtils.emptyIfNull(yearBalance.getBankBalanceList()).stream()
+        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceList()).stream()
                               .filter(Objects::nonNull)
-                              .map(BankBalance::getIncomes)
+                              .map(MonthBalance::getIncomes)
                               .filter(Objects::nonNull)
                               .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

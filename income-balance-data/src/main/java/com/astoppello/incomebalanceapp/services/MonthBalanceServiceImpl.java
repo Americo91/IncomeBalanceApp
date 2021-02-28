@@ -160,6 +160,22 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
 
   @Override
   public void delete(Long monthBalanceId) {
+    monthBalanceRepository
+        .findById(monthBalanceId)
+        .ifPresent(
+            monthBalance -> {
+              final YearBalance yearBalance = monthBalance.getYearBalance();
+              if (yearBalance != null) {
+                log.info(
+                    "Removing MonthBalance "
+                        + monthBalance.getId()
+                        + "from YearBalance "
+                        + yearBalance.getId());
+                yearBalance.getMonthBalanceList().remove(monthBalance);
+                YearBalanceUtils.computeYearlyAmount(yearBalance);
+                yearBalanceRepository.save(yearBalance);
+              }
+            });
     log.info("Delete MonthBalance: " + monthBalanceId);
     monthBalanceRepository.deleteById(monthBalanceId);
   }
@@ -181,6 +197,11 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
     MonthBalance savedMonthBalance = monthBalanceRepository.save(monthBalance);
     final YearBalance yearBalance = savedMonthBalance.getYearBalance();
     if (yearBalance != null) {
+      log.info(
+          "Updating YearBalance "
+              + yearBalance.getId()
+              + " after saving MonthBalance "
+              + savedMonthBalance.getId());
       yearBalance.addMonthBalance(savedMonthBalance);
       YearBalanceUtils.computeYearlyAmount(yearBalance);
       yearBalanceRepository.save(yearBalance);
