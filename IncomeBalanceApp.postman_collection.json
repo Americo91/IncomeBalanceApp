@@ -1,0 +1,764 @@
+{
+	"info": {
+		"_postman_id": "6c8321c4-cd42-4ccf-8118-5c5f815390f6",
+		"name": "IncomeBalanceApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Bank",
+			"item": [
+				{
+					"name": "Get Bank by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}banks\\1",
+							"host": [
+								"{{base_url}}banks"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBank By Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}banks?name=Revolut",
+							"host": [
+								"{{base_url}}banks"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Revolut"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Banks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}\\banks\\",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"banks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Bank",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Fineco\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}\\banks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"banks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Bank",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Medio\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}\\banks\\3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"banks",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Bank",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"pippo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}\\banks\\2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"banks",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Bank",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}\\banks\\33",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"banks",
+								"33"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BankBalance",
+			"item": [
+				{
+					"name": "Ids",
+					"item": [
+						{
+							"name": "All BankBalances By Ids",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}\\yearBalances\\{{yearBalanceId}}/monthBalances/{{monthBalanceId}}/bankBalances\\",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"yearBalances",
+										"{{yearBalanceId}}",
+										"monthBalances",
+										"{{monthBalanceId}}",
+										"bankBalances",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create NewBalance By Ids",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"incomes\":\"2516.67\",\r\n    \"expenses\":\"5064.38\",\r\n    \"bank\": {\r\n        \"name\": \"Mediolanum\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}\\yearBalances/1/monthBalances/97/bankBalances",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"yearBalances",
+										"1",
+										"monthBalances",
+										"97",
+										"bankBalances"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create New BankBalance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"expenses\":10.28,\r\n    \"incomes\":100,\r\n    \"bank\" : {\r\n        \"id\":5,\r\n        \"name\": \"Boursorama\"\r\n    },\r\n    \"monthBalanceId\":3,\r\n    \"yearBalanceId\":3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}\\bankBalances",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bankBalances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All BankBalances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}\\bankBalances/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bankBalances",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get BankBalances By BankName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/bankBalances?bankName=Revolut",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bankBalances"
+							],
+							"query": [
+								{
+									"key": "bankName",
+									"value": "Revolut"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get BankBalance By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}\\bankBalances/{{bankBalanceId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bankBalances",
+								"{{bankBalanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put BankBalance",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"expenses\":100.05,\n    \"incomes\":\"550.00\",\n    \"bank\" : {\n        \"name\": \"Mediolanum\"\n    },\n    \"monthBalanceId\":1,\n    \"yearBalanceId\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}\\bankBalances/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bankBalances",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch BankBalance",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"expenses\": \"224.28\",\n            \"incomes\": \"130.00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}\\bankBalances/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bankBalances",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete BankBalance",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}\\bankBalances/129",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bankBalances",
+								"129"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MotnhBalance",
+			"item": [
+				{
+					"name": "Ids",
+					"item": [
+						{
+							"name": "Get monthBalance by Ids",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/yearBalances/{{yearBalanceId}}/monthBalances/{{monthBalanceId}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"yearBalances",
+										"{{yearBalanceId}}",
+										"monthBalances",
+										"{{monthBalanceId}}"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new MonthBalance By Id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"month\":\"September\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/yearBalances/1/monthBalances",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"yearBalances",
+										"1",
+										"monthBalances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get AllMonthBalance by IDS",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/yearBalances/{{yearBalanceId}}/monthBalances/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"yearBalances",
+										"{{yearBalanceId}}",
+										"monthBalances",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get MonthBalance By Month",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/monthBalances?month=September",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monthBalances"
+							],
+							"query": [
+								{
+									"key": "month",
+									"value": "September"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All MonthBalances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/monthBalances/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monthBalances",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get MonthBalance ById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/monthBalances/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monthBalances",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create MonthBalance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"month\":\"February\",\r\n    \"salary\":\"2473.17\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}monthBalances",
+							"host": [
+								"{{base_url}}monthBalances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put MonthBalance",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"month\":\"November\",\r\n    \"salary\":100,\r\n    \"expenses\":200\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}monthBalances/2",
+							"host": [
+								"{{base_url}}monthBalances"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch MonthBalance",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"yearBalanceId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}monthBalances/129",
+							"host": [
+								"{{base_url}}monthBalances"
+							],
+							"path": [
+								"129"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete MonthBalance",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/monthBalances/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monthBalances",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "YearBalance",
+			"item": [
+				{
+					"name": "GetAll  yearBalance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}yearBalances\\",
+							"host": [
+								"{{base_url}}yearBalances"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post yearBalance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"year\": 2021\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}yearBalances",
+							"host": [
+								"{{base_url}}yearBalances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get YearBalance ById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}\\yearBalances\\3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"yearBalances",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put YearBalance",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"year\":2021,\n    \"salary\":\"100\",\n    \"expenses\":\"200\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}\\yearBalances\\7",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"yearBalances",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch YearBalance",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"year\":2021\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}\\yearBalances\\1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"yearBalances",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete YearBalance",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}\\yearBalances\\2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"yearBalances",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

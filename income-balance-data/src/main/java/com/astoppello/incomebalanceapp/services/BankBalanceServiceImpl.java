@@ -160,16 +160,19 @@ public class BankBalanceServiceImpl implements BankBalanceService {
                                 bankBalance.setResult(new BigDecimal(bankBalanceDTO.getResult()));
                             }
                             if (bankBalanceDTO.getBank() != null) {
-                                bankBalance.setBank(new Bank(
+                                final Bank bank = new Bank(bankBalanceDTO.getBank()
+                                                                         .getId(),
                                         bankBalanceDTO.getBank()
-                                                      .getId(),
-                                        bankBalanceDTO.getBank()
-                                                      .getName()));
+                                                      .getName());
+                                bankBalance.setBank(bank);
                             }
-                            YearBalance yearBalance = getYearBalanceById(bankBalanceDTO.getYearBalanceId());
-                            MonthBalance monthBalance = getMonthBalanceByYearBalance(yearBalance, bankBalanceDTO.getMonthBalanceId());
-                            bankBalance.setYearBalance(yearBalance);
-                            bankBalance.setMonthBalance(monthBalance);
+                            if (bankBalanceDTO.getMonthBalanceId() != null && bankBalanceDTO.getYearBalanceId() != null) {
+                                YearBalance yearBalance = getYearBalanceById(bankBalanceDTO.getYearBalanceId());
+                                MonthBalance monthBalance = getMonthBalanceByYearBalance(yearBalance,
+                                        bankBalanceDTO.getMonthBalanceId());
+                                bankBalance.setYearBalance(yearBalance);
+                                bankBalance.setMonthBalance(monthBalance);
+                            }
                             return createAndReturnDto(bankBalance);
                         })
                 .orElseThrow(() -> new ResourceNotFoundException(BANK_BALANCE_NOT_FOUND + bankBalanceId));
