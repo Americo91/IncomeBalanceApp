@@ -1,6 +1,5 @@
 package com.astoppello.incomebalanceapp.utils;
 
-import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import org.apache.commons.collections4.CollectionUtils;
@@ -17,7 +16,7 @@ public class YearBalanceUtils {
     }
 
     private static BigDecimal computeSalaries(YearBalance yearBalance) {
-        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceList()).stream()
+        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceSet()).stream()
                               .filter(Objects::nonNull)
                               .map(MonthBalance::getSalary)
                               .filter(Objects::nonNull)
@@ -25,7 +24,7 @@ public class YearBalanceUtils {
     }
 
     private static BigDecimal computeResults(YearBalance yearBalance) {
-        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceList()).stream()
+        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceSet()).stream()
                               .filter(Objects::nonNull)
                               .map(MonthBalance::getResult)
                               .filter(Objects::nonNull)
@@ -33,7 +32,7 @@ public class YearBalanceUtils {
     }
 
     private static BigDecimal computeExpenses(YearBalance yearBalance) {
-        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceList()).stream()
+        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceSet()).stream()
                               .filter(Objects::nonNull)
                               .map(MonthBalance::getExpenses)
                               .filter(Objects::nonNull)
@@ -41,7 +40,7 @@ public class YearBalanceUtils {
     }
 
     private static BigDecimal computeIncomes(YearBalance yearBalance) {
-        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceList()).stream()
+        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceSet()).stream()
                               .filter(Objects::nonNull)
                               .map(MonthBalance::getIncomes)
                               .filter(Objects::nonNull)

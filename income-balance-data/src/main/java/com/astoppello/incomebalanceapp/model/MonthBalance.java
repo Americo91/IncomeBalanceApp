@@ -1,18 +1,12 @@
 package com.astoppello.incomebalanceapp.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * Created by @author stopp on 20/12/2020
@@ -24,14 +18,14 @@ import java.util.StringJoiner;
 @Table(name = "monthBalances")
 public class MonthBalance extends AbstractBalanceEntity {
 
-    @Nullable
+    @NonNull
     private String month;
 
-    @Nullable
+    @NonNull
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "monthBalance")
-    private List<BankBalance> bankBalanceList = new LinkedList<>();
+    private Set<BankBalance> bankBalanceSet = new HashSet<>();
 
-    @Nullable
+    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "yearBalance_id")
     private YearBalance yearBalance;
@@ -46,18 +40,18 @@ public class MonthBalance extends AbstractBalanceEntity {
             BigDecimal incomes,
             BigDecimal result,
             String month,
-            List<BankBalance> bankBalanceList) {
+            Set<BankBalance> bankBalanceSet) {
         super(id, expenses, incomes, result);
         this.month = month;
         this.salary = salary;
-        if (CollectionUtils.isNotEmpty(bankBalanceList)) {
-            this.bankBalanceList = bankBalanceList;
+        if (CollectionUtils.isNotEmpty(bankBalanceSet)) {
+            this.bankBalanceSet = bankBalanceSet;
         }
     }
 
-    public MonthBalance addBankBalance(BankBalance bankBalance) {
+    public MonthBalance addBankBalance(@NonNull BankBalance bankBalance) {
         bankBalance.setMonthBalance(this);
-        bankBalanceList.add(bankBalance);
+        bankBalanceSet.add(bankBalance);
         return this;
     }
 
@@ -65,24 +59,20 @@ public class MonthBalance extends AbstractBalanceEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof MonthBalance)) return false;
-        if (!super.equals(o)) return false;
-        MonthBalance that = (MonthBalance) o;
-        return Objects.equals(month, that.month)
-                && Objects.equals(salary, that.salary)
-                && Objects.equals(bankBalanceList, that.bankBalanceList);
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), month, salary, bankBalanceList);
+        return Objects.hash(super.hashCode());
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", MonthBalance.class.getSimpleName() + "[", "]")
                 .merge(super.getStringJoiner())
-                .add("yearBalanceId= " + ((yearBalance != null) ? yearBalance.getId() : "null"))
-                .add("bankBalanceList= " + (CollectionUtils.isNotEmpty(bankBalanceList) ? bankBalanceList
+                .add("yearBalanceId= " + yearBalance.getId())
+                .add("bankBalanceList= " + (CollectionUtils.isNotEmpty(bankBalanceSet) ? bankBalanceSet
                         .toString() : "null"))
                 .add("month= " + month)
                 .add("salary= " + salary)

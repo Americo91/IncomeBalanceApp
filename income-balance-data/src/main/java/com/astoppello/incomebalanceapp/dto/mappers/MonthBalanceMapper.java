@@ -19,7 +19,6 @@ import java.math.RoundingMode;
 public interface MonthBalanceMapper {
 
     @Mappings({
-            @Mapping(source = "bankBalances", target = "bankBalanceList"),
             @Mapping(source = "expenses", target = "expenses", qualifiedByName = "StringToBigDecimal"),
             @Mapping(source = "incomes", target = "incomes", qualifiedByName = "StringToBigDecimal"),
             @Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal"),
@@ -28,7 +27,7 @@ public interface MonthBalanceMapper {
     MonthBalance monthBalanceDtoToMonthBalance(MonthBalanceDTO monthBalanceDto);
 
     @Mappings({
-            @Mapping(source = "bankBalanceList", target = "bankBalances"),
+            @Mapping(source = "bankBalanceSet", target = "bankBalances"),
             @Mapping(source = "yearBalance.id", target = "yearBalanceId"),
             @Mapping(source = "expenses", target = "expenses", qualifiedByName = "BigDecimalToString"),
             @Mapping(source = "incomes", target = "incomes", qualifiedByName = "BigDecimalToString"),

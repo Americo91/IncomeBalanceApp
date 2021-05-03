@@ -17,8 +17,6 @@ import org.mapstruct.Mappings;
 public interface YearBalanceMapper {
 
     @Mappings({
-            @Mapping(source = "monthBalances", target = "monthBalanceList"),
-            @Mapping(source = "bankBalances", target = "bankBalanceList"),
             @Mapping(source = "expenses", target = "expenses", qualifiedByName = "StringToBigDecimal"),
             @Mapping(source = "incomes", target = "incomes", qualifiedByName = "StringToBigDecimal"),
             @Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal"),
@@ -27,8 +25,8 @@ public interface YearBalanceMapper {
     YearBalance yearBalanceDtoToYearBalance(YearBalanceDTO yearBalanceDTO);
 
     @Mappings({
-            @Mapping(source = "bankBalanceList", target = "bankBalances"),
-            @Mapping(source = "monthBalanceList", target = "monthBalances"),
+            @Mapping(source = "bankBalanceSet", target = "bankBalances"),
+            @Mapping(source = "monthBalanceSet", target = "monthBalances"),
             @Mapping(source = "expenses", target = "expenses", qualifiedByName = "BigDecimalToString"),
             @Mapping(source = "incomes", target = "incomes", qualifiedByName = "BigDecimalToString"),
             @Mapping(source = "result", target = "result", qualifiedByName = "BigDecimalToString"),

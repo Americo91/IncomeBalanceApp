@@ -1,15 +1,10 @@
 package com.astoppello.incomebalanceapp.services;
 
-import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.mappers.*;
 import com.astoppello.incomebalanceapp.exceptions.ResourceNotFoundException;
-import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
-import com.astoppello.incomebalanceapp.repositories.BankBalanceRepository;
-import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,8 +36,6 @@ class YearBalanceServiceTest {
   YearBalance yearBalance;
 
   @Autowired YearBalanceMapper yearBalanceMapper;
-  @Autowired MonthBalanceMapper monthBalanceMapper;
-  @Autowired BankBalanceMapper bankBalanceMapper;
   @Mock YearBalanceRepository yearBalanceRepository;
 
   YearBalanceService yearBalanceService;
@@ -50,12 +43,7 @@ class YearBalanceServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    yearBalanceService =
-        new YearBalanceServiceImpl(
-            yearBalanceRepository,
-            yearBalanceMapper,
-            monthBalanceMapper,
-            bankBalanceMapper);
+    yearBalanceService = new YearBalanceServiceImpl(yearBalanceRepository, yearBalanceMapper);
     yearBalance = YearBalance.builder().year(YEAR).id(ID).build();
   }
 
@@ -138,5 +126,4 @@ class YearBalanceServiceTest {
     verify(yearBalanceRepository, times(1)).deleteById(anyLong());
     assertThrows(ResourceNotFoundException.class, () -> yearBalanceService.findById(ID));
   }
-
 }

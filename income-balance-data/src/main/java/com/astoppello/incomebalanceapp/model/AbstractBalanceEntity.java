@@ -34,16 +34,12 @@ public abstract class AbstractBalanceEntity extends AbstractBaseEntity {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof AbstractBalanceEntity)) return false;
-    if (!super.equals(o)) return false;
-    AbstractBalanceEntity that = (AbstractBalanceEntity) o;
-    return Objects.equals(expenses, that.expenses)
-        && Objects.equals(incomes, that.incomes)
-        && Objects.equals(result, that.result);
+    return super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), expenses, incomes, result);
+    return Objects.hash(super.hashCode());
   }
 
   @Override

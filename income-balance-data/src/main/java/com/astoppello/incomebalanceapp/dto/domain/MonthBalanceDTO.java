@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 
-import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 /** Created by @author stopp on 20/12/2020 */
 @Data
@@ -17,6 +16,6 @@ public class MonthBalanceDTO {
   @Nullable private String incomes;
   @Nullable private String result;
   @JsonProperty("bankBalances")
-  @Nullable private List<BankBalanceDTO> bankBalances;
+  @Nullable private Set<BankBalanceDTO> bankBalances;
   @Nullable private Long yearBalanceId;
 }

@@ -46,7 +46,7 @@ public class YearBalanceMapperTest {
         assertNotNull(yearBalanceDTO);
         assertEquals(yearBalance.getId(), yearBalanceDTO.getId());
         assertEquals(yearBalance.getYear(), yearBalanceDTO.getYear());
-        assertEquals(yearBalance.getBankBalanceList().size(), yearBalanceDTO.getBankBalances().size());
-        assertEquals(yearBalance.getMonthBalanceList().size(), yearBalanceDTO.getMonthBalances().size());
+        assertEquals(yearBalance.getBankBalanceSet().size(), yearBalanceDTO.getBankBalances().size());
+        assertEquals(yearBalance.getMonthBalanceSet().size(), yearBalanceDTO.getMonthBalances().size());
     }
 }

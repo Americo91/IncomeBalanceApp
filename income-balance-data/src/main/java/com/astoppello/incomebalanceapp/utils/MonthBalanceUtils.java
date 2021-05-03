@@ -15,7 +15,7 @@ public class MonthBalanceUtils {
     }
 
     private static BigDecimal computeResults(MonthBalance monthBalance) {
-        return CollectionUtils.emptyIfNull(monthBalance.getBankBalanceList())
+        return CollectionUtils.emptyIfNull(monthBalance.getBankBalanceSet())
                               .stream()
                               .filter(Objects::nonNull)
                               .map(BankBalance::getResult)
@@ -24,7 +24,7 @@ public class MonthBalanceUtils {
     }
 
     private static BigDecimal computeExpenses(MonthBalance monthBalance) {
-        return CollectionUtils.emptyIfNull(monthBalance.getBankBalanceList())
+        return CollectionUtils.emptyIfNull(monthBalance.getBankBalanceSet())
                               .stream()
                               .filter(Objects::nonNull)
                               .map(BankBalance::getExpenses)
@@ -33,7 +33,7 @@ public class MonthBalanceUtils {
     }
 
     private static BigDecimal computeIncomes(MonthBalance monthBalance) {
-        return CollectionUtils.emptyIfNull(monthBalance.getBankBalanceList())
+        return CollectionUtils.emptyIfNull(monthBalance.getBankBalanceSet())
                               .stream()
                               .filter(Objects::nonNull)
                               .map(BankBalance::getIncomes)
