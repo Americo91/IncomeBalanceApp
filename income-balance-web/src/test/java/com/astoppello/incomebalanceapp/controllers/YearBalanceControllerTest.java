@@ -32,6 +32,7 @@ public class YearBalanceControllerTest {
   @Mock YearBalanceService yearBalanceService;
   MockMvc mockMvc;
   YearBalanceDTO yearBalanceDTO;
+  private List<YearBalanceDTO> yearBalances;
 
   @BeforeEach
   void setUp() {
@@ -40,16 +41,21 @@ public class YearBalanceControllerTest {
     yearBalanceDTO = new YearBalanceDTO();
     yearBalanceDTO.setId(ID);
     yearBalanceDTO.setYear(YEAR);
+
+    YearBalanceDTO yearBalanceDTO1 = new YearBalanceDTO();
+    yearBalanceDTO1.setYear(2021);
+    yearBalanceDTO1.setId(2L);
+    yearBalances = List.of(yearBalanceDTO, yearBalanceDTO1);
   }
 
   @Test
   void findAllYearBalance() throws Exception {
-    List<YearBalanceDTO> yearBalances = List.of(new YearBalanceDTO(), new YearBalanceDTO());
     when(yearBalanceService.findAll()).thenReturn(yearBalances);
     mockMvc
         .perform(get(YearBalanceController.BASE_URL + "/").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.yearBalances", hasSize(2)));
+        .andExpect(jsonPath("$.yearBalances", hasSize(2)))
+        .andExpect(jsonPath("$.yearBalances.[0].year", equalTo(2021)));
     verify(yearBalanceService).findAll();
   }
 

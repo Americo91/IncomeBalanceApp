@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
+import java.time.Month;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -26,12 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MonthBalanceControllerTest {
 
   private static final Long ID = 1L;
-  private static final String MONTH = "September";
+  private static final String MONTH = "SEPTEMBER";
 
   @InjectMocks MonthBalanceController monthBalanceController;
   @Mock MonthBalanceService monthBalanceService;
   MockMvc mockMvc;
   MonthBalanceDTO monthBalanceDTO;
+  private List<MonthBalanceDTO> monthBalanceDTOS;
 
   @BeforeEach
   void setUp() {
@@ -39,19 +41,24 @@ public class MonthBalanceControllerTest {
     mockMvc = MockMvcBuilders.standaloneSetup(monthBalanceController).build();
     monthBalanceDTO = new MonthBalanceDTO();
     monthBalanceDTO.setId(ID);
-    monthBalanceDTO.setMonth(MONTH);
+    monthBalanceDTO.setMonth(Month.valueOf(MONTH));
+
+    MonthBalanceDTO monthBalanceDTO1 = new MonthBalanceDTO();
+    monthBalanceDTO1.setMonth(Month.DECEMBER);
+    monthBalanceDTO1.setId(2L);
+    monthBalanceDTOS = List.of(monthBalanceDTO, monthBalanceDTO1);
   }
 
   @Test
   void findAllMonthBalance() throws Exception {
-    List<MonthBalanceDTO> monthBalanceDTOS = List.of(new MonthBalanceDTO(), new MonthBalanceDTO());
     when(monthBalanceService.findAllById(ID)).thenReturn(monthBalanceDTOS);
     mockMvc
         .perform(
             get(YearBalanceController.BASE_URL + "/1/monthBalances/")
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.monthBalances", hasSize(2)));
+        .andExpect(jsonPath("$.monthBalances", hasSize(2)))
+        .andExpect(jsonPath("$.monthBalances.[0].month", equalTo(MONTH)));
     verify(monthBalanceService).findAllById(anyLong());
   }
 
@@ -72,7 +79,7 @@ public class MonthBalanceControllerTest {
     when(monthBalanceService.findByMonth(MONTH)).thenReturn(List.of(monthBalanceDTO));
     mockMvc
         .perform(
-            get(MonthBalanceController.BASE_URL + "?month=September")
+            get(MonthBalanceController.BASE_URL + "?month="+MONTH)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.monthBalances.[0].month", equalTo(MONTH)));

@@ -4,11 +4,11 @@ import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
-import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.Month;
 
 import static com.astoppello.incomebalanceapp.utils.ModelEqualUtils.assertYearBalanceAndYearBalanceDtoAreEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +40,7 @@ public class YearBalanceMapperTest {
                                              .id(ID)
                                              .year(YEAR)
                                              .build()
-                                             .addMonthBalance(MonthBalance.builder().id(ID).month("September").build())
+                                             .addMonthBalance(MonthBalance.builder().id(ID).month(Month.SEPTEMBER).build())
                 .addBankBalance(BankBalance.builder().id(ID).build());
         YearBalanceDTO yearBalanceDTO = mapper.yearBalanceToYearBalanceDto(yearBalance);
         assertNotNull(yearBalanceDTO);

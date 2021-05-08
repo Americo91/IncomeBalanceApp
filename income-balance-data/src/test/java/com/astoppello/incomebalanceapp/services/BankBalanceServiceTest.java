@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,6 +68,7 @@ class BankBalanceServiceTest {
                         monthBalanceRepository,
                         yearBalanceRepository, bankRepository);
         monthBalance = MonthBalance.builder()
+                                   .month(Month.SEPTEMBER)
                                    .id(ID)
                                    .build();
         bank = Bank.builder()

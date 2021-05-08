@@ -39,13 +39,13 @@ class YearBalanceUtilsTest {
                                                 .build();
         monthBalance.setBankBalanceSet(bankBalanceList);
         MonthBalanceUtils.computeMontlyAmount(monthBalance);
-        Set<MonthBalance> monthBalanceList = Set.of(monthBalance, MonthBalance.builder()
+        Set<MonthBalance> monthBalances = Set.of(monthBalance, MonthBalance.builder()
                                                                               .id(2L)
                                                                               .salary(new BigDecimal(
                                                                                       "1340.67"))
                                                                               .build());
         yearBalance.setBankBalanceSet(bankBalanceList);
-        yearBalance.setMonthBalanceSet(monthBalanceList);
+        yearBalance.setMonthBalanceSet(monthBalances);
     }
 
     @Test

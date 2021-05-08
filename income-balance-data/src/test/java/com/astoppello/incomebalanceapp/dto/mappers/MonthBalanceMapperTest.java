@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.time.Month;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static com.astoppello.incomebalanceapp.utils.ModelEqualUtils.assertMonthBalanceAndDtoAreEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +27,7 @@ public class MonthBalanceMapperTest {
     @Autowired
     MonthBalanceMapper monthBalanceMapper;
     private static final Long ID = 1L;
-    private static final String MONTH = "September";
+    private static final Month MONTH = Month.APRIL;
     String expenses = "100.00", salary = "150.00", incomes = "170.00", result = "190.00";
     private final BigDecimal EXPENSES = new BigDecimal(expenses);
     private final BigDecimal SALARY = new BigDecimal(salary);

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.time.Month;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +27,8 @@ class MonthBalanceUtilsTest {
                 "130")).build();
         bankBalanceRevolut = BankBalance.builder().id(2L).expenses(new BigDecimal("186.44")).incomes(new BigDecimal(
                 "0.38")).build();
-        monthBalance = MonthBalance.builder().id(1L).month("January").bankBalanceSet(Set.of(
+        monthBalance =
+                MonthBalance.builder().id(1L).month(Month.valueOf("JANUARY")).bankBalanceSet(Set.of(
                 bankBalanceMediolanum,
                 bankBalanceRevolut,
                 bankBalanceBoursorama)).build();

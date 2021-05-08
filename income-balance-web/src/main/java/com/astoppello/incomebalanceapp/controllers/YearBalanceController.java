@@ -1,10 +1,14 @@
 package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
-import com.astoppello.incomebalanceapp.dto.domain.YearBalanceListDTO;
+import com.astoppello.incomebalanceapp.dto.domain.YearBalanceSetDTO;
 import com.astoppello.incomebalanceapp.services.YearBalanceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /** Created by @author stopp on 15/11/2020 */
 @RestController
@@ -20,8 +24,8 @@ public class YearBalanceController {
 
   @GetMapping("/")
   @ResponseStatus(HttpStatus.OK)
-  public YearBalanceListDTO findAllYearBalance() {
-    return new YearBalanceListDTO(yearBalanceService.findAll());
+  public YearBalanceSetDTO findAllYearBalance() {
+    return new YearBalanceSetDTO(new TreeSet<>(yearBalanceService.findAll()));
   }
 
   @GetMapping("/{id}")

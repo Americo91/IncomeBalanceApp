@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
+import java.time.Month;
 import java.util.List;
 import java.util.Objects;
 
@@ -157,7 +158,7 @@ public class ControllerIntegrationTest {
     @Test
     void createNewMonthBalance() {
         MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
-        monthBalanceDTO.setMonth("September");
+        monthBalanceDTO.setMonth(Month.SEPTEMBER);
         MonthBalanceDTO savedMonthBalanceDto =
                 monthBalanceService.createNewMonthBalanceById(ID, monthBalanceDTO);
         assertNotNull(savedMonthBalanceDto);
@@ -171,7 +172,7 @@ public class ControllerIntegrationTest {
                 monthBalanceRepository.findById(3L)
                                       .orElseThrow(ResourceNotFoundException::new);
         MonthBalanceDTO monthBalanceDTO =
-                monthBalanceService.findByMonth(monthBalance.getMonth())
+                monthBalanceService.findByMonth(monthBalance.getMonth().name())
                                    .get(0);
         assertNotNull(monthBalanceDTO);
         assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
@@ -180,8 +181,7 @@ public class ControllerIntegrationTest {
     @Test
     void saveMonthBalance() {
         MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
-        final var september = "September";
-        monthBalanceDTO.setMonth(september);
+        monthBalanceDTO.setMonth(Month.SEPTEMBER);
         monthBalanceDTO.setYearBalanceId(1L);
 
         MonthBalanceDTO savedMonthBalanceDto =
@@ -189,7 +189,7 @@ public class ControllerIntegrationTest {
         assertNotNull(savedMonthBalanceDto);
         assertNotNull(savedMonthBalanceDto.getId());
         assertEquals(2L, savedMonthBalanceDto.getId());
-        assertEquals(september, savedMonthBalanceDto.getMonth());
+        assertEquals("SEPTEMBER", savedMonthBalanceDto.getMonth().name());
         assertEquals(1L, savedMonthBalanceDto.getYearBalanceId());
     }
 

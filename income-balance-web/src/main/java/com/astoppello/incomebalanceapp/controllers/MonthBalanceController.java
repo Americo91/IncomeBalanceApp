@@ -1,10 +1,12 @@
 package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
-import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceListDTO;
+import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceSetDTO;
 import com.astoppello.incomebalanceapp.services.MonthBalanceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.TreeSet;
 
 /** Created by @author stopp on 20/12/2020 */
 @RestController
@@ -20,8 +22,8 @@ public class MonthBalanceController {
 
   @GetMapping(BASE_URL_BY_ID + "/")
   @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceListDTO findAllMonthBalanceById(@PathVariable Long yearBalanceId) {
-    return new MonthBalanceListDTO(monthBalanceService.findAllById(yearBalanceId));
+  public MonthBalanceSetDTO findAllMonthBalanceById(@PathVariable Long yearBalanceId) {
+    return new MonthBalanceSetDTO(new TreeSet<>(monthBalanceService.findAllById(yearBalanceId)));
   }
 
   @GetMapping(BASE_URL_BY_ID + "/{monthBalanceId}")
@@ -40,14 +42,14 @@ public class MonthBalanceController {
 
   @GetMapping(BASE_URL)
   @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceListDTO findMonthBalanceByMonth(@RequestParam String month) {
-    return new MonthBalanceListDTO(monthBalanceService.findByMonth(month));
+  public MonthBalanceSetDTO findMonthBalanceByMonth(@RequestParam String month) {
+    return new MonthBalanceSetDTO(new TreeSet<>(monthBalanceService.findByMonth(month)));
   }
 
   @GetMapping(BASE_URL + "/")
   @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceListDTO findAllMonthBalance() {
-    return new MonthBalanceListDTO(monthBalanceService.findAll());
+  public MonthBalanceSetDTO findAllMonthBalance() {
+    return new MonthBalanceSetDTO(new TreeSet<>(monthBalanceService.findAll()));
   }
 
   @GetMapping(BASE_URL + "/{monthBalanceId}")

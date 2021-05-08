@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
-/** Created by @author stopp on 20/12/2020 */
+/**
+ * Created by @author stopp on 28/11/2020
+ */
 @Data
 @AllArgsConstructor
-public class MonthBalanceListDTO {
-  @JsonProperty("monthBalances")
-  List<MonthBalanceDTO> monthBalances;
+public class BankBalanceSetDTO {
+    @JsonProperty("bankBalances")
+    Set<BankBalanceDTO> bankBalances;
 }

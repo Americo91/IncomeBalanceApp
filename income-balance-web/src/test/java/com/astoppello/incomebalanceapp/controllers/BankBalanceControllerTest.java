@@ -35,6 +35,7 @@ public class BankBalanceControllerTest {
   @Mock BankBalanceService bankBalanceService;
   MockMvc mockMvc;
   BankBalanceDTO bankBalanceDTO;
+  private List<BankBalanceDTO> bankBalanceDTOS;
 
   @BeforeEach
   void setUp() {
@@ -50,11 +51,15 @@ public class BankBalanceControllerTest {
     bankDTO.setName(REVOLUT);
     bankDTO.setId(ID);
     bankBalanceDTO.setBank(bankDTO);
+
+    BankBalanceDTO bankBalanceDTO1 = new BankBalanceDTO();
+    bankBalanceDTO1.setId(2L);
+
+    bankBalanceDTOS = List.of(bankBalanceDTO, bankBalanceDTO1);
   }
 
   @Test
   void findAllBankBalancesById() throws Exception {
-    List<BankBalanceDTO> bankBalanceDTOS = List.of(new BankBalanceDTO(), new BankBalanceDTO());
     when(bankBalanceService.findAllByIds(anyLong(), anyLong())).thenReturn(bankBalanceDTOS);
     mockMvc
         .perform(
@@ -67,7 +72,6 @@ public class BankBalanceControllerTest {
 
   @Test
   void findAllBankBalancesByYearBalanceId() throws Exception {
-    List<BankBalanceDTO> bankBalanceDTOS = List.of(new BankBalanceDTO(), new BankBalanceDTO());
     when(bankBalanceService.findAllByYearBalanceId(anyLong())).thenReturn(bankBalanceDTOS);
     mockMvc
             .perform(
@@ -80,8 +84,7 @@ public class BankBalanceControllerTest {
 
   @Test
   void findAllBankBalances() throws Exception {
-    List<BankBalanceDTO> bankBalanceDTOList = List.of(bankBalanceDTO, new BankBalanceDTO());
-    when(bankBalanceService.findAll()).thenReturn(bankBalanceDTOList);
+    when(bankBalanceService.findAll()).thenReturn(bankBalanceDTOS);
     mockMvc
         .perform(get(BankBalanceController.BASE_URL + "/").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())

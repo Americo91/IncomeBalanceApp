@@ -2,10 +2,10 @@ package com.astoppello.incomebalanceapp.model;
 
 import lombok.*;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.Month;
 import java.util.*;
 
 /**
@@ -19,7 +19,7 @@ import java.util.*;
 public class MonthBalance extends AbstractBalanceEntity {
 
     @NonNull
-    private String month;
+    private Month month;
 
     @NonNull
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "monthBalance")
@@ -39,7 +39,7 @@ public class MonthBalance extends AbstractBalanceEntity {
             BigDecimal expenses,
             BigDecimal incomes,
             BigDecimal result,
-            String month,
+            Month month,
             Set<BankBalance> bankBalanceSet) {
         super(id, expenses, incomes, result);
         this.month = month;

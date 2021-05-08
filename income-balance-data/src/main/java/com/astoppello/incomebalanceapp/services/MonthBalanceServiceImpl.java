@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Month;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,8 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
         log.info("Find MonthBalance by month: " + month);
         return monthBalanceRepository.findAll()
                                      .stream()
-                                     .filter(monthBalance -> month.equals(monthBalance.getMonth()))
+                                     .filter(monthBalance -> month.equals(monthBalance.getMonth()
+                                                                                      .name()))
                                      .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
                                      .collect(Collectors.toList());
     }
@@ -131,7 +133,8 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
                             if (StringUtils.isNotEmpty(monthBalanceDTO.getIncomes())) {
                                 monthBalance.setIncomes(new BigDecimal(monthBalanceDTO.getIncomes()));
                             }
-                            if (StringUtils.isNotBlank(monthBalanceDTO.getMonth())) {
+                            if (monthBalanceDTO.getMonth() != null && StringUtils.isNotBlank(monthBalanceDTO.getMonth()
+                                                                                                            .name())) {
                                 monthBalance.setMonth(monthBalanceDTO.getMonth());
                             }
                             if (StringUtils.isNotEmpty(monthBalanceDTO.getResult())) {

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ class MonthBalanceServiceTest {
     final BigDecimal INCOMES = new BigDecimal(incomes);
     final String REVOLUT = "Revolut";
     private static final Long ID = 1L;
-    private static final String MONTH = "September";
+    private static final Month MONTH = Month.SEPTEMBER;
     @Mock
     MonthBalanceRepository monthBalanceRepository;
     MonthBalance monthBalance;
@@ -67,7 +68,7 @@ class MonthBalanceServiceTest {
     @Test
     void findByMonth() {
         when(monthBalanceRepository.findAll()).thenReturn(List.of(monthBalance));
-        List<MonthBalanceDTO> balanceDTOList = monthBalanceService.findByMonth(MONTH);
+        List<MonthBalanceDTO> balanceDTOList = monthBalanceService.findByMonth(MONTH.name());
         assertNotNull(balanceDTOList);
         assertNotNull(balanceDTOList.get(0));
         assertEquals(ID, balanceDTOList.get(0)
@@ -202,7 +203,7 @@ class MonthBalanceServiceTest {
 
         MonthBalanceDTO monthBalanceDTO =
                 monthBalanceMapper.monthBalanceToMonthBalanceDto(monthBalance);
-        monthBalanceDTO.setMonth("October");
+        monthBalanceDTO.setMonth(Month.OCTOBER);
 
         MonthBalanceDTO savedMonthBalanceDto =
                 monthBalanceService.updateMonthBalance(ID, monthBalanceDTO);

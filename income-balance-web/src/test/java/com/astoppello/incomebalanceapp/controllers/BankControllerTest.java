@@ -31,6 +31,7 @@ public class BankControllerTest {
   @Mock BankService bankService;
   MockMvc mockMvc;
   BankDTO bankDTO;
+  private List<BankDTO> bankDTOS;
 
   @BeforeEach
   void setUp() {
@@ -42,11 +43,15 @@ public class BankControllerTest {
     bankDTO = new BankDTO();
     bankDTO.setName(NAME);
     bankDTO.setId(ID);
+
+    BankDTO bankDTO1 = new BankDTO();
+    bankDTO1.setName("BankName");
+    bankDTO1.setId(2L);
+    bankDTOS = List.of(bankDTO, bankDTO1);
   }
 
   @Test
   void findAllBanks() throws Exception {
-    List<BankDTO> bankDTOS = List.of(new BankDTO(), new BankDTO());
     when(bankService.findAll()).thenReturn(bankDTOS);
     mockMvc
         .perform(get(BankController.BASE_URL + "/").contentType(MediaType.APPLICATION_JSON))
