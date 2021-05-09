@@ -18,9 +18,9 @@ public class YearBalanceDTO implements Comparable {
     @Nullable
     private String salary;
     @Nullable
-    private String expenses;
-    @Nullable
     private String incomes;
+    @Nullable
+    private String expenses;
     @Nullable
     private String result;
 

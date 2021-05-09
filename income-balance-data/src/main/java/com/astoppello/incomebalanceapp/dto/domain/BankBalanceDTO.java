@@ -14,9 +14,9 @@ public class BankBalanceDTO implements Comparable {
     @Nullable
     private BankDTO bank;
     @Nullable
-    private String expenses;
-    @Nullable
     private String incomes;
+    @Nullable
+    private String expenses;
     @Nullable
     private String result;
     @Nullable

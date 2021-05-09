@@ -169,11 +169,10 @@ public class ControllerIntegrationTest {
     @Test
     void getMonthBalanceByMonth() {
         MonthBalance monthBalance =
-                monthBalanceRepository.findById(3L)
+                monthBalanceRepository.findById(1L)
                                       .orElseThrow(ResourceNotFoundException::new);
         MonthBalanceDTO monthBalanceDTO =
-                monthBalanceService.findByMonth(monthBalance.getMonth().name())
-                                   .get(0);
+                monthBalanceService.findByMonth(Month.SEPTEMBER.name()).get(0);
         assertNotNull(monthBalanceDTO);
         assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
     }
