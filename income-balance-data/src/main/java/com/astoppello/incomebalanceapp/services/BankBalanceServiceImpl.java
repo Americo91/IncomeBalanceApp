@@ -166,14 +166,20 @@ public class BankBalanceServiceImpl implements BankBalanceService {
                                                       .getName());
                                 bankBalance.setBank(bank);
                             }
-                            if (bankBalanceDTO.getMonthBalanceId() != null && bankBalanceDTO.getYearBalanceId() != null) {
+                            MonthBalance oldMonthBalance = bankBalance.getMonthBalance();
+                            YearBalance oldYearBalance = bankBalance.getYearBalance();
+                            if (bankBalanceDTO.getYearBalanceId() != null) {
                                 YearBalance yearBalance = getYearBalanceById(bankBalanceDTO.getYearBalanceId());
-                                MonthBalance monthBalance = getMonthBalanceByYearBalance(yearBalance,
-                                        bankBalanceDTO.getMonthBalanceId());
                                 bankBalance.setYearBalance(yearBalance);
+                            }
+                            if (bankBalanceDTO.getMonthBalanceId() != null) {
+                                MonthBalance monthBalance = getMonthBalanceByYearBalance(bankBalance.getYearBalance(),
+                                        bankBalanceDTO.getMonthBalanceId());
                                 bankBalance.setMonthBalance(monthBalance);
                             }
-                            return createAndReturnDto(bankBalance);
+                            updateCollateralBalancesForDelete(oldYearBalance, oldMonthBalance, bankBalance);
+                            BankBalanceDTO savedBankBalanceDto = createAndReturnDto(bankBalance);
+                            return savedBankBalanceDto;
                         })
                 .orElseThrow(() -> new ResourceNotFoundException(BANK_BALANCE_NOT_FOUND + bankBalanceId));
     }
@@ -230,12 +236,14 @@ public class BankBalanceServiceImpl implements BankBalanceService {
     }
 
     /**
-     * Remove bankBalance in MonthBalance and YEarBalance in case of delete
+     * Remove bankBalance in MonthBalance and YEarBalance in case of update
      *
+     * @param yearBalance
+     * @param monthBalance
      * @param bankBalance
      */
-    private void updateCollateralBalancesForDelete(@NonNull BankBalance bankBalance) {
-        MonthBalance monthBalance = bankBalance.getMonthBalance();
+    private void updateCollateralBalancesForDelete(YearBalance yearBalance, MonthBalance monthBalance,
+                                                   BankBalance bankBalance) {
         log.info("Removing bankBalanceId "
                 + bankBalance.getId()
                 + " from MonthBalance: "
@@ -245,7 +253,6 @@ public class BankBalanceServiceImpl implements BankBalanceService {
         MonthBalanceUtils.computeMontlyAmount(monthBalance);
         monthBalanceRepository.save(monthBalance);
 
-        YearBalance yearBalance = bankBalance.getYearBalance();
         log.info("Removing bankBalanceId "
                 + bankBalance.getId()
                 + "from YearBalance: "
@@ -254,6 +261,15 @@ public class BankBalanceServiceImpl implements BankBalanceService {
                    .remove(bankBalance);
         YearBalanceUtils.computeYearlyAmount(yearBalance);
         yearBalanceRepository.save(yearBalance);
+    }
+
+    /**
+     * Remove bankBalance in MonthBalance and YEarBalance in case of delete
+     *
+     * @param bankBalance
+     */
+    private void updateCollateralBalancesForDelete(@NonNull BankBalance bankBalance) {
+        updateCollateralBalancesForDelete(bankBalance.getYearBalance(), bankBalance.getMonthBalance(), bankBalance);
     }
 
     private void saveBankToBankBalance(BankBalance bankBalance, Bank bank) {

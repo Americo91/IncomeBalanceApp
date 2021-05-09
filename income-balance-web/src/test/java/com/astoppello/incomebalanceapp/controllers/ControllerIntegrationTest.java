@@ -172,7 +172,8 @@ public class ControllerIntegrationTest {
                 monthBalanceRepository.findById(1L)
                                       .orElseThrow(ResourceNotFoundException::new);
         MonthBalanceDTO monthBalanceDTO =
-                monthBalanceService.findByMonth(Month.SEPTEMBER.name()).get(0);
+                monthBalanceService.findByMonth(Month.SEPTEMBER.name())
+                                   .get(0);
         assertNotNull(monthBalanceDTO);
         assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
     }
@@ -188,7 +189,8 @@ public class ControllerIntegrationTest {
         assertNotNull(savedMonthBalanceDto);
         assertNotNull(savedMonthBalanceDto.getId());
         assertEquals(2L, savedMonthBalanceDto.getId());
-        assertEquals("SEPTEMBER", savedMonthBalanceDto.getMonth().name());
+        assertEquals("SEPTEMBER", savedMonthBalanceDto.getMonth()
+                                                      .name());
         assertEquals(1L, savedMonthBalanceDto.getYearBalanceId());
     }
 
@@ -275,7 +277,8 @@ public class ControllerIntegrationTest {
         assertEquals(incomes.subtract(expenses)
                             .toString(), savedBankBalanceDTO.getResult());
         assertNotNull(savedBankBalanceDTO.getBank());
-        assertEquals("Revolut", savedBankBalanceDTO.getBank().getName());
+        assertEquals("Revolut", savedBankBalanceDTO.getBank()
+                                                   .getName());
         assertEquals(id, savedBankBalanceDTO.getYearBalanceId());
         assertEquals(id, savedBankBalanceDTO.getMonthBalanceId());
     }
@@ -302,6 +305,33 @@ public class ControllerIntegrationTest {
         assertEquals(BigDecimal.ZERO, yearBalance.getExpenses());
         assertEquals(BigDecimal.ZERO, yearBalance.getResult());
         assertEquals(BigDecimal.ZERO, yearBalance.getIncomes());
+    }
+
+    @Test
+    void updateBankBalanceMonthBalanceIdTest() {
+        BankBalance bankBalance = bankBalanceRepository.findById(ID)
+                                                       .get();
+        BankBalanceDTO bankBalanceDTO = bankBalanceMapper.bankBalanceToBankBalanceDTO(bankBalance);
+
+        long oldMonthBalanceId = bankBalanceDTO.getMonthBalanceId();
+        long monthBalanceId = 4L;
+        bankBalanceDTO.setMonthBalanceId(monthBalanceId);
+        bankBalanceDTO.setYearBalanceId(null);
+        BankBalanceDTO savedBankBalanceDto = bankBalanceService.updateBankBalance(ID, bankBalanceDTO);
+        assertNotNull(savedBankBalanceDto);
+        assertEquals(monthBalanceId, savedBankBalanceDto.getMonthBalanceId());
+
+        //Assert new MonthBalance modify correctly
+        MonthBalanceDTO newMonthBalanceDTO = monthBalanceService.findById(monthBalanceId);
+        assertEquals(savedBankBalanceDto.getIncomes(), newMonthBalanceDTO.getIncomes());
+        assertEquals(savedBankBalanceDto.getExpenses(), newMonthBalanceDTO.getExpenses());
+        assertEquals(savedBankBalanceDto.getResult(), newMonthBalanceDTO.getResult());
+
+        //Assert old MonthBalance modify correctly
+        MonthBalanceDTO oldMonthBalanceDTO = monthBalanceService.findById(oldMonthBalanceId);
+        assertEquals("0", oldMonthBalanceDTO.getIncomes());
+        assertEquals("0", oldMonthBalanceDTO.getExpenses());
+        assertEquals("0", oldMonthBalanceDTO.getResult());
     }
 
     // Bank tests

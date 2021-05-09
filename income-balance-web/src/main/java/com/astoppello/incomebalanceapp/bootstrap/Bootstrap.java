@@ -57,6 +57,7 @@ public class Bootstrap implements CommandLineRunner {
                 BankBalance.builder()
                            .id(1L)
                            .expenses(new BigDecimal("100"))
+                           .incomes(new BigDecimal("150"))
                            .bank(revolut)
                            .build();
         bankBalanceRepository.save(bankBalance);
@@ -79,11 +80,18 @@ public class Bootstrap implements CommandLineRunner {
                             .id(3L)
                             .month(Month.OCTOBER)
                             .salary(new BigDecimal("2000"))
+                            .expenses(new BigDecimal("100"))
                             .build()
                             .addBankBalance(bankBalance);
+        MonthBalance november = MonthBalance.builder()
+                                            .month(Month.NOVEMBER)
+                                            .salary(new BigDecimal("200"))
+                                            .id(4L)
+                                            .build();
         monthBalanceRepository.save(september);
         monthBalanceRepository.save(monthBalance);
         monthBalanceRepository.save(october);
+        monthBalanceRepository.save(november);
         System.out.println("MonthBalance loaded " + monthBalanceRepository.count());
 
         yearBalanceRepository.save(YearBalance.builder()
@@ -101,9 +109,9 @@ public class Bootstrap implements CommandLineRunner {
                 YearBalance.builder()
                            .year(2021)
                            .id(3L)
-                           .expenses(new BigDecimal("500"))
                            .build()
-                           .addMonthBalance(october);
+                           .addMonthBalance(october)
+                           .addMonthBalance(november);
         yearBalanceRepository.save(yearBalance);
         System.out.println("YearBalance data loaded " + yearBalanceRepository.count());
     }
