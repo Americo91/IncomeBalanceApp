@@ -221,7 +221,6 @@ public class BankBalanceServiceImpl implements BankBalanceService {
         yearBalance.addBankBalance(savedBankBalance);
         YearBalanceUtils.computeYearlyAmount(yearBalance);
         yearBalanceRepository.save(yearBalance);
-
     }
 
     private MonthBalance updateMonthBalance(BankBalance savedBankBalance) {

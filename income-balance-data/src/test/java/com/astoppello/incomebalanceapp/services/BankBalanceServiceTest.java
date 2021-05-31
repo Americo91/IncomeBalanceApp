@@ -240,9 +240,9 @@ class BankBalanceServiceTest {
         assertEquals(result, savedBankBalanceDto.getResult());
         verify(bankBalanceRepository, times(1)).findById(anyLong());
         verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
-        verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
+        verify(monthBalanceRepository, times(2)).save(any(MonthBalance.class));
         verify(yearBalanceRepository, times(1)).findById(anyLong());
-        verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
+        verify(yearBalanceRepository, times(2)).save(any(YearBalance.class));
         verify(bankRepository, times(1)).findById(anyLong());
     }
 

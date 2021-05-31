@@ -138,8 +138,7 @@ public class ControllerIntegrationTest {
     // MonthBalance Tests
     @Test
     void getAllMonthBalanceTest() {
-        assertEquals(3, monthBalanceRepository.findAll()
-                                              .size());
+        assertEquals(4, monthBalanceRepository.findAll().size());
     }
 
     @Test
