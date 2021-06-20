@@ -26,13 +26,6 @@ public class MonthBalanceController {
     return new MonthBalanceSetDTO(new TreeSet<>(monthBalanceService.findAllById(yearBalanceId)));
   }
 
-  @GetMapping(BASE_URL_BY_ID + "/{monthBalanceId}")
-  @ResponseStatus(HttpStatus.OK)
-  public MonthBalanceDTO findMonthBalanceOfYearById(
-      @PathVariable Long yearBalanceId, @PathVariable Long monthBalanceId) {
-    return monthBalanceService.findMonthOfYearById(yearBalanceId, monthBalanceId);
-  }
-
   @PostMapping(BASE_URL_BY_ID)
   @ResponseStatus(HttpStatus.CREATED)
   public MonthBalanceDTO createNewMonthBalanceById(
@@ -56,12 +49,6 @@ public class MonthBalanceController {
   @ResponseStatus(HttpStatus.OK)
   public MonthBalanceDTO findMonthBalanceById(@PathVariable Long monthBalanceId) {
     return monthBalanceService.findById(monthBalanceId);
-  }
-
-  @PostMapping(BASE_URL)
-  @ResponseStatus(HttpStatus.CREATED)
-  public MonthBalanceDTO createNewMonthBalance(@RequestBody MonthBalanceDTO monthBalanceDTO) {
-    return monthBalanceService.createNewMonthBalance(monthBalanceDTO);
   }
 
   @PutMapping(BASE_URL + "/{id}")

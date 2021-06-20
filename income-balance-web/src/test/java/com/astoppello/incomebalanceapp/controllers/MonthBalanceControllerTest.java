@@ -1,7 +1,6 @@
 package com.astoppello.incomebalanceapp.controllers;
 
 import com.astoppello.incomebalanceapp.dto.domain.MonthBalanceDTO;
-import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.services.MonthBalanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,13 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.math.BigDecimal;
 import java.time.Month;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,6 +41,7 @@ public class MonthBalanceControllerTest {
     monthBalanceDTO = new MonthBalanceDTO();
     monthBalanceDTO.setId(ID);
     monthBalanceDTO.setMonth(Month.valueOf(MONTH));
+    monthBalanceDTO.setYearBalanceId(ID);
 
     MonthBalanceDTO monthBalanceDTO1 = new MonthBalanceDTO();
     monthBalanceDTO1.setMonth(Month.DECEMBER);
@@ -60,18 +60,6 @@ public class MonthBalanceControllerTest {
         .andExpect(jsonPath("$.monthBalances", hasSize(2)))
         .andExpect(jsonPath("$.monthBalances.[0].month", equalTo(MONTH)));
     verify(monthBalanceService).findAllById(anyLong());
-  }
-
-  @Test
-  void findMonthBalanceById() throws Exception {
-    when(monthBalanceService.findMonthOfYearById(ID, ID)).thenReturn(monthBalanceDTO);
-    mockMvc
-        .perform(
-            get(YearBalanceController.BASE_URL + "/1/monthBalances/" + ID)
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", equalTo(1)));
-    verify(monthBalanceService).findMonthOfYearById(anyLong(), anyLong());
   }
 
   @Test
@@ -122,23 +110,6 @@ public class MonthBalanceControllerTest {
         .andExpect(jsonPath("$.month", equalTo(MONTH)))
         .andExpect(jsonPath("$.id", equalTo(1)));
     verify(monthBalanceService, times(1)).findById(anyLong());
-  }
-
-  @Test
-  void testCreateNewMonthBalance() throws Exception {
-    monthBalanceDTO.setYearBalanceId(ID);
-    when(monthBalanceService.createNewMonthBalance(monthBalanceDTO))
-        .thenReturn(monthBalanceDTO);
-    mockMvc
-        .perform(
-            post(MonthBalanceController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(AbstractRestControllerTest.asJsonString(monthBalanceDTO)))
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id", equalTo(1)))
-        .andExpect(jsonPath("$.month", equalTo(MONTH)))
-        .andExpect(jsonPath("$.yearBalanceId", equalTo(1)));
-    verify(monthBalanceService).createNewMonthBalance(any(MonthBalanceDTO.class));
   }
 
   @Test

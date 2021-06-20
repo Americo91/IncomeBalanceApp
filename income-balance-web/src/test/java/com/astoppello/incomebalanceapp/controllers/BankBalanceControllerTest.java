@@ -122,24 +122,6 @@ public class BankBalanceControllerTest {
   }
 
   @Test
-  void createNewBankBalance() throws Exception {
-    bankBalanceDTO.setMonthBalanceId(ID);
-    when(bankBalanceService.createNewBankBalance(bankBalanceDTO))
-        .thenReturn(bankBalanceDTO);
-    mockMvc
-        .perform(
-            post(BankBalanceController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id", equalTo(1)))
-        .andExpect(jsonPath("$.result", equalTo(result)))
-        .andExpect(jsonPath("$.monthBalanceId", equalTo(1)))
-        .andExpect(jsonPath("$.bank.name", equalTo(REVOLUT)));
-    verify(bankBalanceService).createNewBankBalance(any(BankBalanceDTO.class));
-  }
-
-  @Test
   void saveBankBalance() throws Exception {
     BankBalanceDTO bankBalanceDTO1 = new BankBalanceDTO();
     bankBalanceDTO1.setId(3L);

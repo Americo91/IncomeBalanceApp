@@ -71,21 +71,6 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
     }
 
     @Override
-    public MonthBalanceDTO findMonthOfYearById(Long yearBalanceId, Long monthBalanceId) {
-        log.info(
-                "Find MonthBalance of yearBalanceId: "
-                        + yearBalanceId
-                        + ". MonthBalanceId: "
-                        + monthBalanceId);
-        return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceSet())
-                              .stream()
-                              .filter(monthBalance -> monthBalanceId.equals(monthBalance.getId()))
-                              .findFirst()
-                              .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
-                              .orElseThrow(() -> new ResourceNotFoundException(MONTH_BALANCE_NOT_FOUND + monthBalanceId));
-    }
-
-    @Override
     public List<MonthBalanceDTO> findAll() {
         log.info("Find all MonthBalance");
         return monthBalanceRepository.findAll()
@@ -101,14 +86,6 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
                 .findById(id)
                 .map(monthBalanceMapper::monthBalanceToMonthBalanceDto)
                 .orElseThrow(() -> new ResourceNotFoundException(MONTH_BALANCE_NOT_FOUND + id));
-    }
-
-    @Override
-    public MonthBalanceDTO createNewMonthBalance(MonthBalanceDTO monthBalanceDTO) {
-        log.info("Create MonthBalance: " + monthBalanceDTO);
-        MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
-        setYearBalanceIfPresent(monthBalanceDTO.getYearBalanceId(), monthBalance);
-        return createAndReturnDto(monthBalance);
     }
 
     @Override

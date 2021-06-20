@@ -64,12 +64,6 @@ public class BankBalanceController {
         return new BankBalanceSetDTO(new TreeSet<>(bankBalanceService.findByBankName(bankName)));
     }
 
-    @PostMapping(BASE_URL)
-    @ResponseStatus(HttpStatus.CREATED)
-    public BankBalanceDTO createNewBankBalance(@RequestBody BankBalanceDTO bankBalanceDTO) {
-        return bankBalanceService.createNewBankBalance(bankBalanceDTO);
-    }
-
     @PutMapping(BASE_URL + "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BankBalanceDTO saveBankBalance(
@@ -86,7 +80,9 @@ public class BankBalanceController {
 
     @DeleteMapping(BASE_URL + "/{bankBalanceId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteBankBalance(@PathVariable Long bankBalanceId) {
+    public BankBalanceDTO deleteBankBalance(@PathVariable Long bankBalanceId) {
+        BankBalanceDTO bankBalanceDTO = bankBalanceService.findById(bankBalanceId);
         bankBalanceService.deleteBankBalance(bankBalanceId);
+        return bankBalanceDTO;
     }
 }

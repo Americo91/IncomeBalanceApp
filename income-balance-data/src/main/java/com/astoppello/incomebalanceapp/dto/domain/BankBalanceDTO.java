@@ -1,6 +1,9 @@
 package com.astoppello.incomebalanceapp.dto.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
@@ -8,6 +11,9 @@ import java.math.BigDecimal;
 /**
  * Created by @author stopp on 28/11/2020
  */
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class BankBalanceDTO implements Comparable {
     private Long id;

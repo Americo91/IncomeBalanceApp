@@ -17,14 +17,12 @@ import com.astoppello.incomebalanceapp.utils.YearBalanceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -118,17 +116,6 @@ public class BankBalanceServiceImpl implements BankBalanceService {
                                                                                       .getName()))
                                     .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)
                                     .collect(Collectors.toList());
-    }
-
-    @Override
-    public BankBalanceDTO createNewBankBalance(BankBalanceDTO bankBalanceDTO) {
-        log.info("Create BankBalance " + bankBalanceDTO);
-        BankBalance bankBalance = bankBalanceMapper.bankBalanceDtoToBankBalance(bankBalanceDTO);
-        YearBalance yearBalance = getYearBalanceById(bankBalanceDTO.getYearBalanceId());
-        MonthBalance monthBalance = getMonthBalanceByYearBalance(yearBalance, bankBalanceDTO.getMonthBalanceId());
-        bankBalance.setYearBalance(yearBalance);
-        bankBalance.setMonthBalance(monthBalance);
-        return createAndReturnDto(bankBalance);
     }
 
     @Override
@@ -301,8 +288,8 @@ public class BankBalanceServiceImpl implements BankBalanceService {
                 .filter(monthBalance -> monthBalanceId.equals(monthBalance.getId()))
                 .findFirst()
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(String.format("YearBalance %d doesn't contain MonthBalance %d",
-                                yearBalance.getId(), monthBalanceId)));
+                        new ResourceNotFoundException(String.format("MonthBalance %d is not linked to YearBalance %d",
+                                monthBalanceId, yearBalance.getId())));
     }
 
     private YearBalance getYearBalanceById(Long yearBalanceId) {

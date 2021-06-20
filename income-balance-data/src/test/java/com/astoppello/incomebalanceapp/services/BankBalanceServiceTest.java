@@ -173,31 +173,6 @@ class BankBalanceServiceTest {
     }
 
     @Test
-    void createNewBankBalance() {
-        BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
-        when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
-        when(bankRepository.findById(anyLong())).thenReturn(Optional.ofNullable(bank));
-        when(monthBalanceRepository.save(any())).thenReturn(monthBalance);
-        when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
-
-        BankBalanceDTO savedBankBalanceDto = service.createNewBankBalance(bankBalanceDTO);
-        assertNotNull(savedBankBalanceDto);
-        assertEquals(ID, savedBankBalanceDto.getId());
-        assertEquals(expenses, savedBankBalanceDto.getExpenses());
-        assertEquals(incomes, savedBankBalanceDto.getIncomes());
-        assertEquals(ID, savedBankBalanceDto.getBank()
-                                            .getId());
-        assertEquals(REVOLUT, savedBankBalanceDto.getBank()
-                                                 .getName());
-        verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
-        assertNotNull(savedBankBalanceDto.getMonthBalanceId());
-        verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
-        verify(bankRepository, times(1)).findById(anyLong());
-        verify(yearBalanceRepository, times(1)).save(any());
-        verify(yearBalanceRepository, times(1)).findById(anyLong());
-    }
-
-    @Test
     void saveBankBalance() {
         BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
         when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);

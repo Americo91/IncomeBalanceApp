@@ -142,19 +142,6 @@ public class ControllerIntegrationTest {
     }
 
     @Test
-    void getMonthBalanceById() {
-        MonthBalance monthBalance =
-                monthBalanceRepository.findById(3L)
-                                      .orElseThrow(ResourceNotFoundException::new);
-        MonthBalanceDTO monthBalanceDTO =
-                monthBalanceService.findMonthOfYearById(
-                        monthBalance.getYearBalance()
-                                    .getId(), monthBalance.getId());
-        assertNotNull(monthBalanceDTO);
-        assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
-    }
-
-    @Test
     void createNewMonthBalance() {
         MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
         monthBalanceDTO.setMonth(Month.SEPTEMBER);
@@ -168,7 +155,7 @@ public class ControllerIntegrationTest {
     @Test
     void getMonthBalanceByMonth() {
         MonthBalance monthBalance =
-                monthBalanceRepository.findById(1L)
+                monthBalanceRepository.findById(2L)
                                       .orElseThrow(ResourceNotFoundException::new);
         MonthBalanceDTO monthBalanceDTO =
                 monthBalanceService.findByMonth(Month.SEPTEMBER.name())
@@ -251,35 +238,6 @@ public class ControllerIntegrationTest {
                                 .getId(), bankBalanceDTO.getMonthBalanceId());
         assertEquals(bankBalance.getYearBalance()
                                 .getId(), bankBalanceDTO.getYearBalanceId());
-    }
-
-    @Test
-    void createBankBalanceTest() {
-        String incomesString = "100.00";
-        final BigDecimal incomes = new BigDecimal(incomesString);
-        String expensesString = "50.00";
-        final BigDecimal expenses = new BigDecimal(expensesString);
-        BankDTO bankDTO = new BankDTO();
-        bankDTO.setName("Revolut");
-        BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
-        bankBalanceDTO.setIncomes(incomesString);
-        bankBalanceDTO.setExpenses(expensesString);
-        bankBalanceDTO.setBank(bankDTO);
-        long id = 3L;
-        bankBalanceDTO.setYearBalanceId(id);
-        bankBalanceDTO.setMonthBalanceId(id);
-        BankBalanceDTO savedBankBalanceDTO = bankBalanceService.createNewBankBalance(bankBalanceDTO);
-        assertNotNull(savedBankBalanceDTO);
-        assertEquals(incomesString, savedBankBalanceDTO.getIncomes());
-        assertEquals(expensesString, savedBankBalanceDTO.getExpenses());
-        assertNotNull(savedBankBalanceDTO.getId());
-        assertEquals(incomes.subtract(expenses)
-                            .toString(), savedBankBalanceDTO.getResult());
-        assertNotNull(savedBankBalanceDTO.getBank());
-        assertEquals("Revolut", savedBankBalanceDTO.getBank()
-                                                   .getName());
-        assertEquals(id, savedBankBalanceDTO.getYearBalanceId());
-        assertEquals(id, savedBankBalanceDTO.getMonthBalanceId());
     }
 
     @Test

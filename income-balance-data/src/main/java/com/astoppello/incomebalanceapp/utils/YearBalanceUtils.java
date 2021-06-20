@@ -1,10 +1,12 @@
 package com.astoppello.incomebalanceapp.utils;
 
+import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Objects;
 
 public class YearBalanceUtils {
@@ -25,24 +27,30 @@ public class YearBalanceUtils {
 
     private static BigDecimal computeResults(YearBalance yearBalance) {
         return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceSet()).stream()
+                              .map(MonthBalance::getBankBalanceSet)
+                              .flatMap(Collection::stream)
                               .filter(Objects::nonNull)
-                              .map(MonthBalance::getResult)
+                              .map(BankBalance::getResult)
                               .filter(Objects::nonNull)
                               .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private static BigDecimal computeExpenses(YearBalance yearBalance) {
         return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceSet()).stream()
+                              .map(MonthBalance::getBankBalanceSet)
+                              .flatMap(Collection::stream)
                               .filter(Objects::nonNull)
-                              .map(MonthBalance::getExpenses)
+                              .map(BankBalance::getExpenses)
                               .filter(Objects::nonNull)
                               .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private static BigDecimal computeIncomes(YearBalance yearBalance) {
         return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceSet()).stream()
+                              .map(MonthBalance::getBankBalanceSet)
+                              .flatMap(Collection::stream)
                               .filter(Objects::nonNull)
-                              .map(MonthBalance::getIncomes)
+                              .map(BankBalance::getIncomes)
                               .filter(Objects::nonNull)
                               .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

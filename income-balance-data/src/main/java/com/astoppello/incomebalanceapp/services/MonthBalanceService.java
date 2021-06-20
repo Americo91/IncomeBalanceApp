@@ -11,8 +11,6 @@ public interface MonthBalanceService {
 
   List<MonthBalanceDTO> findAllById(Long yearBalanceId);
 
-  MonthBalanceDTO findMonthOfYearById(Long yearBalanceId, Long monthBalanceId);
-
   List<MonthBalanceDTO> findByMonth(String month);
 
   MonthBalanceDTO createNewMonthBalanceById(Long yearBalanceId, MonthBalanceDTO monthBalanceDTO);
@@ -20,8 +18,6 @@ public interface MonthBalanceService {
   List<MonthBalanceDTO> findAll();
 
   MonthBalanceDTO findById(Long id);
-
-  MonthBalanceDTO createNewMonthBalance(MonthBalanceDTO monthBalanceDTO);
 
   MonthBalanceDTO saveMonthBalance(Long id, MonthBalanceDTO monthBalanceDTO);
 

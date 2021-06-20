@@ -79,16 +79,6 @@ class MonthBalanceServiceTest {
     }
 
     @Test
-    void findById() {
-        when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.of(yearBalance));
-        MonthBalanceDTO monthBalanceDTO = monthBalanceService.findMonthOfYearById(ID, ID);
-        assertNotNull(monthBalanceDTO);
-        assertEquals(ID, monthBalanceDTO.getId());
-        assertEquals(MONTH, monthBalanceDTO.getMonth());
-        verify(yearBalanceRepository, times(1)).findById(anyLong());
-    }
-
-    @Test
     void findAll() {
         when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
         assertEquals(
@@ -158,24 +148,6 @@ class MonthBalanceServiceTest {
         assertEquals(ID, savedMonthBalanceDTO.getId());
         assertEquals(MONTH, savedMonthBalanceDTO.getMonth());
         verify(monthBalanceRepository, times(1)).findById(anyLong());
-    }
-
-    @Test
-    void testCreateNewMonthBalance() {
-        MonthBalanceDTO monthBalanceDTO =
-                monthBalanceMapper.monthBalanceToMonthBalanceDto(monthBalance);
-        monthBalanceDTO.setYearBalanceId(ID);
-        when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
-        when(monthBalanceRepository.save(any(MonthBalance.class))).thenReturn(monthBalance);
-        MonthBalanceDTO savedMonthBalanceDTO =
-                monthBalanceService.createNewMonthBalance(monthBalanceDTO);
-        assertNotNull(savedMonthBalanceDTO);
-        assertNotNull(savedMonthBalanceDTO.getYearBalanceId());
-        assertEquals(ID, savedMonthBalanceDTO.getId());
-        assertEquals(MONTH, savedMonthBalanceDTO.getMonth());
-        verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
-        verify(yearBalanceRepository, times(1)).findById(anyLong());
-        verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));
     }
 
     @Test

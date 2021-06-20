@@ -49,7 +49,7 @@ class YearBalanceServiceTest {
 
   @Test
   void findAllYearBalance() {
-    List<YearBalance> list = List.of(yearBalance, YearBalance.builder().build());
+    List<YearBalance> list = List.of(yearBalance, YearBalance.builder().year(2021).build());
     when(yearBalanceRepository.findAll()).thenReturn(list);
     assertEquals(list.size(), yearBalanceService.findAll().size());
     verify(yearBalanceRepository, times(1)).findAll();

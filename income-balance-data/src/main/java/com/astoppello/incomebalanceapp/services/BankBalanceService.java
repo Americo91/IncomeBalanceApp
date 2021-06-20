@@ -21,8 +21,6 @@ public interface BankBalanceService {
 
   List<BankBalanceDTO> findByBankName(String bankName);
 
-  BankBalanceDTO createNewBankBalance(BankBalanceDTO bankBalanceDTO);
-
   BankBalanceDTO saveBankBalance(Long id, BankBalanceDTO bankBalanceDTO);
 
   BankBalanceDTO updateBankBalance(Long bankBalanceId, BankBalanceDTO bankBalanceDTO);
