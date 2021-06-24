@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -122,8 +123,10 @@ class YearBalanceServiceTest {
 
   @Test
   void deleteYearBalance() {
-    yearBalanceService.deleteYearBalance(ID);
-    verify(yearBalanceRepository, times(1)).deleteById(anyLong());
-    assertThrows(ResourceNotFoundException.class, () -> yearBalanceService.findById(ID));
+    when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
+    YearBalanceDTO yearBalanceDTO = yearBalanceService.deleteYearBalance(ID);
+    verify(yearBalanceRepository, times(1)).deleteById(ID);
+    verify(yearBalanceRepository, times(1)).findById(ID);
+    assertThat(yearBalanceDTO.getId()).isEqualTo(ID);
   }
 }

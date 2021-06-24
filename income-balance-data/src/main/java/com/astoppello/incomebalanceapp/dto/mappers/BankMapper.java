@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface BankMapper {
 
-  Bank bankDtoToBank(BankDTO bankDTO);
+  Bank toEntity(BankDTO bankDTO);
 
-  BankDTO bankToBankDto(Bank bank);
+  BankDTO toDto(Bank bank);
 }

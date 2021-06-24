@@ -22,7 +22,7 @@ public interface YearBalanceMapper {
             @Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal"),
             @Mapping(source = "salary", target = "salary", qualifiedByName = "StringToBigDecimal"),
     })
-    YearBalance yearBalanceDtoToYearBalance(YearBalanceDTO yearBalanceDTO);
+    YearBalance toEntity(YearBalanceDTO yearBalanceDTO);
 
     @Mappings({
             @Mapping(source = "bankBalanceSet", target = "bankBalances"),
@@ -32,5 +32,5 @@ public interface YearBalanceMapper {
             @Mapping(source = "result", target = "result", qualifiedByName = "BigDecimalToString"),
             @Mapping(source = "salary", target = "salary", qualifiedByName = "BigDecimalToString"),
     })
-    YearBalanceDTO yearBalanceToYearBalanceDto(YearBalance yearBalance);
+    YearBalanceDTO toDto(YearBalance yearBalance);
 }

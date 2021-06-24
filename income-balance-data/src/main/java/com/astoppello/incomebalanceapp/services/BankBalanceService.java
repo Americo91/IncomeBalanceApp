@@ -25,5 +25,5 @@ public interface BankBalanceService {
 
   BankBalanceDTO updateBankBalance(Long bankBalanceId, BankBalanceDTO bankBalanceDTO);
 
-  void deleteBankBalance(Long bankBalanceId);
+  BankBalanceDTO deleteBankBalance(Long bankBalanceId);
 }

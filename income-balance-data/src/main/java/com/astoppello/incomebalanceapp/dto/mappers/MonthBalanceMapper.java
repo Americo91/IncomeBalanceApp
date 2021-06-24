@@ -24,7 +24,7 @@ public interface MonthBalanceMapper {
             @Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal"),
             @Mapping(source = "salary", target = "salary", qualifiedByName = "StringToBigDecimal"),
     })
-    MonthBalance monthBalanceDtoToMonthBalance(MonthBalanceDTO monthBalanceDto);
+    MonthBalance toEntity(MonthBalanceDTO monthBalanceDto);
 
     @Mappings({
             @Mapping(source = "bankBalanceSet", target = "bankBalances"),
@@ -34,5 +34,5 @@ public interface MonthBalanceMapper {
             @Mapping(source = "result", target = "result", qualifiedByName = "BigDecimalToString"),
             @Mapping(source = "salary", target = "salary", qualifiedByName = "BigDecimalToString"),
     })
-    MonthBalanceDTO monthBalanceToMonthBalanceDto(MonthBalance monthBalance);
+    MonthBalanceDTO toDto(MonthBalance monthBalance);
 }

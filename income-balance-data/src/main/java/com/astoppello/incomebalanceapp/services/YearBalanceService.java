@@ -21,5 +21,5 @@ public interface YearBalanceService {
 
   YearBalanceDTO updateYearBalance(Long id, YearBalanceDTO yearBalanceDTO);
 
-  void deleteYearBalance(Long id);
+  YearBalanceDTO deleteYearBalance(Long id);
 }

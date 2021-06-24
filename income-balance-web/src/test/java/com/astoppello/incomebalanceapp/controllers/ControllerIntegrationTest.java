@@ -16,8 +16,6 @@ import com.astoppello.incomebalanceapp.repositories.BankRepository;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
 import com.astoppello.incomebalanceapp.services.*;
-import org.apache.commons.collections4.CollectionUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -30,7 +28,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.math.BigDecimal;
 import java.time.Month;
 import java.util.List;
-import java.util.Objects;
 
 import static com.astoppello.incomebalanceapp.utils.ModelEqualUtils.assertBankAndBankDtoAreEquals;
 import static com.astoppello.incomebalanceapp.utils.ModelEqualUtils.assertMonthBalanceAndDtoAreEqual;
@@ -268,7 +265,7 @@ public class ControllerIntegrationTest {
     void updateBankBalanceMonthBalanceIdTest() {
         BankBalance bankBalance = bankBalanceRepository.findById(ID)
                                                        .get();
-        BankBalanceDTO bankBalanceDTO = bankBalanceMapper.bankBalanceToBankBalanceDTO(bankBalance);
+        BankBalanceDTO bankBalanceDTO = bankBalanceMapper.toDto(bankBalance);
 
         long oldMonthBalanceId = bankBalanceDTO.getMonthBalanceId();
         long monthBalanceId = 4L;

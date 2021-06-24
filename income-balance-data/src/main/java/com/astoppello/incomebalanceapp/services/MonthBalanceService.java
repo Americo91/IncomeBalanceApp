@@ -23,5 +23,5 @@ public interface MonthBalanceService {
 
   MonthBalanceDTO updateMonthBalance(Long monthBalanceId, MonthBalanceDTO monthBalanceDTO);
 
-  void delete(Long monthBalanceId);
+  MonthBalanceDTO delete(Long monthBalanceId);
 }

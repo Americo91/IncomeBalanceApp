@@ -14,8 +14,8 @@ import java.util.TreeSet;
 @RestController
 public class BankBalanceController {
 
-    public static final String BASE_URL_BY_IDS =
-            "/api/v1/yearBalances/{yearBalanceId}/monthBalances/{monthBalanceId}/bankBalances";
+    public static final String BASE_URL_BY_IDS = "/api/v1/yearBalances/{yearBalanceId}/monthBalances/{monthBalanceId" +
+            "}/bankBalances";
     public static final String BASE_URL_BY_YEARBALANCEID = "/api/v1/yearBalances/{yearBalanceId}/bankBalances/";
     public static final String BASE_URL = "/api/v1/bankBalances";
     private final BankBalanceService bankBalanceService;
@@ -26,8 +26,8 @@ public class BankBalanceController {
 
     @GetMapping(BASE_URL_BY_IDS + "/")
     @ResponseStatus(HttpStatus.OK)
-    public BankBalanceSetDTO findAllBankBalancesByIds(
-            @PathVariable Long yearBalanceId, @PathVariable Long monthBalanceId) {
+    public BankBalanceSetDTO findAllBankBalancesByIds(@PathVariable Long yearBalanceId,
+                                                      @PathVariable Long monthBalanceId) {
         return new BankBalanceSetDTO(new TreeSet<>(bankBalanceService.findAllByIds(yearBalanceId, monthBalanceId)));
     }
 
@@ -39,10 +39,9 @@ public class BankBalanceController {
 
     @PostMapping(BASE_URL_BY_IDS)
     @ResponseStatus(HttpStatus.CREATED)
-    public BankBalanceDTO createNewBankBalancesById(
-            @PathVariable Long yearBalanceId,
-            @PathVariable Long monthBalanceId,
-            @RequestBody BankBalanceDTO bankBalanceDTO) {
+    public BankBalanceDTO createNewBankBalancesById(@PathVariable Long yearBalanceId,
+                                                    @PathVariable Long monthBalanceId,
+                                                    @RequestBody BankBalanceDTO bankBalanceDTO) {
         return bankBalanceService.createNewBankBalanceById(yearBalanceId, monthBalanceId, bankBalanceDTO);
     }
 
@@ -66,23 +65,20 @@ public class BankBalanceController {
 
     @PutMapping(BASE_URL + "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BankBalanceDTO saveBankBalance(
-            @PathVariable Long id, @RequestBody BankBalanceDTO bankBalanceDTO) {
+    public BankBalanceDTO saveBankBalance(@PathVariable Long id, @RequestBody BankBalanceDTO bankBalanceDTO) {
         return bankBalanceService.saveBankBalance(id, bankBalanceDTO);
     }
 
     @PatchMapping(BASE_URL + "/{bankBalanceId}")
     @ResponseStatus(HttpStatus.OK)
-    public BankBalanceDTO updateBankBalance(
-            @PathVariable Long bankBalanceId, @RequestBody BankBalanceDTO bankBalanceDTO) {
+    public BankBalanceDTO updateBankBalance(@PathVariable Long bankBalanceId,
+                                            @RequestBody BankBalanceDTO bankBalanceDTO) {
         return bankBalanceService.updateBankBalance(bankBalanceId, bankBalanceDTO);
     }
 
     @DeleteMapping(BASE_URL + "/{bankBalanceId}")
     @ResponseStatus(HttpStatus.OK)
     public BankBalanceDTO deleteBankBalance(@PathVariable Long bankBalanceId) {
-        BankBalanceDTO bankBalanceDTO = bankBalanceService.findById(bankBalanceId);
-        bankBalanceService.deleteBankBalance(bankBalanceId);
-        return bankBalanceDTO;
+        return bankBalanceService.deleteBankBalance(bankBalanceId);
     }
 }

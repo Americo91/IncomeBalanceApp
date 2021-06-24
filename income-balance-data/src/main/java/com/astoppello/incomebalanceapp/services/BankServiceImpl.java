@@ -30,7 +30,7 @@ public class BankServiceImpl implements BankService {
   public List<BankDTO> findAll() {
     log.info("Get all Banks");
     return repository.findAll().stream()
-        .map(bankMapper::bankToBankDto)
+        .map(bankMapper::toDto)
         .collect(Collectors.toList());
   }
 
@@ -39,7 +39,7 @@ public class BankServiceImpl implements BankService {
     log.info("Get Bank by id: " + id);
     return repository
         .findById(id)
-        .map(bankMapper::bankToBankDto)
+        .map(bankMapper::toDto)
         .orElseThrow(ResourceNotFoundException::new);
   }
 
@@ -50,19 +50,19 @@ public class BankServiceImpl implements BankService {
     if (bank == null) {
       throw new ResourceNotFoundException(BANK_NOT_FOUND + name);
     }
-    return bankMapper.bankToBankDto(bank);
+    return bankMapper.toDto(bank);
   }
 
   @Override
   public BankDTO createNewBank(BankDTO bankDTO) {
     log.info("Create new bank " + bankDTO.toString());
-    return saveAndReturnDto(bankMapper.bankDtoToBank(bankDTO));
+    return saveAndReturnDto(bankMapper.toEntity(bankDTO));
   }
 
   @Override
   public BankDTO saveBank(Long id, BankDTO bankDTO) {
     log.info("Put bank with id:" +id+". Bank: " + bankDTO.toString());
-    Bank bank = bankMapper.bankDtoToBank(bankDTO);
+    Bank bank = bankMapper.toEntity(bankDTO);
     bank.setId(id);
     return saveAndReturnDto(bank);
   }
@@ -83,13 +83,15 @@ public class BankServiceImpl implements BankService {
   }
 
   @Override
-  public void deleteBank(Long id) {
+  public BankDTO deleteBank(Long id) {
+    Bank bank = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(BANK_NOT_FOUND + "id"));
     log.info("Delete bank id: " + id);
     repository.deleteById(id);
+    return bankMapper.toDto(bank);
   }
 
   private BankDTO saveAndReturnDto(Bank bank) {
     Bank savedBank = repository.save(bank);
-    return bankMapper.bankToBankDto(savedBank);
+    return bankMapper.toDto(savedBank);
   }
 }

@@ -19,5 +19,5 @@ public interface BankService {
 
   BankDTO updateBank(Long id, BankDTO bankDTO);
 
-  void deleteBank(Long id);
+  BankDTO deleteBank(Long id);
 }

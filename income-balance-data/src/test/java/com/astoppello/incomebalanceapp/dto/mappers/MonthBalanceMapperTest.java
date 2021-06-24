@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.time.Month;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static com.astoppello.incomebalanceapp.utils.ModelEqualUtils.assertMonthBalanceAndDtoAreEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +37,7 @@ public class MonthBalanceMapperTest {
     @Test
     void monthBalanceDtoToMonthBalance() {
         MonthBalanceDTO monthBalanceDTO = createMonthBalanceDto();
-        MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
+        MonthBalance monthBalance = monthBalanceMapper.toEntity(monthBalanceDTO);
         assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
     }
 
@@ -46,7 +45,7 @@ public class MonthBalanceMapperTest {
     void monthBalanceToMonthBalanceDto() {
         MonthBalance monthBalance = createMonthBalance();
         monthBalance.setYearBalance(YearBalance.builder().id(3L).build());
-        MonthBalanceDTO monthBalanceDTO = monthBalanceMapper.monthBalanceToMonthBalanceDto(monthBalance);
+        MonthBalanceDTO monthBalanceDTO = monthBalanceMapper.toDto(monthBalance);
         assertMonthBalanceAndDtoAreEqual(monthBalance, monthBalanceDTO);
         assertEquals(3L, monthBalanceDTO.getYearBalanceId());
     }

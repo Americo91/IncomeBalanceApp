@@ -22,7 +22,7 @@ public interface BankBalanceMapper {
             @Mapping(source = "incomes", target = "incomes", qualifiedByName = "StringToBigDecimal"),
             @Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal")
     })
-    BankBalance bankBalanceDtoToBankBalance(BankBalanceDTO bankBalanceDto);
+    BankBalance toEntity(BankBalanceDTO bankBalanceDto);
 
     @Mappings({
             @Mapping(source = "monthBalance.id", target = "monthBalanceId"),
@@ -31,7 +31,7 @@ public interface BankBalanceMapper {
             @Mapping(source = "incomes", target = "incomes", qualifiedByName = "BigDecimalToString"),
             @Mapping(source = "result", target = "result", qualifiedByName = "BigDecimalToString")
     })
-    BankBalanceDTO bankBalanceToBankBalanceDTO(BankBalance bankBalance);
+    BankBalanceDTO toDto(BankBalance bankBalance);
 
     @Named("StringToBigDecimal")
     public static BigDecimal stringToBigDecimal(String amount) {

@@ -7,7 +7,6 @@ import com.astoppello.incomebalanceapp.model.BankBalance;
 import com.astoppello.incomebalanceapp.model.MonthBalance;
 import com.astoppello.incomebalanceapp.model.YearBalance;
 import com.astoppello.incomebalanceapp.utils.ModelEqualUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,7 +32,7 @@ public class BankBalanceMapperTest {
     @Test
     void bankBalanceDtoToBankBalance() {
         BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
-        BankBalance bankBalance = bankBalanceMapper.bankBalanceDtoToBankBalance(bankBalanceDTO);
+        BankBalance bankBalance = bankBalanceMapper.toEntity(bankBalanceDTO);
         assertNotNull(bankBalance);
         ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, bankBalanceDTO);
     }
@@ -41,7 +40,7 @@ public class BankBalanceMapperTest {
     @Test
     void bankBalanceToBankBalanceDto() {
         BankBalance bankBalance = createBankBalance();
-        BankBalanceDTO bankBalanceDTO = bankBalanceMapper.bankBalanceToBankBalanceDTO(bankBalance);
+        BankBalanceDTO bankBalanceDTO = bankBalanceMapper.toDto(bankBalance);
         assertNotNull(bankBalanceDTO);
         ModelEqualUtils.assertBankBalanceAndDtoAreEqual(bankBalance, bankBalanceDTO);
         assertEquals(1L, bankBalanceDTO.getMonthBalanceId());

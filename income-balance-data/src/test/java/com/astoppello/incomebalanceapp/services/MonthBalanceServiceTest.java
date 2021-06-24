@@ -23,6 +23,7 @@ import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -97,7 +98,7 @@ class MonthBalanceServiceTest {
         monthBalanceDTO.setMonth(MONTH);
         monthBalanceDTO.setExpenses(expenses);
         monthBalanceDTO.setYearBalanceId(ID);
-        MonthBalance monthBalance = monthBalanceMapper.monthBalanceDtoToMonthBalance(monthBalanceDTO);
+        MonthBalance monthBalance = monthBalanceMapper.toEntity(monthBalanceDTO);
         monthBalance.setYearBalance(yearBalance);
 
         yearBalance.addMonthBalance(
@@ -153,7 +154,7 @@ class MonthBalanceServiceTest {
     @Test
     void saveMonthBalance() {
         MonthBalanceDTO monthBalanceDTO =
-                monthBalanceMapper.monthBalanceToMonthBalanceDto(monthBalance);
+                monthBalanceMapper.toDto(monthBalance);
 
         when(monthBalanceRepository.save(any(MonthBalance.class))).thenReturn(monthBalance);
         MonthBalanceDTO savedMonthBalanceDto =
@@ -174,7 +175,7 @@ class MonthBalanceServiceTest {
         when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
 
         MonthBalanceDTO monthBalanceDTO =
-                monthBalanceMapper.monthBalanceToMonthBalanceDto(monthBalance);
+                monthBalanceMapper.toDto(monthBalance);
         monthBalanceDTO.setMonth(Month.OCTOBER);
 
         MonthBalanceDTO savedMonthBalanceDto =
@@ -190,9 +191,10 @@ class MonthBalanceServiceTest {
 
     @Test
     void delete() {
-        monthBalanceService.delete(monthBalance.getId());
+        when(monthBalanceRepository.findById(anyLong())).thenReturn(Optional.of(monthBalance));
+        MonthBalanceDTO monthBalanceDTO = monthBalanceService.delete(monthBalance.getId());
+        assertThat(monthBalanceDTO.getId()).isEqualTo(ID);
         verify(monthBalanceRepository, times(1)).findById(anyLong());
-        assertThrows(ResourceNotFoundException.class, () -> monthBalanceService.findById(ID));
         verify(monthBalanceRepository, times(1)).deleteById(anyLong());
     }
 

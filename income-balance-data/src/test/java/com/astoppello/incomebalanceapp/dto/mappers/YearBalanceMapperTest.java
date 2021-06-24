@@ -29,7 +29,7 @@ public class YearBalanceMapperTest {
         yearBalanceDTO.setId(ID);
         yearBalanceDTO.setYear(YEAR);
 
-        YearBalance yearBalance = mapper.yearBalanceDtoToYearBalance(yearBalanceDTO);
+        YearBalance yearBalance = mapper.toEntity(yearBalanceDTO);
         assertNotNull(yearBalance);
         assertYearBalanceAndYearBalanceDtoAreEquals(yearBalance, yearBalanceDTO);
     }
@@ -42,7 +42,7 @@ public class YearBalanceMapperTest {
                                              .build()
                                              .addMonthBalance(MonthBalance.builder().id(ID).month(Month.SEPTEMBER).build())
                 .addBankBalance(BankBalance.builder().id(ID).build());
-        YearBalanceDTO yearBalanceDTO = mapper.yearBalanceToYearBalanceDto(yearBalance);
+        YearBalanceDTO yearBalanceDTO = mapper.toDto(yearBalance);
         assertNotNull(yearBalanceDTO);
         assertEquals(yearBalance.getId(), yearBalanceDTO.getId());
         assertEquals(yearBalance.getYear(), yearBalanceDTO.getYear());

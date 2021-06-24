@@ -38,12 +38,9 @@ public class BankBalanceServiceImpl implements BankBalanceService {
     private final BankBalanceMapper bankBalanceMapper;
     private final BankRepository bankRepository;
 
-    public BankBalanceServiceImpl(
-            BankBalanceRepository bankBalanceRepository,
-            BankBalanceMapper bankBalanceMapper,
-            MonthBalanceRepository monthBalanceRepository,
-            YearBalanceRepository yearBalanceRepository,
-            BankRepository bankRepository) {
+    public BankBalanceServiceImpl(BankBalanceRepository bankBalanceRepository, BankBalanceMapper bankBalanceMapper,
+                                  MonthBalanceRepository monthBalanceRepository,
+                                  YearBalanceRepository yearBalanceRepository, BankRepository bankRepository) {
         this.bankBalanceRepository = bankBalanceRepository;
         this.bankBalanceMapper = bankBalanceMapper;
         this.monthBalanceRepository = monthBalanceRepository;
@@ -54,35 +51,26 @@ public class BankBalanceServiceImpl implements BankBalanceService {
     @Override
     public List<BankBalanceDTO> findAllByIds(Long yearBalanceId, Long monthBalanceId) {
         log.info("Get all BankBalance by yearBalanceId " + yearBalanceId + "monthBalanceId " + monthBalanceId);
-        return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceSet())
-                              .stream()
+        return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getMonthBalanceSet()).stream()
                               .filter(monthBalance -> monthBalanceId.equals(monthBalance.getId()))
-                              .map(MonthBalance::getBankBalanceSet)
-                              .flatMap(Collection::stream)
-                              .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)
-                              .collect(Collectors.toList());
+                              .map(MonthBalance::getBankBalanceSet).flatMap(Collection::stream)
+                              .map(bankBalanceMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<BankBalanceDTO> findAllByYearBalanceId(Long yearBalanceId) {
         log.info("Get all BankBalance by yearBalanceId " + yearBalanceId);
-        return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getBankBalanceSet())
-                              .stream()
-                              .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)
-                              .collect(Collectors.toList());
+        return CollectionUtils.emptyIfNull(getYearBalanceById(yearBalanceId).getBankBalanceSet()).stream()
+                              .map(bankBalanceMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public BankBalanceDTO createNewBankBalanceById(
-            Long yearBalanceId, Long monthBalanceId, BankBalanceDTO bankBalanceDTO) {
+    public BankBalanceDTO createNewBankBalanceById(Long yearBalanceId, Long monthBalanceId,
+                                                   BankBalanceDTO bankBalanceDTO) {
         log.info(
-                "Create BankBalance by yearBalanceId "
-                        + yearBalanceId
-                        + "monthBalanceId "
-                        + monthBalanceId
-                        + ". BankBalance: "
-                        + bankBalanceDTO);
-        BankBalance bankBalance = bankBalanceMapper.bankBalanceDtoToBankBalance(bankBalanceDTO);
+                "Create BankBalance by yearBalanceId " + yearBalanceId + "monthBalanceId " + monthBalanceId + ". " +
+                        "BankBalance: " + bankBalanceDTO);
+        BankBalance bankBalance = bankBalanceMapper.toEntity(bankBalanceDTO);
         final YearBalance yearBalance = getYearBalanceById(yearBalanceId);
         bankBalance.setYearBalance(yearBalance);
         bankBalance.setMonthBalance(getMonthBalanceByYearBalance(yearBalance, monthBalanceId));
@@ -92,36 +80,30 @@ public class BankBalanceServiceImpl implements BankBalanceService {
     @Override
     public List<BankBalanceDTO> findAll() {
         log.info("Get all BankBalance");
-        return bankBalanceRepository.findAll()
-                                    .stream()
-                                    .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)
+        return bankBalanceRepository.findAll().stream().map(bankBalanceMapper::toDto)
                                     .collect(Collectors.toList());
     }
 
     @Override
     public BankBalanceDTO findById(Long bankBalanceId) {
         log.info("Get BankBalance id " + bankBalanceId);
-        return bankBalanceRepository
-                .findById(bankBalanceId)
-                .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)
-                .orElseThrow(() -> new ResourceNotFoundException(BANK_BALANCE_NOT_FOUND + bankBalanceId));
+        return bankBalanceRepository.findById(bankBalanceId).map(bankBalanceMapper::toDto)
+                                    .orElseThrow(() -> new ResourceNotFoundException(
+                                            BANK_BALANCE_NOT_FOUND + bankBalanceId));
     }
 
     @Override
     public List<BankBalanceDTO> findByBankName(String bankName) {
         log.info("Get BankBalance bankName " + bankName);
-        return bankBalanceRepository.findAll()
-                                    .stream()
-                                    .filter(bankBalance -> bankName.equals(bankBalance.getBank()
-                                                                                      .getName()))
-                                    .map(bankBalanceMapper::bankBalanceToBankBalanceDTO)
-                                    .collect(Collectors.toList());
+        return bankBalanceRepository.findAll().stream()
+                                    .filter(bankBalance -> bankName.equals(bankBalance.getBank().getName()))
+                                    .map(bankBalanceMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public BankBalanceDTO saveBankBalance(Long id, BankBalanceDTO bankBalanceDTO) {
         log.info("Put BankBalance id " + id + ". BankBalance " + bankBalanceDTO);
-        BankBalance bankBalance = bankBalanceMapper.bankBalanceDtoToBankBalance(bankBalanceDTO);
+        BankBalance bankBalance = bankBalanceMapper.toEntity(bankBalanceDTO);
         bankBalance.setId(id);
         YearBalance yearBalance = getYearBalanceById(bankBalanceDTO.getYearBalanceId());
         MonthBalance monthBalance = getMonthBalanceByYearBalance(yearBalance, bankBalanceDTO.getMonthBalanceId());
@@ -133,51 +115,44 @@ public class BankBalanceServiceImpl implements BankBalanceService {
     @Override
     public BankBalanceDTO updateBankBalance(Long bankBalanceId, BankBalanceDTO bankBalanceDTO) {
         log.info("Patch BankBalance id " + bankBalanceId + ". BankBalance " + bankBalanceDTO);
-        return bankBalanceRepository
-                .findById(bankBalanceId)
-                .map(
-                        bankBalance -> {
-                            if (bankBalanceDTO.getExpenses() != null) {
-                                bankBalance.setExpenses(new BigDecimal(bankBalanceDTO.getExpenses()));
-                            }
-                            if (bankBalanceDTO.getIncomes() != null) {
-                                bankBalance.setIncomes(new BigDecimal(bankBalanceDTO.getIncomes()));
-                            }
-                            if (bankBalanceDTO.getResult() != null) {
-                                bankBalance.setResult(new BigDecimal(bankBalanceDTO.getResult()));
-                            }
-                            if (bankBalanceDTO.getBank() != null) {
-                                final Bank bank = new Bank(bankBalanceDTO.getBank()
-                                                                         .getId(),
-                                        bankBalanceDTO.getBank()
-                                                      .getName());
-                                bankBalance.setBank(bank);
-                            }
-                            MonthBalance oldMonthBalance = bankBalance.getMonthBalance();
-                            YearBalance oldYearBalance = bankBalance.getYearBalance();
-                            if (bankBalanceDTO.getYearBalanceId() != null) {
-                                YearBalance yearBalance = getYearBalanceById(bankBalanceDTO.getYearBalanceId());
-                                bankBalance.setYearBalance(yearBalance);
-                            }
-                            if (bankBalanceDTO.getMonthBalanceId() != null) {
-                                MonthBalance monthBalance = getMonthBalanceByYearBalance(bankBalance.getYearBalance(),
-                                        bankBalanceDTO.getMonthBalanceId());
-                                bankBalance.setMonthBalance(monthBalance);
-                            }
-                            updateCollateralBalancesForDelete(oldYearBalance, oldMonthBalance, bankBalance);
-                            BankBalanceDTO savedBankBalanceDto = createAndReturnDto(bankBalance);
-                            return savedBankBalanceDto;
-                        })
-                .orElseThrow(() -> new ResourceNotFoundException(BANK_BALANCE_NOT_FOUND + bankBalanceId));
+        return bankBalanceRepository.findById(bankBalanceId).map(bankBalance -> {
+            if (bankBalanceDTO.getExpenses() != null) {
+                bankBalance.setExpenses(new BigDecimal(bankBalanceDTO.getExpenses()));
+            }
+            if (bankBalanceDTO.getIncomes() != null) {
+                bankBalance.setIncomes(new BigDecimal(bankBalanceDTO.getIncomes()));
+            }
+            if (bankBalanceDTO.getResult() != null) {
+                bankBalance.setResult(new BigDecimal(bankBalanceDTO.getResult()));
+            }
+            if (bankBalanceDTO.getBank() != null) {
+                final Bank bank = new Bank(bankBalanceDTO.getBank().getId(), bankBalanceDTO.getBank().getName());
+                bankBalance.setBank(bank);
+            }
+            MonthBalance oldMonthBalance = bankBalance.getMonthBalance();
+            YearBalance oldYearBalance = bankBalance.getYearBalance();
+            if (bankBalanceDTO.getYearBalanceId() != null) {
+                YearBalance yearBalance = getYearBalanceById(bankBalanceDTO.getYearBalanceId());
+                bankBalance.setYearBalance(yearBalance);
+            }
+            if (bankBalanceDTO.getMonthBalanceId() != null) {
+                MonthBalance monthBalance = getMonthBalanceByYearBalance(bankBalance.getYearBalance(),
+                        bankBalanceDTO.getMonthBalanceId());
+                bankBalance.setMonthBalance(monthBalance);
+            }
+            updateCollateralBalancesForDelete(oldYearBalance, oldMonthBalance, bankBalance);
+            return createAndReturnDto(bankBalance);
+        }).orElseThrow(() -> new ResourceNotFoundException(BANK_BALANCE_NOT_FOUND + bankBalanceId));
     }
 
     @Override
-    public void deleteBankBalance(Long bankBalanceId) {
-        bankBalanceRepository
-                .findById(bankBalanceId)
-                .ifPresent(this::updateCollateralBalancesForDelete);
+    public BankBalanceDTO deleteBankBalance(Long bankBalanceId) {
+        BankBalance bankBalance = bankBalanceRepository.findById(bankBalanceId).orElseThrow(
+                () -> new ResourceNotFoundException(BANK_BALANCE_NOT_FOUND + bankBalanceId));
+        updateCollateralBalancesForDelete(bankBalance);
         log.info("Delete BankBalance " + bankBalanceId);
         bankBalanceRepository.deleteById(bankBalanceId);
+        return bankBalanceMapper.toDto(bankBalance);
     }
 
     private BankBalanceDTO createAndReturnDto(BankBalance bankBalance) {
@@ -185,7 +160,7 @@ public class BankBalanceServiceImpl implements BankBalanceService {
         saveBankToBankBalance(bankBalance, bankBalance.getBank());
         BankBalance savedBankBalance = bankBalanceRepository.save(bankBalance);
         updateCollateralBalances(savedBankBalance);
-        return bankBalanceMapper.bankBalanceToBankBalanceDTO(savedBankBalance);
+        return bankBalanceMapper.toDto(savedBankBalance);
     }
 
     /**
@@ -200,10 +175,7 @@ public class BankBalanceServiceImpl implements BankBalanceService {
 
     private void updateYearBalance(BankBalance savedBankBalance, MonthBalance monthBalance) {
         YearBalance yearBalance = savedBankBalance.getYearBalance();
-        log.info("Updating YearBalance {} with {} and {}",
-                yearBalance.getId(),
-                monthBalance,
-                savedBankBalance);
+        log.info("Updating YearBalance {} with {} and {}", yearBalance.getId(), monthBalance, savedBankBalance);
         yearBalance.addMonthBalance(monthBalance);
         yearBalance.addBankBalance(savedBankBalance);
         YearBalanceUtils.computeYearlyAmount(yearBalance);
@@ -212,10 +184,7 @@ public class BankBalanceServiceImpl implements BankBalanceService {
 
     private MonthBalance updateMonthBalance(BankBalance savedBankBalance) {
         MonthBalance monthBalance = savedBankBalance.getMonthBalance();
-        log.info("Updating MonthBalance: "
-                + monthBalance.getId()
-                + " with bankBalance: "
-                + savedBankBalance);
+        log.info("Updating MonthBalance: " + monthBalance.getId() + " with bankBalance: " + savedBankBalance);
         monthBalance.addBankBalance(savedBankBalance);
         MonthBalanceUtils.computeMontlyAmount(monthBalance);
         return monthBalanceRepository.save(monthBalance);
@@ -230,21 +199,13 @@ public class BankBalanceServiceImpl implements BankBalanceService {
      */
     private void updateCollateralBalancesForDelete(YearBalance yearBalance, MonthBalance monthBalance,
                                                    BankBalance bankBalance) {
-        log.info("Removing bankBalanceId "
-                + bankBalance.getId()
-                + " from MonthBalance: "
-                + monthBalance.getId());
-        CollectionUtils.emptyIfNull(monthBalance.getBankBalanceSet())
-                       .remove(bankBalance);
+        log.info("Removing bankBalanceId " + bankBalance.getId() + " from MonthBalance: " + monthBalance.getId());
+        CollectionUtils.emptyIfNull(monthBalance.getBankBalanceSet()).remove(bankBalance);
         MonthBalanceUtils.computeMontlyAmount(monthBalance);
         monthBalanceRepository.save(monthBalance);
 
-        log.info("Removing bankBalanceId "
-                + bankBalance.getId()
-                + "from YearBalance: "
-                + yearBalance.getId());
-        yearBalance.getBankBalanceSet()
-                   .remove(bankBalance);
+        log.info("Removing bankBalanceId " + bankBalance.getId() + "from YearBalance: " + yearBalance.getId());
+        yearBalance.getBankBalanceSet().remove(bankBalance);
         YearBalanceUtils.computeYearlyAmount(yearBalance);
         yearBalanceRepository.save(yearBalance);
     }
@@ -270,34 +231,24 @@ public class BankBalanceServiceImpl implements BankBalanceService {
         }
         log.info("Adding Bank: id {}, name {} to BankBalance {}", id, bankName, bankBalance);
         if (id != null) {
-            bankRepository.findById(id)
-                          .ifPresent(bankBalance::setBank);
+            bankRepository.findById(id).ifPresent(bankBalance::setBank);
         } else if (StringUtils.isNotBlank(bankName) && bankRepository.findBankByName(bankName) != null) {
             bankBalance.setBank(bankRepository.findBankByName(bankName));
         } else {
-            bankBalance.setBank(bankRepository.save(Bank.builder()
-                                                        .name(bankName)
-                                                        .build()));
+            bankBalance.setBank(bankRepository.save(Bank.builder().name(bankName).build()));
         }
     }
 
     private MonthBalance getMonthBalanceByYearBalance(YearBalance yearBalance, Long monthBalanceId) {
-        return CollectionUtils
-                .emptyIfNull(yearBalance.getMonthBalanceSet())
-                .stream()
-                .filter(monthBalance -> monthBalanceId.equals(monthBalance.getId()))
-                .findFirst()
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(String.format("MonthBalance %d is not linked to YearBalance %d",
-                                monthBalanceId, yearBalance.getId())));
+        return CollectionUtils.emptyIfNull(yearBalance.getMonthBalanceSet()).stream()
+                              .filter(monthBalance -> monthBalanceId.equals(monthBalance.getId())).findFirst()
+                              .orElseThrow(() -> new ResourceNotFoundException(
+                                      String.format("MonthBalance %d is not linked to YearBalance %d", monthBalanceId,
+                                              yearBalance.getId())));
     }
 
     private YearBalance getYearBalanceById(Long yearBalanceId) {
-        return yearBalanceRepository
-                .findById(yearBalanceId)
-                .orElseThrow(
-                        () ->
-                                new ResourceNotFoundException(
-                                        YearBalanceService.YEAR_BALANCE_NOT_FOUND + yearBalanceId));
+        return yearBalanceRepository.findById(yearBalanceId).orElseThrow(
+                () -> new ResourceNotFoundException(YearBalanceService.YEAR_BALANCE_NOT_FOUND + yearBalanceId));
     }
 }

@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static com.astoppello.incomebalanceapp.dto.mappers.BankMapperTest.ID;
 import static com.astoppello.incomebalanceapp.dto.mappers.BankMapperTest.NAME;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -108,8 +109,9 @@ class BankServiceTest {
 
   @Test
   void deleteBank() {
-    bankService.deleteBank(ID);
-    assertThrows(ResourceNotFoundException.class, () -> bankService.findById(ID));
+    when(bankRepository.findById(anyLong())).thenReturn(Optional.ofNullable(Bank.builder().id(ID).build()));
+    BankDTO bankDTO = bankService.deleteBank(ID);
+    assertThat(bankDTO.getId()).isEqualTo(ID);
     verify(bankRepository).deleteById(anyLong());
   }
 }

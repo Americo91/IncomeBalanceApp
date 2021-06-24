@@ -22,12 +22,14 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -61,32 +63,12 @@ class BankBalanceServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        service =
-                new BankBalanceServiceImpl(
-                        bankBalanceRepository,
-                        bankBalanceMapper,
-                        monthBalanceRepository,
-                        yearBalanceRepository, bankRepository);
-        monthBalance = MonthBalance.builder()
-                                   .month(Month.SEPTEMBER)
-                                   .id(ID)
-                                   .build();
-        bank = Bank.builder()
-                   .id(ID)
-                   .name(REVOLUT)
-                   .build();
-        bankBalance =
-                BankBalance.builder()
-                           .bank(bank)
-                           .expenses(EXPENSES)
-                           .incomes(INCOMES)
-                           .id(ID)
-                           .build();
-        yearBalance =
-                YearBalance.builder()
-                           .id(ID)
-                           .build()
-                           .addMonthBalance(monthBalance.addBankBalance(bankBalance));
+        service = new BankBalanceServiceImpl(bankBalanceRepository, bankBalanceMapper, monthBalanceRepository,
+                yearBalanceRepository, bankRepository);
+        monthBalance = MonthBalance.builder().month(Month.SEPTEMBER).id(ID).build();
+        bank = Bank.builder().id(ID).name(REVOLUT).build();
+        bankBalance = BankBalance.builder().bank(bank).expenses(EXPENSES).incomes(INCOMES).id(ID).build();
+        yearBalance = YearBalance.builder().id(ID).build().addMonthBalance(monthBalance.addBankBalance(bankBalance));
         bankBalance.setYearBalance(yearBalance);
         bankBalance.setMonthBalance(monthBalance);
     }
@@ -94,24 +76,21 @@ class BankBalanceServiceTest {
     @Test
     void findAllById() {
         when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
-        assertEquals(1, service.findAllByIds(ID, ID)
-                               .size());
+        assertEquals(1, service.findAllByIds(ID, ID).size());
         verify(yearBalanceRepository, times(1)).findById(anyLong());
     }
 
     @Test
     void findAllByYearBalanceId() {
         when(yearBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(yearBalance));
-        assertEquals(1, service.findAllByYearBalanceId(ID)
-                               .size());
+        assertEquals(1, service.findAllByYearBalanceId(ID).size());
         verify(yearBalanceRepository, times(1)).findById(anyLong());
     }
 
     @Test
     void findAll() {
         when(bankBalanceRepository.findAll()).thenReturn(List.of(bankBalance));
-        assertEquals(1, service.findAll()
-                               .size());
+        assertEquals(1, service.findAll().size());
         verify(bankBalanceRepository, times(1)).findAll();
     }
 
@@ -123,26 +102,21 @@ class BankBalanceServiceTest {
         assertEquals(ID, bankBalanceDTO.getId());
         assertEquals(expenses, bankBalanceDTO.getExpenses());
         assertEquals(incomes, bankBalanceDTO.getIncomes());
-        assertEquals(ID, bankBalanceDTO.getBank()
-                                       .getId());
-        assertEquals(REVOLUT, bankBalanceDTO.getBank()
-                                            .getName());
+        assertEquals(ID, bankBalanceDTO.getBank().getId());
+        assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
         verify(bankBalanceRepository, times(1)).findById(anyLong());
     }
 
     @Test
     void findByBankName() {
         when(bankBalanceRepository.findAll()).thenReturn(List.of(bankBalance));
-        BankBalanceDTO bankBalanceDTO = service.findByBankName(REVOLUT)
-                                               .get(0);
+        BankBalanceDTO bankBalanceDTO = service.findByBankName(REVOLUT).get(0);
         assertNotNull(bankBalanceDTO);
         assertEquals(ID, bankBalanceDTO.getId());
         assertEquals(expenses, bankBalanceDTO.getExpenses());
         assertEquals(incomes, bankBalanceDTO.getIncomes());
-        assertEquals(ID, bankBalanceDTO.getBank()
-                                       .getId());
-        assertEquals(REVOLUT, bankBalanceDTO.getBank()
-                                            .getName());
+        assertEquals(ID, bankBalanceDTO.getBank().getId());
+        assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
         verify(bankBalanceRepository, times(1)).findAll();
     }
 
@@ -159,10 +133,8 @@ class BankBalanceServiceTest {
         assertEquals(ID, savedBankBalanced.getId());
         assertEquals(expenses, savedBankBalanced.getExpenses());
         assertEquals(incomes, savedBankBalanced.getIncomes());
-        assertEquals(ID, savedBankBalanced.getBank()
-                                          .getId());
-        assertEquals(REVOLUT, savedBankBalanced.getBank()
-                                               .getName());
+        assertEquals(ID, savedBankBalanced.getBank().getId());
+        assertEquals(REVOLUT, savedBankBalanced.getBank().getName());
         verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
         assertNotNull(savedBankBalanced.getMonthBalanceId());
         verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
@@ -208,10 +180,8 @@ class BankBalanceServiceTest {
         assertEquals(ID, savedBankBalanceDto.getId());
         assertEquals(expenses, savedBankBalanceDto.getExpenses());
         assertEquals(incomes, savedBankBalanceDto.getIncomes());
-        assertEquals(ID, savedBankBalanceDto.getBank()
-                                            .getId());
-        assertEquals(REVOLUT, savedBankBalanceDto.getBank()
-                                                 .getName());
+        assertEquals(ID, savedBankBalanceDto.getBank().getId());
+        assertEquals(REVOLUT, savedBankBalanceDto.getBank().getName());
         assertEquals(result, savedBankBalanceDto.getResult());
         verify(bankBalanceRepository, times(1)).findById(anyLong());
         verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
@@ -223,9 +193,11 @@ class BankBalanceServiceTest {
 
     @Test
     void deleteBankBalance() {
-        service.deleteBankBalance(ID);
+        when(bankBalanceRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(bankBalance));
+        BankBalanceDTO bankBalanceDTO = service.deleteBankBalance(ID);
+        assertThat(bankBalanceDTO.getId()).isEqualTo(ID);
         verify(bankBalanceRepository, times(1)).findById(anyLong());
-        assertThrows(ResourceNotFoundException.class, () -> service.findById(ID));
         verify(bankBalanceRepository, times(1)).deleteById(anyLong());
     }
 
