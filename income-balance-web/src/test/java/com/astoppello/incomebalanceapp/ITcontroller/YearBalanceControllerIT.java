@@ -4,7 +4,8 @@ import com.astoppello.incomebalanceapp.controllers.YearBalanceController;
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceDTO;
 import com.astoppello.incomebalanceapp.dto.domain.YearBalanceSetDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Test;
+import org.hibernate.annotations.OnDelete;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,14 +24,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class YearBalanceControllerIT {
 
     private static final Long ID = 3L;
     @Autowired
     private MockMvc mockMvc;
+    private Long createdYearBalanceDtoId;
 
     @Test
+    @Order(1)
     void findAllYearBalance() throws Exception {
         MvcResult result = mockMvc
                 .perform(get(YearBalanceController.BASE_URL + "/").contentType(MediaType.APPLICATION_JSON)).andReturn();
@@ -43,6 +47,7 @@ public class YearBalanceControllerIT {
     }
 
     @Test
+    @Order(1)
     void findYearBalanceById() throws Exception {
         MvcResult result = mockMvc
                 .perform(get(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
@@ -59,6 +64,7 @@ public class YearBalanceControllerIT {
     }
 
     @Test
+    @Order(1)
     void findYearBalanceByYear() throws Exception {
         final int year = 2019;
         MvcResult result = mockMvc
@@ -76,8 +82,9 @@ public class YearBalanceControllerIT {
     }
 
     @Test
+    @Order(2)
     void createNewYearBalance() throws Exception {
-        final int year = 2022;
+        int year = 2022;
         YearBalanceDTO yearBalanceDTO = YearBalanceDTO.builder().year(year).build();
         MvcResult result = mockMvc.perform(post(YearBalanceController.BASE_URL).contentType(MediaType.APPLICATION_JSON)
                                                                                .content(asJsonString(yearBalanceDTO)))
@@ -87,6 +94,7 @@ public class YearBalanceControllerIT {
 
         YearBalanceDTO yearBalanceDTOResult = new ObjectMapper()
                 .readValue(result.getResponse().getContentAsString(), YearBalanceDTO.class);
+        createdYearBalanceDtoId = yearBalanceDTOResult.getId();
         assertThat(yearBalanceDTOResult.getYear()).isEqualTo(year);
         assertThat(yearBalanceDTOResult.getId()).isNotNull();
         assertThat(yearBalanceDTOResult.getMonthBalances().size()).isEqualTo(0);
@@ -94,26 +102,9 @@ public class YearBalanceControllerIT {
     }
 
     @Test
-    void saveYearBalance() throws Exception {
-        final int year = 2022;
-        YearBalanceDTO yearBalanceDTO = YearBalanceDTO.builder().year(year).build();
-        MvcResult result = mockMvc.perform(
-                put(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON)
-                                                              .content(asJsonString(yearBalanceDTO))).andReturn();
-        int status = result.getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK.value());
-
-        YearBalanceDTO yearBalanceDTOResult = new ObjectMapper()
-                .readValue(result.getResponse().getContentAsString(), YearBalanceDTO.class);
-        assertThat(yearBalanceDTOResult.getYear()).isEqualTo(year);
-        assertThat(yearBalanceDTOResult.getId()).isEqualTo(ID);
-        assertThat(yearBalanceDTOResult.getMonthBalances().size()).isEqualTo(2);
-        assertThat(yearBalanceDTOResult.getBankBalances().size()).isEqualTo(0);
-    }
-
-    @Test
+    @Order(3)
     void patchYearBalance() throws Exception {
-        final int year = 2022;
+        final int year = 2034;
         YearBalanceDTO yearBalanceDTO = YearBalanceDTO.builder().year(year).build();
         MvcResult result = mockMvc.perform(
                 patch(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON)
@@ -134,14 +125,37 @@ public class YearBalanceControllerIT {
     }
 
     @Test
-    void deleteYearBalance() throws Exception {
-        MvcResult result = mockMvc
-                .perform(delete(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
+    @Order(4)
+    void saveYearBalance() throws Exception {
+        int year = 2023;
+        YearBalanceDTO yearBalanceDTO = YearBalanceDTO.builder().year(year).build();
+        MvcResult result = mockMvc.perform(put(YearBalanceController.BASE_URL + "/" + ID)
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(yearBalanceDTO))).andReturn();
         int status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
 
-        result = mockMvc.perform(get(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
+        YearBalanceDTO yearBalanceDTOResult = new ObjectMapper()
+                .readValue(result.getResponse().getContentAsString(), YearBalanceDTO.class);
+        assertThat(yearBalanceDTOResult.getYear()).isEqualTo(year);
+        assertThat(yearBalanceDTOResult.getId()).isEqualTo(ID);
+        assertThat(yearBalanceDTOResult.getMonthBalances().size()).isEqualTo(2);
+        assertThat(yearBalanceDTOResult.getBankBalances().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Order(5)
+    void deleteYearBalance() throws Exception {
+        MvcResult result = mockMvc
+                .perform(delete(YearBalanceController.BASE_URL + "/" + createdYearBalanceDtoId).contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        int status = result.getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
+        YearBalanceDTO yearBalanceDTOResult = new ObjectMapper()
+                .readValue(result.getResponse().getContentAsString(), YearBalanceDTO.class);
+        assertThat(yearBalanceDTOResult.getId()).isEqualTo(createdYearBalanceDtoId);
+
+        result =
+                mockMvc.perform(get(YearBalanceController.BASE_URL + "/" + createdYearBalanceDtoId).contentType(MediaType.APPLICATION_JSON))
                         .andReturn();
         status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.NOT_FOUND.value());

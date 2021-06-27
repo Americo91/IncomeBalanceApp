@@ -67,7 +67,7 @@ public class MonthBalanceController {
 
   @DeleteMapping(BASE_URL + "/{monthBalanceId}")
   @ResponseStatus(HttpStatus.OK)
-  public void deleteMonthBalance(@PathVariable Long monthBalanceId) {
-    monthBalanceService.delete(monthBalanceId);
+  public MonthBalanceDTO deleteMonthBalance(@PathVariable Long monthBalanceId) {
+    return monthBalanceService.delete(monthBalanceId);
   }
 }

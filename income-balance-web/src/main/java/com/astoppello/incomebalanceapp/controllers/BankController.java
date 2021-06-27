@@ -60,7 +60,7 @@ public class BankController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteBank(@PathVariable Long id) {
-        bankService.deleteBank(id);
+    public BankDTO deleteBank(@PathVariable Long id) {
+        return bankService.deleteBank(id);
     }
 }
