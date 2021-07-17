@@ -89,20 +89,20 @@ public class MonthBalanceServiceImpl implements MonthBalanceService {
     public MonthBalanceDTO updateMonthBalance(Long monthBalanceId, MonthBalanceDTO monthBalanceDTO) {
         log.info("Patch MonthBalance with id: " + monthBalanceId + "MonthBalance: " + monthBalanceDTO);
         return monthBalanceRepository.findById(monthBalanceId).map(monthBalance -> {
-            if (StringUtils.isNotEmpty(monthBalanceDTO.getExpenses())) {
-                monthBalance.setExpenses(new BigDecimal(monthBalanceDTO.getExpenses()));
+            if (monthBalanceDTO.getExpenses()!= null) {
+                monthBalance.setExpenses(monthBalanceDTO.getExpenses());
             }
-            if (StringUtils.isNotEmpty(monthBalanceDTO.getIncomes())) {
-                monthBalance.setIncomes(new BigDecimal(monthBalanceDTO.getIncomes()));
+            if (monthBalanceDTO.getIncomes()!= null) {
+                monthBalance.setIncomes(monthBalanceDTO.getIncomes());
             }
             if (monthBalanceDTO.getMonth() != null && StringUtils.isNotBlank(monthBalanceDTO.getMonth().name())) {
                 monthBalance.setMonth(monthBalanceDTO.getMonth());
             }
-            if (StringUtils.isNotEmpty(monthBalanceDTO.getResult())) {
-                monthBalance.setResult(new BigDecimal(monthBalanceDTO.getResult()));
+            if (monthBalanceDTO.getResult() != null) {
+                monthBalance.setResult(monthBalanceDTO.getResult());
             }
-            if (StringUtils.isNotEmpty(monthBalanceDTO.getSalary())) {
-                monthBalance.setSalary(new BigDecimal(monthBalanceDTO.getSalary()));
+            if (monthBalanceDTO.getSalary()!= null) {
+                monthBalance.setSalary(monthBalanceDTO.getSalary());
             }
             setYearBalanceIfPresent(monthBalanceDTO.getYearBalanceId(), monthBalance);
             return createAndReturnDto(monthBalance);

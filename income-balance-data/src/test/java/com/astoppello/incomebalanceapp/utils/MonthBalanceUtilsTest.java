@@ -39,5 +39,6 @@ class MonthBalanceUtilsTest {
     void computeMontlyAmountTest() {
         MonthBalanceUtils.computeMontlyAmount(monthBalance);
         assertEquals(new BigDecimal("1515.74"), monthBalance.getExpenses());
+
     }
 }

@@ -117,13 +117,13 @@ public class BankBalanceServiceImpl implements BankBalanceService {
         log.info("Patch BankBalance id " + bankBalanceId + ". BankBalance " + bankBalanceDTO);
         return bankBalanceRepository.findById(bankBalanceId).map(bankBalance -> {
             if (bankBalanceDTO.getExpenses() != null) {
-                bankBalance.setExpenses(new BigDecimal(bankBalanceDTO.getExpenses()));
+                bankBalance.setExpenses(bankBalanceDTO.getExpenses());
             }
             if (bankBalanceDTO.getIncomes() != null) {
-                bankBalance.setIncomes(new BigDecimal(bankBalanceDTO.getIncomes()));
+                bankBalance.setIncomes(bankBalanceDTO.getIncomes());
             }
             if (bankBalanceDTO.getResult() != null) {
-                bankBalance.setResult(new BigDecimal(bankBalanceDTO.getResult()));
+                bankBalance.setResult(bankBalanceDTO.getResult());
             }
             if (bankBalanceDTO.getBank() != null) {
                 final Bank bank = new Bank(bankBalanceDTO.getBank().getId(), bankBalanceDTO.getBank().getName());

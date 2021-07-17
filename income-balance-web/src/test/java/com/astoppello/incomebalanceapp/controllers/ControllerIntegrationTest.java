@@ -181,14 +181,14 @@ public class ControllerIntegrationTest {
     void updateMonthBalance() {
         MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
         String salary = "200";
-        monthBalanceDTO.setSalary(salary);
+        monthBalanceDTO.setSalary(new BigDecimal(salary));
         monthBalanceDTO.setYearBalanceId(1L);
 
         MonthBalanceDTO savedMonthBalanceDto =
                 monthBalanceService.updateMonthBalance(2L, monthBalanceDTO);
         assertNotNull(savedMonthBalanceDto);
         assertNotNull(savedMonthBalanceDto.getId());
-        assertEquals(salary, savedMonthBalanceDto.getSalary());
+        assertEquals(salary, savedMonthBalanceDto.getSalary().toString());
         assertEquals(1L, savedMonthBalanceDto.getYearBalanceId());
     }
 
@@ -229,8 +229,7 @@ public class ControllerIntegrationTest {
         assertEquals(bankBalance.getBank()
                                 .getName(), bankBalanceDTO.getBank()
                                                           .getName());
-        assertEquals(bankBalance.getExpenses()
-                                .toString(), bankBalanceDTO.getExpenses());
+        assertEquals(bankBalance.getExpenses(), bankBalanceDTO.getExpenses());
         assertEquals(bankBalance.getMonthBalance()
                                 .getId(), bankBalanceDTO.getMonthBalanceId());
         assertEquals(bankBalance.getYearBalance()
@@ -283,9 +282,9 @@ public class ControllerIntegrationTest {
 
         //Assert old MonthBalance modify correctly
         MonthBalanceDTO oldMonthBalanceDTO = monthBalanceService.findById(oldMonthBalanceId);
-        assertEquals("0", oldMonthBalanceDTO.getIncomes());
-        assertEquals("0", oldMonthBalanceDTO.getExpenses());
-        assertEquals("0", oldMonthBalanceDTO.getResult());
+        assertEquals("0", oldMonthBalanceDTO.getIncomes().toString());
+        assertEquals("0", oldMonthBalanceDTO.getExpenses().toString());
+        assertEquals("0", oldMonthBalanceDTO.getResult().toString());
     }
 
     // Bank tests

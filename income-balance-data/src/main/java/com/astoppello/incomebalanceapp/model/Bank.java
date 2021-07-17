@@ -1,9 +1,6 @@
 package com.astoppello.incomebalanceapp.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.Entity;
@@ -12,8 +9,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /** Created by @author stopp on 21/11/2020 */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "banks")

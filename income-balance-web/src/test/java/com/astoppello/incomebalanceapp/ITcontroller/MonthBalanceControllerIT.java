@@ -15,6 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.time.Month;
 
 import static com.astoppello.incomebalanceapp.controllers.AbstractRestControllerTest.asJsonString;
@@ -110,7 +111,7 @@ public class MonthBalanceControllerIT {
     @Order(2)
     void createNewMonthBalanceById() throws Exception {
         MonthBalanceDTO monthBalanceDTO = MonthBalanceDTO.builder().yearBalanceId(ID).month(Month.NOVEMBER)
-                                                         .salary("300.00").build();
+                                                         .salary(new BigDecimal("300.00")).build();
         MvcResult result = mockMvc.perform(post(YearBalanceController.BASE_URL + "/" + ID + "/monthBalances")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(monthBalanceDTO))).andReturn();
 
@@ -123,6 +124,7 @@ public class MonthBalanceControllerIT {
         assertThat(monthBalanceDTOResult.getMonth()).isEqualTo(Month.NOVEMBER);
         assertThat(monthBalanceDTOResult.getSalary()).isEqualTo("300.00");
         assertThat(monthBalanceDTOResult.getYearBalanceId()).isEqualTo(ID);
+        assertThat(monthBalanceDTOResult.getSavingPercentage()).isNull();
         assertThat(monthBalanceDTOResult.getId()).isNotNull();
     }
 

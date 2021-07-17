@@ -1,9 +1,6 @@
 package com.astoppello.incomebalanceapp.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -15,8 +12,7 @@ import java.util.StringJoiner;
 /**
  * Created by @author stopp on 28/11/2020
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "bankBalances")

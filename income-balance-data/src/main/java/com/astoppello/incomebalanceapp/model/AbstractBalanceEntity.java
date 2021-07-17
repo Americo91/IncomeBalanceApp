@@ -1,9 +1,6 @@
 package com.astoppello.incomebalanceapp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.MappedSuperclass;
 import java.math.BigDecimal;
@@ -11,8 +8,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /** Created by @author stopp on 28/11/2020 */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass

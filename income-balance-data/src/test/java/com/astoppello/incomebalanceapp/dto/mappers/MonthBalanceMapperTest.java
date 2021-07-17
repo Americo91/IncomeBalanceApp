@@ -69,11 +69,11 @@ public class MonthBalanceMapperTest {
     private MonthBalanceDTO createMonthBalanceDto() {
         MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
         monthBalanceDTO.setMonth(MONTH);
-        monthBalanceDTO.setExpenses(expenses);
-        monthBalanceDTO.setSalary(salary);
+        monthBalanceDTO.setExpenses(EXPENSES);
+        monthBalanceDTO.setSalary(SALARY);
         monthBalanceDTO.setId(ID);
-        monthBalanceDTO.setIncomes(incomes);
-        monthBalanceDTO.setResult(result);
+        monthBalanceDTO.setIncomes(INCOMES);
+        monthBalanceDTO.setResult(RESULT);
         monthBalanceDTO.setBankBalances(Set.of(createBankBalanceDto()));
         return monthBalanceDTO;
     }
@@ -85,10 +85,10 @@ public class MonthBalanceMapperTest {
 
         BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
         bankBalanceDTO.setBank(bankDto);
-        bankBalanceDTO.setExpenses(expenses);
+        bankBalanceDTO.setExpenses(EXPENSES);
         bankBalanceDTO.setId(ID);
-        bankBalanceDTO.setIncomes(incomes);
-        bankBalanceDTO.setResult(result);
+        bankBalanceDTO.setIncomes(INCOMES);
+        bankBalanceDTO.setResult(RESULT);
         return bankBalanceDTO;
     }
 }

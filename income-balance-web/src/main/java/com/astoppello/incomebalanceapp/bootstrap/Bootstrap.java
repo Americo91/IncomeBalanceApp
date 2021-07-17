@@ -17,6 +17,7 @@ import java.time.Month;
 /**
  * Created by @author stopp on 16/11/2020
  */
+//Comment Component before using the real DB.
 @Component
 public class Bootstrap implements CommandLineRunner {
 

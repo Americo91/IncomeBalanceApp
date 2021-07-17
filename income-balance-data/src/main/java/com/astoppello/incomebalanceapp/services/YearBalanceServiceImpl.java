@@ -73,16 +73,16 @@ public class YearBalanceServiceImpl implements YearBalanceService {
                 yearBalance.setYear(yearBalanceDTO.getYear());
             }
             if (yearBalanceDTO.getExpenses() != null) {
-                yearBalance.setExpenses(new BigDecimal(yearBalanceDTO.getExpenses()));
+                yearBalance.setExpenses(yearBalanceDTO.getExpenses());
             }
             if (yearBalanceDTO.getIncomes() != null) {
-                yearBalance.setIncomes(new BigDecimal(yearBalanceDTO.getIncomes()));
+                yearBalance.setIncomes(yearBalanceDTO.getIncomes());
             }
             if (yearBalanceDTO.getResult() != null) {
-                yearBalance.setResult(new BigDecimal(yearBalanceDTO.getResult()));
+                yearBalance.setResult(yearBalanceDTO.getResult());
             }
             if (yearBalanceDTO.getSalary() != null) {
-                yearBalance.setSalary(new BigDecimal(yearBalanceDTO.getSalary()));
+                yearBalance.setSalary(yearBalanceDTO.getSalary());
             }
             return saveAndReturnDto(yearBalance);
         }).orElseThrow(() -> new ResourceNotFoundException(YEAR_BALANCE_NOT_FOUND + id));

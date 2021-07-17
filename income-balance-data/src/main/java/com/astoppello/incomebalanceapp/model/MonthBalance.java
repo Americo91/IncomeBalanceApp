@@ -11,8 +11,7 @@ import java.util.*;
 /**
  * Created by @author stopp on 20/12/2020
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "monthBalances")

@@ -101,7 +101,7 @@ public class YearBalanceControllerTest {
   @Test
   void saveYearBalance() throws Exception {
     YearBalanceDTO yearBalanceDTOToSave = yearBalanceDTO;
-    yearBalanceDTOToSave.setSalary("200.00");
+    yearBalanceDTOToSave.setSalary(new BigDecimal("200.00"));
     when(yearBalanceService.saveYearBalance(ID, yearBalanceDTO)).thenReturn(yearBalanceDTOToSave);
     mockMvc
         .perform(
@@ -118,7 +118,7 @@ public class YearBalanceControllerTest {
   @Test
   void patchYearBalance() throws Exception {
     YearBalanceDTO saved = yearBalanceDTO;
-    saved.setResult("200");
+    saved.setResult(new BigDecimal("200"));
     when(yearBalanceService.updateYearBalance(ID, yearBalanceDTO)).thenReturn(saved);
     mockMvc
         .perform(

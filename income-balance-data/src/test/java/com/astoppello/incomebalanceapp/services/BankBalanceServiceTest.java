@@ -100,8 +100,8 @@ class BankBalanceServiceTest {
         BankBalanceDTO bankBalanceDTO = service.findById(ID);
         assertNotNull(bankBalanceDTO);
         assertEquals(ID, bankBalanceDTO.getId());
-        assertEquals(expenses, bankBalanceDTO.getExpenses());
-        assertEquals(incomes, bankBalanceDTO.getIncomes());
+        assertEquals(expenses, bankBalanceDTO.getExpenses().toString());
+        assertEquals(incomes, bankBalanceDTO.getIncomes().toString());
         assertEquals(ID, bankBalanceDTO.getBank().getId());
         assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
         verify(bankBalanceRepository, times(1)).findById(anyLong());
@@ -113,8 +113,8 @@ class BankBalanceServiceTest {
         BankBalanceDTO bankBalanceDTO = service.findByBankName(REVOLUT).get(0);
         assertNotNull(bankBalanceDTO);
         assertEquals(ID, bankBalanceDTO.getId());
-        assertEquals(expenses, bankBalanceDTO.getExpenses());
-        assertEquals(incomes, bankBalanceDTO.getIncomes());
+        assertEquals(expenses, bankBalanceDTO.getExpenses().toString());
+        assertEquals(incomes, bankBalanceDTO.getIncomes().toString());
         assertEquals(ID, bankBalanceDTO.getBank().getId());
         assertEquals(REVOLUT, bankBalanceDTO.getBank().getName());
         verify(bankBalanceRepository, times(1)).findAll();
@@ -131,8 +131,8 @@ class BankBalanceServiceTest {
         BankBalanceDTO savedBankBalanced = service.createNewBankBalanceById(ID, ID, bankBalanceDTO);
         assertNotNull(savedBankBalanced);
         assertEquals(ID, savedBankBalanced.getId());
-        assertEquals(expenses, savedBankBalanced.getExpenses());
-        assertEquals(incomes, savedBankBalanced.getIncomes());
+        assertEquals(expenses, savedBankBalanced.getExpenses().toString());
+        assertEquals(incomes, savedBankBalanced.getIncomes().toString());
         assertEquals(ID, savedBankBalanced.getBank().getId());
         assertEquals(REVOLUT, savedBankBalanced.getBank().getName());
         verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
@@ -167,7 +167,7 @@ class BankBalanceServiceTest {
     void updateBankBalance() {
         BankBalanceDTO bankBalanceDTO = createBankBalanceDto();
         String result = "100";
-        bankBalanceDTO.setResult(result);
+        bankBalanceDTO.setResult(new BigDecimal(result));
 
         when(bankBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(bankBalance));
         when(bankBalanceRepository.save(any(BankBalance.class))).thenReturn(bankBalance);
@@ -178,11 +178,11 @@ class BankBalanceServiceTest {
         BankBalanceDTO savedBankBalanceDto = service.updateBankBalance(ID, bankBalanceDTO);
         assertNotNull(savedBankBalanceDto);
         assertEquals(ID, savedBankBalanceDto.getId());
-        assertEquals(expenses, savedBankBalanceDto.getExpenses());
-        assertEquals(incomes, savedBankBalanceDto.getIncomes());
+        assertEquals(expenses, savedBankBalanceDto.getExpenses().toString());
+        assertEquals(incomes, savedBankBalanceDto.getIncomes().toString());
         assertEquals(ID, savedBankBalanceDto.getBank().getId());
         assertEquals(REVOLUT, savedBankBalanceDto.getBank().getName());
-        assertEquals(result, savedBankBalanceDto.getResult());
+        assertEquals(result, savedBankBalanceDto.getResult().toString());
         verify(bankBalanceRepository, times(1)).findById(anyLong());
         verify(bankBalanceRepository, times(1)).save(any(BankBalance.class));
         verify(monthBalanceRepository, times(2)).save(any(MonthBalance.class));
@@ -193,8 +193,7 @@ class BankBalanceServiceTest {
 
     @Test
     void deleteBankBalance() {
-        when(bankBalanceRepository.findById(anyLong()))
-                .thenReturn(Optional.ofNullable(bankBalance));
+        when(bankBalanceRepository.findById(anyLong())).thenReturn(Optional.ofNullable(bankBalance));
         BankBalanceDTO bankBalanceDTO = service.deleteBankBalance(ID);
         assertThat(bankBalanceDTO.getId()).isEqualTo(ID);
         verify(bankBalanceRepository, times(1)).findById(anyLong());
@@ -203,8 +202,8 @@ class BankBalanceServiceTest {
 
     private BankBalanceDTO createBankBalanceDto() {
         BankBalanceDTO bankBalanceDTO = new BankBalanceDTO();
-        bankBalanceDTO.setExpenses(expenses);
-        bankBalanceDTO.setIncomes(incomes);
+        bankBalanceDTO.setExpenses(EXPENSES);
+        bankBalanceDTO.setIncomes(INCOMES);
         bankBalanceDTO.setId(ID);
         BankDTO bankDTO = new BankDTO();
         bankDTO.setName(REVOLUT);

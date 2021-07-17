@@ -94,9 +94,9 @@ class MonthBalanceServiceTest {
         // when
         MonthBalanceDTO monthBalanceDTO = new MonthBalanceDTO();
         monthBalanceDTO.setId(ID);
-        monthBalanceDTO.setSalary(salary);
+        monthBalanceDTO.setSalary(SALARY);
         monthBalanceDTO.setMonth(MONTH);
-        monthBalanceDTO.setExpenses(expenses);
+        monthBalanceDTO.setExpenses(EXPENSES);
         monthBalanceDTO.setYearBalanceId(ID);
         MonthBalance monthBalance = monthBalanceMapper.toEntity(monthBalanceDTO);
         monthBalance.setYearBalance(yearBalance);
@@ -119,10 +119,10 @@ class MonthBalanceServiceTest {
         assertNotNull(savedMonthBalance);
         assertNotNull(savedMonthBalance.getId());
         assertNotNull(savedMonthBalance.getYearBalanceId());
-        assertEquals(savedMonthBalance.getExpenses(), expenses);
+        assertEquals(savedMonthBalance.getExpenses(), EXPENSES);
         assertEquals(savedMonthBalance.getMonth(), MONTH);
         assertEquals(savedMonthBalance.getYearBalanceId(), ID);
-        assertEquals(savedMonthBalance.getSalary(), salary);
+        assertEquals(savedMonthBalance.getSalary(), SALARY);
         verify(monthBalanceRepository, times(1)).save(any(MonthBalance.class));
         verify(yearBalanceRepository, times(1)).findById(anyLong());
         verify(yearBalanceRepository, times(1)).save(any(YearBalance.class));

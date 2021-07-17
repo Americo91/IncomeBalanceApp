@@ -15,8 +15,7 @@ import java.util.*;
 /**
  * Created by @author stopp on 15/11/2020
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "yearbalances")

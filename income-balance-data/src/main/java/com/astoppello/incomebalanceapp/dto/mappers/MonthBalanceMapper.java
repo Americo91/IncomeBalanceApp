@@ -19,20 +19,20 @@ import java.math.RoundingMode;
 public interface MonthBalanceMapper {
 
     @Mappings({
-            @Mapping(source = "expenses", target = "expenses", qualifiedByName = "StringToBigDecimal"),
-            @Mapping(source = "incomes", target = "incomes", qualifiedByName = "StringToBigDecimal"),
-            @Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal"),
-            @Mapping(source = "salary", target = "salary", qualifiedByName = "StringToBigDecimal"),
+            //@Mapping(source = "expenses", target = "expenses", qualifiedByName = "StringToBigDecimal"),
+            //@Mapping(source = "incomes", target = "incomes", qualifiedByName = "StringToBigDecimal"),
+            //@Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal"),
+            //@Mapping(source = "salary", target = "salary", qualifiedByName = "StringToBigDecimal"),
     })
     MonthBalance toEntity(MonthBalanceDTO monthBalanceDto);
 
     @Mappings({
             @Mapping(source = "bankBalanceSet", target = "bankBalances"),
             @Mapping(source = "yearBalance.id", target = "yearBalanceId"),
-            @Mapping(source = "expenses", target = "expenses", qualifiedByName = "BigDecimalToString"),
-            @Mapping(source = "incomes", target = "incomes", qualifiedByName = "BigDecimalToString"),
-            @Mapping(source = "result", target = "result", qualifiedByName = "BigDecimalToString"),
-            @Mapping(source = "salary", target = "salary", qualifiedByName = "BigDecimalToString"),
+            //@Mapping(source = "expenses", target = "expenses", qualifiedByName = "BigDecimalToString"),
+            //@Mapping(source = "incomes", target = "incomes", qualifiedByName = "BigDecimalToString"),
+            //@Mapping(source = "result", target = "result", qualifiedByName = "BigDecimalToString"),
+            //@Mapping(source = "salary", target = "salary", qualifiedByName = "BigDecimalToString"),
     })
     MonthBalanceDTO toDto(MonthBalance monthBalance);
 }

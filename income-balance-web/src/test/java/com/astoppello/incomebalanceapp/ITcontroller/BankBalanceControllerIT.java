@@ -15,6 +15,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -35,34 +37,42 @@ public class BankBalanceControllerIT {
 
     @BeforeAll
     void setup() {
-        createdBankBalanceDTO = BankBalanceDTO.builder().bank(BankDTO.builder().name("bank").build()).incomes("0.00")
-                                              .expenses("200").yearBalanceId(ID).monthBalanceId(ID).build();
+        createdBankBalanceDTO = BankBalanceDTO
+                .builder()
+                .bank(BankDTO.builder().name("bank").build())
+                .incomes(new BigDecimal("0.00"))
+                .expenses(new BigDecimal("200"))
+                .yearBalanceId(ID)
+                .monthBalanceId(ID)
+                .build();
     }
 
     @Test
     @Order(1)
     void createBankBalanceTest() throws Exception {
         /* Test Failure case */
-        MvcResult resultFailure = mockMvc.perform(
-                post(YearBalanceController.BASE_URL + "/" + ID + "/monthBalances/" + 100 + "/bankBalances")
+        MvcResult resultFailure = mockMvc
+                .perform(post(YearBalanceController.BASE_URL + "/" + ID + "/monthBalances/" + 100 + "/bankBalances")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(AbstractRestControllerTest.asJsonString(createdBankBalanceDTO))).andReturn();
+                        .content(AbstractRestControllerTest.asJsonString(createdBankBalanceDTO)))
+                .andReturn();
         int status = resultFailure.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(resultFailure.getResolvedException().getMessage())
                 .isEqualTo("MonthBalance 100 is not linked to " + "YearBalance 1");
 
         /* Test working case */
-        MvcResult result = mockMvc.perform(
-                post(YearBalanceController.BASE_URL + "/" + ID + "/monthBalances/" + ID + "/bankBalances")
+        MvcResult result = mockMvc
+                .perform(post(YearBalanceController.BASE_URL + "/" + ID + "/monthBalances/" + ID + "/bankBalances")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(AbstractRestControllerTest.asJsonString(createdBankBalanceDTO))).andReturn();
+                        .content(AbstractRestControllerTest.asJsonString(createdBankBalanceDTO)))
+                .andReturn();
 
         status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.CREATED.value());
 
-        BankBalanceDTO bankBalanceDTOResult = new ObjectMapper()
-                .readValue(result.getResponse().getContentAsString(), BankBalanceDTO.class);
+        BankBalanceDTO bankBalanceDTOResult = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+                BankBalanceDTO.class);
 
         assertThat(bankBalanceDTOResult.getId()).isNotNull();
         createdBankBalanceDTOId = bankBalanceDTOResult.getId();
@@ -76,16 +86,18 @@ public class BankBalanceControllerIT {
     @Order(2)
     void updateBankBalance() throws Exception {
         /* Modifying expenses. Other variable should be the same */
-        BankBalanceDTO bankBalanceDTO = BankBalanceDTO.builder().expenses("150").build();
-        MvcResult result = mockMvc.perform(patch(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO))).andReturn();
+        BankBalanceDTO bankBalanceDTO = BankBalanceDTO.builder().expenses(new BigDecimal("150")).build();
+        MvcResult result = mockMvc
+                .perform(patch(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
+                .andReturn();
 
         int status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
 
-        BankBalanceDTO bankBalanceDTOResult = new ObjectMapper()
-                .readValue(result.getResponse().getContentAsString(), BankBalanceDTO.class);
+        BankBalanceDTO bankBalanceDTOResult = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+                BankBalanceDTO.class);
         assertThat(bankBalanceDTOResult.getId()).isEqualTo(createdBankBalanceDTOId);
         assertThat(bankBalanceDTOResult.getExpenses()).isEqualTo("150");
         assertThat(bankBalanceDTOResult.getResult()).isEqualTo("-150.00");
@@ -100,16 +112,20 @@ public class BankBalanceControllerIT {
     void updateBankBalanceChangingYearBalance() throws Exception {
         /* Modifying yearBalanceId and monthBalanceId */
         final long newYearBalanceId = 2L;
-        MvcResult result = mockMvc.perform(patch(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId)
-                .contentType(MediaType.APPLICATION_JSON).content(AbstractRestControllerTest.asJsonString(
-                        BankBalanceDTO.builder().yearBalanceId(newYearBalanceId).monthBalanceId(newYearBalanceId))))
-                                  .andReturn();
+        MvcResult result = mockMvc
+                .perform(patch(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(AbstractRestControllerTest.asJsonString(BankBalanceDTO
+                                .builder()
+                                .yearBalanceId(newYearBalanceId)
+                                .monthBalanceId(newYearBalanceId))))
+                .andReturn();
 
         int status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
 
-        BankBalanceDTO bankBalanceDTOResult = new ObjectMapper()
-                .readValue(result.getResponse().getContentAsString(), BankBalanceDTO.class);
+        BankBalanceDTO bankBalanceDTOResult = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+                BankBalanceDTO.class);
         assertThat(bankBalanceDTOResult.getId()).isEqualTo(createdBankBalanceDTOId);
         assertThat(bankBalanceDTOResult.getIncomes()).isEqualTo(createdBankBalanceDTO.getIncomes());
         assertThat(bankBalanceDTOResult.getExpenses()).isEqualTo("150.00");
@@ -119,11 +135,12 @@ public class BankBalanceControllerIT {
         assertThat(bankBalanceDTOResult.getMonthBalanceId()).isEqualTo(newYearBalanceId);
 
 
-        MvcResult resultGetNewYearBalance = mockMvc.perform(
-                get(YearBalanceController.BASE_URL + "/" + newYearBalanceId).contentType(MediaType.APPLICATION_JSON))
-                                                   .andReturn();
-        YearBalanceDTO newYearBalance = new ObjectMapper()
-                .readValue(resultGetNewYearBalance.getResponse().getContentAsString(), YearBalanceDTO.class);
+        MvcResult resultGetNewYearBalance = mockMvc
+                .perform(get(YearBalanceController.BASE_URL + "/" + newYearBalanceId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        YearBalanceDTO newYearBalance = new ObjectMapper().readValue(
+                resultGetNewYearBalance.getResponse().getContentAsString(), YearBalanceDTO.class);
         assertThat(newYearBalance.getId()).isEqualTo(newYearBalanceId);
         assertThat(newYearBalance.getIncomes()).isEqualTo(bankBalanceDTOResult.getIncomes());
         assertThat(newYearBalance.getExpenses()).isEqualTo(bankBalanceDTOResult.getExpenses());
@@ -139,9 +156,8 @@ public class BankBalanceControllerIT {
         MvcResult resultGetYearBalanceOriginalAfterPatch = mockMvc
                 .perform(get(YearBalanceController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
-        YearBalanceDTO yearBalanceOriginalAfterPatch = new ObjectMapper()
-                .readValue(resultGetYearBalanceOriginalAfterPatch.getResponse().getContentAsString(),
-                        YearBalanceDTO.class);
+        YearBalanceDTO yearBalanceOriginalAfterPatch = new ObjectMapper().readValue(
+                resultGetYearBalanceOriginalAfterPatch.getResponse().getContentAsString(), YearBalanceDTO.class);
         assertThat(yearBalanceOriginalAfterPatch.getId()).isEqualTo(ID);
         assertThat(yearBalanceOriginalAfterPatch.getIncomes()).isEqualTo("0.00");
         assertThat(yearBalanceOriginalAfterPatch.getExpenses()).isEqualTo("0.00");
@@ -160,17 +176,24 @@ public class BankBalanceControllerIT {
     void saveBankBalance() throws Exception {
         /* Modifying expenses and bankName  */
         final String updatedBankName = "revolut";
-        BankBalanceDTO bankBalanceDTO = BankBalanceDTO.builder().bank(BankDTO.builder().name(updatedBankName).build())
-                                                      .expenses("500").yearBalanceId(ID).monthBalanceId(ID).build();
-        MvcResult result = mockMvc.perform(put(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO))).andReturn();
+        BankBalanceDTO bankBalanceDTO = BankBalanceDTO
+                .builder()
+                .bank(BankDTO.builder().name(updatedBankName).build())
+                .expenses(new BigDecimal("500"))
+                .yearBalanceId(ID)
+                .monthBalanceId(ID)
+                .build();
+        MvcResult result = mockMvc
+                .perform(put(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(AbstractRestControllerTest.asJsonString(bankBalanceDTO)))
+                .andReturn();
 
         int status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
 
-        BankBalanceDTO bankBalanceDTOResult = new ObjectMapper()
-                .readValue(result.getResponse().getContentAsString(), BankBalanceDTO.class);
+        BankBalanceDTO bankBalanceDTOResult = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+                BankBalanceDTO.class);
         assertThat(bankBalanceDTOResult.getId()).isEqualTo(createdBankBalanceDTOId);
         assertThat(bankBalanceDTOResult.getExpenses()).isEqualTo("500");
         assertThat(bankBalanceDTOResult.getResult()).isEqualTo("-500");
@@ -184,25 +207,27 @@ public class BankBalanceControllerIT {
     @Order(5)
     void findAllBankBalancesByIds() throws Exception {
         /* Test Failure case */
-        MvcResult resultFailure = mockMvc.perform(
-                get(YearBalanceController.BASE_URL + "/" + 3 + "/monthBalances/" + 100 + "/bankBalances/")
-                        .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MvcResult resultFailure = mockMvc
+                .perform(get(YearBalanceController.BASE_URL + "/" + 3 + "/monthBalances/" + 100 + "/bankBalances/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
         int status = resultFailure.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
-        BankBalanceSetDTO bankBalanceSetDTO = new ObjectMapper()
-                .readValue(resultFailure.getResponse().getContentAsString(), BankBalanceSetDTO.class);
+        BankBalanceSetDTO bankBalanceSetDTO = new ObjectMapper().readValue(
+                resultFailure.getResponse().getContentAsString(), BankBalanceSetDTO.class);
         assertThat(bankBalanceSetDTO.getBankBalances().size()).isEqualTo(0);
 
         /* Test Working case */
-        MvcResult result = mockMvc.perform(
-                get(YearBalanceController.BASE_URL + "/" + 3 + "/monthBalances/" + 3 + "/bankBalances/")
-                        .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MvcResult result = mockMvc
+                .perform(get(YearBalanceController.BASE_URL + "/" + 3 + "/monthBalances/" + 3 + "/bankBalances/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
 
-        bankBalanceSetDTO = new ObjectMapper()
-                .readValue(result.getResponse().getContentAsString(), BankBalanceSetDTO.class);
+        bankBalanceSetDTO = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+                BankBalanceSetDTO.class);
         assertThat(bankBalanceSetDTO).isNotNull();
         assertThat(bankBalanceSetDTO.getBankBalances()).isNotNull();
         assertThat(bankBalanceSetDTO.getBankBalances().size()).isEqualTo(1);
@@ -227,25 +252,29 @@ public class BankBalanceControllerIT {
         assertThat(statusFailure).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(resultDeleteFailing.getResolvedException().getMessage()).isEqualTo("BankBalance not found: 100");
 
-        MvcResult resultDelete = mockMvc.perform(delete(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId)
-                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MvcResult resultDelete = mockMvc
+                .perform(delete(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
-        BankBalanceDTO bankBalanceDTO = new ObjectMapper()
-                .readValue(resultDelete.getResponse().getContentAsString(), BankBalanceDTO.class);
+        BankBalanceDTO bankBalanceDTO = new ObjectMapper().readValue(resultDelete.getResponse().getContentAsString(),
+                BankBalanceDTO.class);
         long originalYearBalanceId = bankBalanceDTO.getYearBalanceId();
 
         MvcResult resultGet = mockMvc
-                .perform(get(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId).contentType(MediaType.APPLICATION_JSON))
+                .perform(get(BankBalanceController.BASE_URL + "/" + createdBankBalanceDTOId)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         int status = resultGet.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(bankBalanceDTO.getId()).isEqualTo(createdBankBalanceDTOId);
 
-        MvcResult resultYearBalanceAfterDelete = mockMvc.perform(
-                get(YearBalanceController.BASE_URL + "/" + originalYearBalanceId)
-                        .contentType(MediaType.APPLICATION_JSON)).andReturn();
-        YearBalanceDTO yearBalanceAfterDelete = new ObjectMapper()
-                .readValue(resultYearBalanceAfterDelete.getResponse().getContentAsString(), YearBalanceDTO.class);
+        MvcResult resultYearBalanceAfterDelete = mockMvc
+                .perform(get(YearBalanceController.BASE_URL + "/" + originalYearBalanceId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        YearBalanceDTO yearBalanceAfterDelete = new ObjectMapper().readValue(
+                resultYearBalanceAfterDelete.getResponse().getContentAsString(), YearBalanceDTO.class);
         assertThat(yearBalanceAfterDelete.getId()).isEqualTo(originalYearBalanceId);
         assertThat(yearBalanceAfterDelete.getIncomes()).isEqualTo("0.00");
         assertThat(yearBalanceAfterDelete.getExpenses()).isEqualTo("0.00");
@@ -263,21 +292,25 @@ public class BankBalanceControllerIT {
     @Order(7)
     void findAllBankBalancesByYearBalanceId() throws Exception {
         /* Test Failure case */
-        MvcResult resultFailure = mockMvc.perform(get(YearBalanceController.BASE_URL + "/" + 100 + "/bankBalances/")
-                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MvcResult resultFailure = mockMvc
+                .perform(get(YearBalanceController.BASE_URL + "/" + 100 + "/bankBalances/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
         int status = resultFailure.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(resultFailure.getResolvedException().getMessage()).isEqualTo("YearBalance not found: 100");
 
         /* Test Working case */
-        MvcResult result = mockMvc.perform(get(YearBalanceController.BASE_URL + "/" + 3 + "/bankBalances/")
-                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MvcResult result = mockMvc
+                .perform(get(YearBalanceController.BASE_URL + "/" + 3 + "/bankBalances/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
 
-        BankBalanceSetDTO bankBalanceSetDTO = new ObjectMapper()
-                .readValue(result.getResponse().getContentAsString(), BankBalanceSetDTO.class);
+        BankBalanceSetDTO bankBalanceSetDTO = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+                BankBalanceSetDTO.class);
         assertThat(bankBalanceSetDTO).isNotNull();
         assertThat(bankBalanceSetDTO.getBankBalances()).isNotNull();
         assertThat(bankBalanceSetDTO.getBankBalances().size()).isEqualTo(1);
@@ -298,13 +331,14 @@ public class BankBalanceControllerIT {
     @Order(7)
     void findAllBankBalancesTest() throws Exception {
         MvcResult result = mockMvc
-                .perform(get(BankBalanceController.BASE_URL + "/").contentType(MediaType.APPLICATION_JSON)).andReturn();
+                .perform(get(BankBalanceController.BASE_URL + "/").contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         int status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
 
-        BankBalanceSetDTO bankBalanceSetDTO = new ObjectMapper()
-                .readValue(result.getResponse().getContentAsString(), BankBalanceSetDTO.class);
+        BankBalanceSetDTO bankBalanceSetDTO = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+                BankBalanceSetDTO.class);
         assertThat(bankBalanceSetDTO).isNotNull();
         assertThat(bankBalanceSetDTO.getBankBalances()).isNotNull();
         assertThat(bankBalanceSetDTO.getBankBalances().size()).isEqualTo(1);
@@ -356,27 +390,30 @@ public class BankBalanceControllerIT {
     void findBankBalanceByName() throws Exception {
         /* Test Failure case */
         String missingBankName = "missingBankName";
-        MvcResult resultFailure = mockMvc.perform(get(BankBalanceController.BASE_URL + "?bankName=" + missingBankName)
-                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MvcResult resultFailure = mockMvc
+                .perform(get(BankBalanceController.BASE_URL + "?bankName=" + missingBankName)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
         int status = resultFailure.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
-        BankBalanceSetDTO bankBalanceSetDTOFailure = new ObjectMapper()
-                .readValue(resultFailure.getResponse().getContentAsString(), BankBalanceSetDTO.class);
+        BankBalanceSetDTO bankBalanceSetDTOFailure = new ObjectMapper().readValue(
+                resultFailure.getResponse().getContentAsString(), BankBalanceSetDTO.class);
         assertThat(bankBalanceSetDTOFailure).isNotNull();
         assertThat(bankBalanceSetDTOFailure.getBankBalances()).isNotNull();
         assertThat(bankBalanceSetDTOFailure.getBankBalances().size()).isEqualTo(0);
 
         /* Test Working case */
         String bankName = "Revolut";
-        MvcResult result = mockMvc.perform(
-                get(BankBalanceController.BASE_URL + "?bankName=" + bankName).contentType(MediaType.APPLICATION_JSON))
-                                  .andReturn();
+        MvcResult result = mockMvc
+                .perform(get(BankBalanceController.BASE_URL + "?bankName=" + bankName)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         status = result.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value());
 
-        BankBalanceSetDTO bankBalanceSetDTO = new ObjectMapper()
-                .readValue(result.getResponse().getContentAsString(), BankBalanceSetDTO.class);
+        BankBalanceSetDTO bankBalanceSetDTO = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+                BankBalanceSetDTO.class);
         assertThat(bankBalanceSetDTO).isNotNull();
         assertThat(bankBalanceSetDTO.getBankBalances()).isNotNull();
         assertThat(bankBalanceSetDTO.getBankBalances().size()).isEqualTo(1);

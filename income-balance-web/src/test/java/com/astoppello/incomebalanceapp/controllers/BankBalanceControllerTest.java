@@ -46,7 +46,7 @@ public class BankBalanceControllerTest {
             .build();
     bankBalanceDTO = new BankBalanceDTO();
     bankBalanceDTO.setId(ID);
-    bankBalanceDTO.setResult(result);
+    bankBalanceDTO.setResult(new BigDecimal(result));
     BankDTO bankDTO = new BankDTO();
     bankDTO.setName(REVOLUT);
     bankDTO.setId(ID);
@@ -142,7 +142,7 @@ public class BankBalanceControllerTest {
   void updateBankBalance() throws Exception {
     BankBalanceDTO bankBalanceDTO1 = bankBalanceDTO;
     String expenses = "200";
-    bankBalanceDTO1.setExpenses(expenses);
+    bankBalanceDTO1.setExpenses(new BigDecimal(expenses));
     when(bankBalanceService.updateBankBalance(ID, bankBalanceDTO))
         .thenReturn(bankBalanceDTO1);
     mockMvc
