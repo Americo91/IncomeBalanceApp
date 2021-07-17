@@ -8,6 +8,9 @@ import com.astoppello.incomebalanceapp.repositories.BankBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.BankRepository;
 import com.astoppello.incomebalanceapp.repositories.MonthBalanceRepository;
 import com.astoppello.incomebalanceapp.repositories.YearBalanceRepository;
+import com.astoppello.incomebalanceapp.utils.BankBalanceUtils;
+import com.astoppello.incomebalanceapp.utils.MonthBalanceUtils;
+import com.astoppello.incomebalanceapp.utils.YearBalanceUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -47,24 +50,31 @@ public class Bootstrap implements CommandLineRunner {
         BankBalance bankBalance = BankBalance.builder().id(1L).expenses(new BigDecimal("100"))
                                              .incomes(new BigDecimal("150")).result(new BigDecimal("50")).bank(revolut)
                                              .build();
-
+        BankBalanceUtils.computeResult(bankBalance);
         MonthBalance september = MonthBalance.builder().id(2L).month(Month.SEPTEMBER).salary(new BigDecimal("2229.58"))
                                              .build();
         MonthBalance april = MonthBalance.builder().month(Month.APRIL).id(1L).salary(new BigDecimal("200.00"))
                                                 .build();
+        MonthBalanceUtils.computeMontlyAmount(april);
         MonthBalance october = MonthBalance.builder().id(3L).month(Month.OCTOBER).salary(new BigDecimal("2000")).build().addBankBalance(bankBalance);
+        MonthBalanceUtils.computeMontlyAmount(october);
         MonthBalance november = MonthBalance.builder().month(Month.NOVEMBER).salary(new BigDecimal("200")).id(4L).build();
+        MonthBalanceUtils.computeMontlyAmount(november);
         monthBalanceRepository.save(april);
         monthBalanceRepository.save(september);
         monthBalanceRepository.save(october);
         monthBalanceRepository.save(november);
         System.out.println("MonthBalance loaded " + monthBalanceRepository.count());
 
-        yearBalanceRepository.save(YearBalance.builder().id(1L).year(2020).build().addMonthBalance(april));
+        final YearBalance yearBalance2 = YearBalance.builder().id(1L).year(2020).build().addMonthBalance(april);
+        YearBalanceUtils.computeYearlyAmount(yearBalance2);
+        yearBalanceRepository.save(yearBalance2);
         YearBalance yearBalance1 = YearBalance.builder().id(2L).year(2019).build().addMonthBalance(september);
+        YearBalanceUtils.computeYearlyAmount(yearBalance1);
         yearBalanceRepository.save(yearBalance1);
         YearBalance yearBalance = YearBalance.builder().id(3L).year(2021).build().addMonthBalance(october)
                                              .addMonthBalance(november).addBankBalance(bankBalance);
+        YearBalanceUtils.computeYearlyAmount(yearBalance);
         yearBalanceRepository.save(yearBalance);
         System.out.println("YearBalance data loaded " + yearBalanceRepository.count());
 

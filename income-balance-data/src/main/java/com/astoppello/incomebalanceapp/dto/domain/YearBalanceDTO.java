@@ -34,6 +34,8 @@ public class YearBalanceDTO extends BalanceDTO implements Comparable {
     @JsonProperty("bankBalances")
     @Nullable
     private Set<BankBalanceDTO> bankBalances;
+    @Nullable
+    private String savings;
 
     @Override
     public int compareTo(Object o) {

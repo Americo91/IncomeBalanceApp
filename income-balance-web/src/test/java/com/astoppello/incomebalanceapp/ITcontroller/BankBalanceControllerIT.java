@@ -40,7 +40,7 @@ public class BankBalanceControllerIT {
         createdBankBalanceDTO = BankBalanceDTO
                 .builder()
                 .bank(BankDTO.builder().name("bank").build())
-                .incomes(new BigDecimal("0.00"))
+                .incomes(new BigDecimal("0"))
                 .expenses(new BigDecimal("200"))
                 .yearBalanceId(ID)
                 .monthBalanceId(ID)
@@ -101,7 +101,7 @@ public class BankBalanceControllerIT {
         assertThat(bankBalanceDTOResult.getId()).isEqualTo(createdBankBalanceDTOId);
         assertThat(bankBalanceDTOResult.getExpenses()).isEqualTo("150");
         assertThat(bankBalanceDTOResult.getResult()).isEqualTo("-150.00");
-        assertThat(bankBalanceDTOResult.getIncomes()).isEqualTo(createdBankBalanceDTO.getIncomes());
+        assertThat(bankBalanceDTOResult.getIncomes()).isEqualByComparingTo(createdBankBalanceDTO.getIncomes());
         assertThat(bankBalanceDTOResult.getBank().getName()).isEqualTo(createdBankBalanceDTO.getBank().getName());
         assertThat(bankBalanceDTOResult.getYearBalanceId()).isEqualTo(createdBankBalanceDTO.getYearBalanceId());
         assertThat(bankBalanceDTOResult.getMonthBalanceId()).isEqualTo(createdBankBalanceDTO.getMonthBalanceId());
@@ -127,7 +127,7 @@ public class BankBalanceControllerIT {
         BankBalanceDTO bankBalanceDTOResult = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
                 BankBalanceDTO.class);
         assertThat(bankBalanceDTOResult.getId()).isEqualTo(createdBankBalanceDTOId);
-        assertThat(bankBalanceDTOResult.getIncomes()).isEqualTo(createdBankBalanceDTO.getIncomes());
+        assertThat(bankBalanceDTOResult.getIncomes()).isEqualByComparingTo(createdBankBalanceDTO.getIncomes());
         assertThat(bankBalanceDTOResult.getExpenses()).isEqualTo("150.00");
         assertThat(bankBalanceDTOResult.getResult()).isEqualTo("-150.00");
         assertThat(bankBalanceDTOResult.getBank().getName()).isEqualTo(createdBankBalanceDTO.getBank().getName());
@@ -180,6 +180,7 @@ public class BankBalanceControllerIT {
                 .builder()
                 .bank(BankDTO.builder().name(updatedBankName).build())
                 .expenses(new BigDecimal("500"))
+                .incomes(BigDecimal.ZERO)
                 .yearBalanceId(ID)
                 .monthBalanceId(ID)
                 .build();
@@ -197,7 +198,7 @@ public class BankBalanceControllerIT {
         assertThat(bankBalanceDTOResult.getId()).isEqualTo(createdBankBalanceDTOId);
         assertThat(bankBalanceDTOResult.getExpenses()).isEqualTo("500");
         assertThat(bankBalanceDTOResult.getResult()).isEqualTo("-500");
-        assertThat(bankBalanceDTOResult.getIncomes()).isEqualTo("0");
+        assertThat(bankBalanceDTOResult.getIncomes()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(bankBalanceDTOResult.getBank().getName()).isEqualTo(updatedBankName);
         assertThat(bankBalanceDTOResult.getYearBalanceId()).isEqualTo(createdBankBalanceDTO.getYearBalanceId());
         assertThat(bankBalanceDTOResult.getMonthBalanceId()).isEqualTo(createdBankBalanceDTO.getMonthBalanceId());

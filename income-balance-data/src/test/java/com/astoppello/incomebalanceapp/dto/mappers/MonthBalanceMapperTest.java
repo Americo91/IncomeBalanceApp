@@ -32,6 +32,7 @@ public class MonthBalanceMapperTest {
     private final BigDecimal SALARY = new BigDecimal(salary);
     private final BigDecimal INCOMES = new BigDecimal(incomes);
     private final BigDecimal RESULT = new BigDecimal(result);
+    private final String SAVINGS = "25%";
 
 
     @Test
@@ -58,6 +59,7 @@ public class MonthBalanceMapperTest {
                            .incomes(INCOMES)
                            .result(RESULT)
                            .salary(SALARY)
+                           .savings(SAVINGS)
                            .build()
                            .addBankBalance(BankBalance.builder()
                                                       .id(1L)
@@ -74,6 +76,7 @@ public class MonthBalanceMapperTest {
         monthBalanceDTO.setId(ID);
         monthBalanceDTO.setIncomes(INCOMES);
         monthBalanceDTO.setResult(RESULT);
+        monthBalanceDTO.setSavings(SAVINGS);
         monthBalanceDTO.setBankBalances(Set.of(createBankBalanceDto()));
         return monthBalanceDTO;
     }

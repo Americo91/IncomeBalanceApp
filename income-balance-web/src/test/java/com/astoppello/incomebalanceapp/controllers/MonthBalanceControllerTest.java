@@ -45,7 +45,6 @@ public class MonthBalanceControllerTest {
         monthBalanceDTO.setId(ID);
         monthBalanceDTO.setMonth(Month.valueOf(MONTH));
         monthBalanceDTO.setYearBalanceId(ID);
-        monthBalanceDTO.setSavingPercentage(40.00);
 
         MonthBalanceDTO monthBalanceDTO1 = new MonthBalanceDTO();
         monthBalanceDTO1.setMonth(Month.DECEMBER);
@@ -84,8 +83,7 @@ public class MonthBalanceControllerTest {
                         .content(AbstractRestControllerTest.asJsonString(monthBalanceDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(1)))
-                .andExpect(jsonPath("$.month", equalTo(MONTH)))
-                .andExpect(jsonPath("$.savingPercentage", equalTo(40.0)));
+                .andExpect(jsonPath("$.month", equalTo(MONTH)));
         verify(monthBalanceService).createNewMonthBalanceById(anyLong(), any(MonthBalanceDTO.class));
     }
 

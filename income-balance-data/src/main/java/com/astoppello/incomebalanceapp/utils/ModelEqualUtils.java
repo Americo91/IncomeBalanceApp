@@ -25,6 +25,7 @@ public class ModelEqualUtils {
         assertEquals(yearBalance.getIncomes(), yearBalanceDTO.getIncomes());
         assertEquals(yearBalance.getSalary(), yearBalanceDTO.getSalary());
         assertEquals(yearBalance.getResult(), yearBalanceDTO.getResult());
+        assertEquals(yearBalance.getSavings(), yearBalanceDTO.getSavings());
     }
 
     public static void assertBankAndBankDtoAreEquals(Bank bank, BankDTO bankDTO) {
@@ -53,6 +54,7 @@ public class ModelEqualUtils {
         assertEquals(monthBalance.getIncomes(), monthBalanceDTO.getIncomes());
         assertEquals(monthBalance.getResult(), monthBalanceDTO.getResult());
         assertEquals(monthBalance.getSalary(), monthBalanceDTO.getSalary());
+        assertEquals(monthBalance.getSavings(), monthBalanceDTO.getSavings());
         if (monthBalance.getYearBalance() != null) {
             assertEquals(monthBalance.getYearBalance().getId(), monthBalanceDTO.getYearBalanceId());
         }

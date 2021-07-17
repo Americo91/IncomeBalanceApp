@@ -22,12 +22,14 @@ public class YearBalanceMapperTest {
     private YearBalanceMapper mapper;
     private static final Integer YEAR = 2020;
     private static final Long ID = 1L;
+    private final String SAVINGS = "25%";
 
     @Test
     void yearBalanceDtoToYearBalance() {
         YearBalanceDTO yearBalanceDTO = new YearBalanceDTO();
         yearBalanceDTO.setId(ID);
         yearBalanceDTO.setYear(YEAR);
+        yearBalanceDTO.setSavings(SAVINGS);
 
         YearBalance yearBalance = mapper.toEntity(yearBalanceDTO);
         assertNotNull(yearBalance);
@@ -39,6 +41,7 @@ public class YearBalanceMapperTest {
         YearBalance yearBalance = YearBalance.builder()
                                              .id(ID)
                                              .year(YEAR)
+                                             .savings(SAVINGS)
                                              .build()
                                              .addMonthBalance(MonthBalance.builder().id(ID).month(Month.SEPTEMBER).build())
                 .addBankBalance(BankBalance.builder().id(ID).build());

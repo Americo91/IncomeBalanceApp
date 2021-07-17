@@ -32,7 +32,7 @@ public class MonthBalanceDTO extends BalanceDTO implements Comparable {
     @Nullable
     private Long yearBalanceId;
     @Nullable
-    private Double savingPercentage;
+    private String savings;
 
     @Override
     public int compareTo(Object o) {

@@ -124,7 +124,7 @@ public class MonthBalanceControllerIT {
         assertThat(monthBalanceDTOResult.getMonth()).isEqualTo(Month.NOVEMBER);
         assertThat(monthBalanceDTOResult.getSalary()).isEqualTo("300.00");
         assertThat(monthBalanceDTOResult.getYearBalanceId()).isEqualTo(ID);
-        assertThat(monthBalanceDTOResult.getSavingPercentage()).isNull();
+        assertThat(monthBalanceDTOResult.getSavings()).isNull();
         assertThat(monthBalanceDTOResult.getId()).isNotNull();
     }
 
@@ -159,7 +159,7 @@ public class MonthBalanceControllerIT {
         MonthBalanceDTO monthBalanceDTOResult = new ObjectMapper()
                 .readValue(result.getResponse().getContentAsString(), MonthBalanceDTO.class);
         assertThat(monthBalanceDTOResult.getMonth()).isEqualTo(Month.DECEMBER);
-        assertThat(monthBalanceDTOResult.getSalary()).isEqualTo("0");
+        assertThat(monthBalanceDTOResult.getSalary()).isNull();
         assertThat(monthBalanceDTOResult.getYearBalanceId()).isEqualTo(ID);
         assertThat(monthBalanceDTOResult.getId()).isEqualTo(createdMonthBalanceId);
     }
@@ -176,7 +176,7 @@ public class MonthBalanceControllerIT {
                 .readValue(result.getResponse().getContentAsString(), MonthBalanceDTO.class);
         assertThat(monthBalanceDTOResult.getId()).isEqualTo(createdMonthBalanceId);
         assertThat(monthBalanceDTOResult.getMonth()).isEqualTo(Month.DECEMBER);
-        assertThat(monthBalanceDTOResult.getSalary()).isEqualTo("0.00");
+        assertThat(monthBalanceDTOResult.getSalary()).isNull();
         assertThat(monthBalanceDTOResult.getYearBalanceId()).isEqualTo(ID);
 
         result = mockMvc.perform(get(MonthBalanceController.BASE_URL + "/"+createdMonthBalanceId).contentType(MediaType.APPLICATION_JSON))

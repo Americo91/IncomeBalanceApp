@@ -16,21 +16,11 @@ import org.mapstruct.Mappings;
         componentModel = "spring")
 public interface YearBalanceMapper {
 
-    @Mappings({
-            @Mapping(source = "expenses", target = "expenses", qualifiedByName = "StringToBigDecimal"),
-            @Mapping(source = "incomes", target = "incomes", qualifiedByName = "StringToBigDecimal"),
-            @Mapping(source = "result", target = "result", qualifiedByName = "StringToBigDecimal"),
-            @Mapping(source = "salary", target = "salary", qualifiedByName = "StringToBigDecimal"),
-    })
     YearBalance toEntity(YearBalanceDTO yearBalanceDTO);
 
     @Mappings({
             @Mapping(source = "bankBalanceSet", target = "bankBalances"),
             @Mapping(source = "monthBalanceSet", target = "monthBalances"),
-            @Mapping(source = "expenses", target = "expenses", qualifiedByName = "BigDecimalToString"),
-            @Mapping(source = "incomes", target = "incomes", qualifiedByName = "BigDecimalToString"),
-            @Mapping(source = "result", target = "result", qualifiedByName = "BigDecimalToString"),
-            @Mapping(source = "salary", target = "salary", qualifiedByName = "BigDecimalToString"),
     })
     YearBalanceDTO toDto(YearBalance yearBalance);
 }

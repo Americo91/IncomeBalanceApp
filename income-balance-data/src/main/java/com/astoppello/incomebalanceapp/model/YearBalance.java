@@ -31,6 +31,8 @@ public class YearBalance extends AbstractBalanceEntity {
     private Set<BankBalance> bankBalanceSet = new HashSet<>();
 
     private BigDecimal salary;
+    @Nullable
+    private String savings;
 
     @Builder
     public YearBalance(
@@ -39,10 +41,12 @@ public class YearBalance extends AbstractBalanceEntity {
             BigDecimal expenses,
             BigDecimal incomes,
             BigDecimal result,
+            String savings,
             Integer year) {
         super(id, expenses, incomes, result);
         this.year = year;
         this.salary = salary;
+        this.savings = savings;
     }
 
     /**
@@ -91,6 +95,7 @@ public class YearBalance extends AbstractBalanceEntity {
                                 : "null"))
                 .add("year=" + year)
                 .add("salary= "+salary)
+                .add("savings= "+savings)
                 .toString();
     }
 }

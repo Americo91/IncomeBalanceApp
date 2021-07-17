@@ -2,6 +2,7 @@ package com.astoppello.incomebalanceapp.model;
 
 import lombok.*;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -30,6 +31,8 @@ public class MonthBalance extends AbstractBalanceEntity {
     private YearBalance yearBalance;
 
     private BigDecimal salary;
+    @Nullable
+    private String savings;
 
     @Builder
     public MonthBalance(
@@ -39,10 +42,12 @@ public class MonthBalance extends AbstractBalanceEntity {
             BigDecimal incomes,
             BigDecimal result,
             Month month,
+            String savings,
             Set<BankBalance> bankBalanceSet) {
         super(id, expenses, incomes, result);
         this.month = month;
         this.salary = salary;
+        this.savings = savings;
         if (CollectionUtils.isNotEmpty(bankBalanceSet)) {
             this.bankBalanceSet = bankBalanceSet;
         }
@@ -75,6 +80,7 @@ public class MonthBalance extends AbstractBalanceEntity {
                         .toString() : "null"))
                 .add("month= " + month)
                 .add("salary= " + salary)
+                .add("savings= "+savings)
                 .toString();
     }
 }

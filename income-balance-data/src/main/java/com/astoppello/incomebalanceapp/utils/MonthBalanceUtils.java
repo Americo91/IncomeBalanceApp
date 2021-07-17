@@ -5,6 +5,8 @@ import com.astoppello.incomebalanceapp.model.MonthBalance;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.Objects;
 
 public class MonthBalanceUtils {
@@ -12,6 +14,14 @@ public class MonthBalanceUtils {
         monthBalance.setIncomes(computeIncomes(monthBalance));
         monthBalance.setExpenses(computeExpenses(monthBalance));
         monthBalance.setResult(computeResults(monthBalance));
+        monthBalance.setSavings(computeSavings(monthBalance.getResult(), monthBalance.getIncomes()));
+    }
+
+    private static String computeSavings(BigDecimal result, BigDecimal incomes) {
+        if (incomes.compareTo(BigDecimal.ZERO) == 0)
+            return "NA";
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        return percent.format(result.divide(incomes, RoundingMode.UP));
     }
 
     private static BigDecimal computeResults(MonthBalance monthBalance) {
